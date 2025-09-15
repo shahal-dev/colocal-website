@@ -7,7 +7,7 @@
 
 ## Key Workflows
 - **Install dependencies:** Use your preferred package manager (`npm install`, `yarn install`, `pnpm install`, or `bun install`).
-- **Development server:** Start with `npm run dev` (or equivalent for your package manager). Default port is `http://localhost:3000`.
+- **Development server:** Start frontend with `npm run dev` (or equivalent for your package manager). Default port is `http://localhost:3000`. Start backend with `npm run develop` in the `cms/` directory (default port `http://localhost:1337`).
 - **Production build:** Use `npm run build` and preview with `npm run preview`.
 
 ## Code Structure & Patterns
