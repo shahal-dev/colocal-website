@@ -1,12 +1,8 @@
-import { fontFamily } from 'tailwindcss/defaultTheme'
+import { fontFamily } from 'tailwindcss/defaultTheme';
 
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: [
-    './app/**/*.{vue,js,ts}',
-    './components/**/*.{vue,js,ts}',
-    './pages/**/*.{vue,js,ts}',
-  ],
+  content: ['./app/**/*.{vue,js,ts}', './components/**/*.{vue,js,ts}', './pages/**/*.{vue,js,ts}'],
   theme: {
     extend: {
       fontFamily: {
@@ -17,4 +13,4 @@ export default {
     },
   },
   plugins: [],
-}
+};
