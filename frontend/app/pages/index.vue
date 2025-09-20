@@ -1,3 +1,6 @@
 <template>
-  <AppNavbar />
+  <div>
+    <AppNavbar />
+    <AppFooter />
+  </div>
 </template>

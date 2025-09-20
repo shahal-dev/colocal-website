@@ -1,12 +1,12 @@
 <template>
-    <nav class="flex items-center justify-between px-60 py-4 bg-white">
+    <nav class="flex items-center justify-between px-25 py-4 bg-white">
         <div>
             <a href="/">
                 <img src="../assets/logos/luccc-logo.png" alt="Logo" class="h-12">
             </a>
         </div>
 
-        <div class="flex items-center space-x-4 font-sans font-semibold">
+        <div class="flex items-center space-x-3 font-poppins font-semibold">
             <a href="/" class="navbar-item">Home</a>
             
             <div class="relative group navbar-item">
