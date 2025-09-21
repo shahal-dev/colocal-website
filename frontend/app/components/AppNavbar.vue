@@ -1,5 +1,5 @@
 <template>
-  <nav class="flex items-center justify-between px-25 py-4 bg-white">
+  <nav class="flex items-center justify-between px-25 py-4 z-50 fixed w-full sticky bg-white">
     <div>
       <a href="/">
         <img src="../assets/logos/luccc-logo.png" alt="Logo" class="h-12" >
@@ -10,7 +10,7 @@
       <a href="/" class="navbar-item">Home</a>
 
       <div class="relative group navbar-item">
-        <button class="text-gray-700 hover:text-gray-900 flex items-center">
+        <button class="hover:text-gray-900 flex items-center">
           About Us
           <svg class="ml-1 h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
             <path

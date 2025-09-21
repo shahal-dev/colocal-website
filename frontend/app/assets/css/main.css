@@ -1,6 +1,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family=Poppins:wght@400;600;700&display=swap');
 @import 'tailwindcss';
 
+@theme {
+  --font-display: 'Poppins', sans-serif;
+  --color-green-800: #166534; /* Tailwind v3 green-800 */
+  --color-green-600: #16a34a; /* Tailwind v3 green-600 */
+  --color-green-500: #22c55e; /* Tailwind v3 green-500 */
+  --color-green-100: #F0FDF4; /* Tailwind v3 green-100 */
+  --color-green-200: #BBF7D0; /* Tailwind v3 green-200 */
+  --color-blue-gray: #0f172a; /* Tailwind v3 blue-gray-900 */
+  --color-home-carousel: #082112; /* Custom dark green for home carousel */
+}
+
 /* Set default font family for body using Tailwind utility */
 body {
   font-family:
