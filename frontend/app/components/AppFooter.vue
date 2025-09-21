@@ -1,10 +1,10 @@
 <template>
-  <footer class="h-[485px] bg-[#0F172A] text-white px-45 py-12 relative">
+  <footer class="h-[485px] bg-[#0F172A] text-white px-45 relative">
     <div class="mx-auto">
       <div class="grid grid-cols-1 md:grid-cols-3 h-full">
         <!-- Left Column - Logo and Contact Info -->
         <div class="flex flex-row justify-start items-start space-x-8 py-31 h-32">
-          <img src="~/assets/logos/luccc-logo.png" alt="LUCCC Logo" class="h-10 my-1.5" >
+          <img src="~/assets/logos/luccc-logo.png" alt="LUCCC Logo" class="h-10 my-1.5" />
 
           <div
             class="text-gray-300 flex flex-col justify-start self-start space-y-7 underline decoration-green-600 underline-offset-2"

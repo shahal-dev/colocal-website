@@ -2,12 +2,14 @@
 @import 'tailwindcss';
 
 @theme {
+  --font-body: 'Open Sans', sans-serif;
   --font-display: 'Poppins', sans-serif;
   --color-green-800: #166534; /* Tailwind v3 green-800 */
+  --color-green-700: #15803d; /* Tailwind v3 green-700 */
   --color-green-600: #16a34a; /* Tailwind v3 green-600 */
   --color-green-500: #22c55e; /* Tailwind v3 green-500 */
-  --color-green-100: #F0FDF4; /* Tailwind v3 green-100 */
-  --color-green-200: #BBF7D0; /* Tailwind v3 green-200 */
+  --color-green-100: #f0fdf4; /* Tailwind v3 green-100 */
+  --color-green-200: #bbf7d0; /* Tailwind v3 green-200 */
   --color-blue-gray: #0f172a; /* Tailwind v3 blue-gray-900 */
   --color-home-carousel: #082112; /* Custom dark green for home carousel */
 }
