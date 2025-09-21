@@ -1,5 +1,5 @@
 <template>
-  <nav class="flex items-center justify-between px-25 py-4 z-50 fixed w-full sticky bg-white">
+  <nav class="flex items-center justify-between px-25 py-4 z-50 w-full sticky bg-white">
     <div>
       <a href="/">
         <img src="../assets/logos/luccc-logo.png" alt="Logo" class="h-12" >

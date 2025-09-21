@@ -10,7 +10,7 @@
         @focusout="startAutoplay"
         @keydown="onKeydown"
     >
-                <transition name="fade" mode="out-in">
+                <transition :name="transitionName" mode="out-in">
                     <div :key="currentIndex" class="h-full w-full flex flex-col md:flex-row">
                         <!-- Content -->
                         <div class="flex flex-col justify-center items-start px-6 md:pl-24 md:pr-20 flex-1">
@@ -105,6 +105,9 @@ const carouselItems = ref([
 const currentIndex = ref(0)
 let autoplayTimer = null
 const autoplayDelay = 5000
+// transitionName is set before changing the index so Vue applies the
+// correct directional transition classes (slide-next / slide-prev)
+const transitionName = ref('slide-next')
 
 const currentItem = computed(() => carouselItems.value[currentIndex.value])
 
@@ -117,6 +120,12 @@ watchEffect(() => {
 })
 
 function goTo(idx) {
+    if (idx === currentIndex.value) return
+    const len = carouselItems.value.length
+    const current = currentIndex.value
+    const forwardDistance = (idx - current + len) % len
+    const backwardDistance = (current - idx + len) % len
+    transitionName.value = forwardDistance <= backwardDistance ? 'slide-next' : 'slide-prev'
     currentIndex.value = idx
 }
 
@@ -131,10 +140,12 @@ function onKeydown(e) {
 }
 
 function next() {
+    transitionName.value = 'slide-next'
     currentIndex.value = (currentIndex.value + 1) % carouselItems.value.length
 }
 
 function prev() {
+    transitionName.value = 'slide-prev'
     currentIndex.value = (currentIndex.value - 1 + carouselItems.value.length) % carouselItems.value.length
 }
 
@@ -162,5 +173,84 @@ onBeforeUnmount(() => {
     stopAutoplay()
 })
 </script>
+<style scoped>
+/* Direction-aware slide transitions (larger motion) */
+/* slide-next: new slide enters from right -> center, old slides exit to left */
+.slide-next-enter-from {
+    opacity: 0;
+    transform: translateX(40px) scale(0.995);
+}
+.slide-next-enter-active {
+    transition: opacity 520ms cubic-bezier(0.22, 1, 0.36, 1), transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.slide-next-enter-to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+}
+.slide-next-leave-from {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+}
+.slide-next-leave-active {
+    transition: opacity 420ms cubic-bezier(0.22, 1, 0.36, 1), transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.slide-next-leave-to {
+    opacity: 0;
+    transform: translateX(-40px) scale(0.995);
+}
+
+/* slide-prev: new slide enters from left -> center, old slides exit to right */
+.slide-prev-enter-from {
+    opacity: 0;
+    transform: translateX(-40px) scale(0.995);
+}
+.slide-prev-enter-active {
+    transition: opacity 520ms cubic-bezier(0.22, 1, 0.36, 1), transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.slide-prev-enter-to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+}
+.slide-prev-leave-from {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+}
+.slide-prev-leave-active {
+    transition: opacity 420ms cubic-bezier(0.22, 1, 0.36, 1), transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.slide-prev-leave-to {
+    opacity: 0;
+    transform: translateX(40px) scale(0.995);
+}
+
+/* Fallback fade (kept for any components still using name="fade") */
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
+    transform: translateX(8px);
+}
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 420ms cubic-bezier(0.22, 1, 0.36, 1), transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.fade-enter-to,
+.fade-leave-from {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Respect user preference for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .slide-next-enter-active,
+    .slide-next-leave-active,
+    .slide-prev-enter-active,
+    .slide-prev-leave-active,
+    .fade-enter-active,
+    .fade-leave-active {
+        transition: none !important;
+        transform: none !important;
+    }
+}
+</style>
 
 
