@@ -3,5 +3,6 @@
     <HomeCarousel />
     <AboutUsSection />
     <StatsSection />
+    <ProjectsSection />
   </div>
 </template>
