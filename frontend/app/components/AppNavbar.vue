@@ -2,7 +2,7 @@
   <nav class="flex items-center justify-between px-25 py-4 z-50 w-full sticky bg-white">
     <div>
       <a href="/">
-        <img src="../assets/logos/luccc-logo.png" alt="Logo" class="h-12" >
+        <img src="../assets/logos/luccc-logo.png" alt="Logo" class="h-12" />
       </a>
     </div>
 
@@ -10,7 +10,7 @@
       <a href="/" class="navbar-item">Home</a>
 
       <div class="relative group navbar-item">
-        <button class="hover:text-gray-900 flex items-center">
+        <a href="/about" class="hover:text-gray-900 flex items-center">
           About Us
           <svg class="ml-1 h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
             <path
@@ -19,20 +19,20 @@
               clip-rule="evenodd"
             />
           </svg>
-        </button>
+        </a>
         <div
-          class="absolute left-0 mt-3 w-48 bg-white rounded-xl border-1 opacity-0 border-slate-200 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200"
+          class="absolute left-0 mt-3 w-48 bg-white rounded-xl border-1 font-normal opacity-0 border-slate-200 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200"
         >
           <div class="py-1">
             <a
-              href="/about"
+              href="/our-story"
               class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 border-b-1 border-slate-200"
               >Our Story</a
             >
             <a
               href="/team"
               class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 border-b-1 border-slate-200"
-              >Team</a
+              >List of Universities</a
             >
             <a href="/mission" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
               >Mission</a

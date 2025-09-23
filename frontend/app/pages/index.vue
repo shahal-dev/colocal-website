@@ -4,5 +4,8 @@
     <AboutUsSection />
     <StatsSection />
     <ProjectsSection />
+    <ResourceSection />
+    <NewsAndAnnouncements />
+    <GetInTouch />
   </div>
 </template>

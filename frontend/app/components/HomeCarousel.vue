@@ -50,7 +50,7 @@
 
     <!-- Controls -->
     <button
-      class="absolute left-6 top-1/2 -translate-y-1/2 -rotate-90 w-12 h-12 bg-green-500 hover:bg-green-600 rounded-full flex items-center justify-center transition-colors shadow-lg"
+      class="absolute left-6 top-1/2 -translate-y-1/2 -rotate-90 w-8 h-8 p-2 bg-green-500 hover:bg-green-600 rounded-full flex items-center justify-center transition-colors shadow-lg"
       aria-label="Scroll to top"
       @click="prev"
     >
@@ -59,7 +59,7 @@
       </svg>
     </button>
     <button
-      class="absolute right-6 top-1/2 -translate-y-1/2 rotate-90 w-12 h-12 bg-green-500 hover:bg-green-600 rounded-full flex items-center justify-center transition-colors shadow-lg"
+      class="absolute right-6 top-1/2 -translate-y-1/2 rotate-90 w-8 h-8 p-2 bg-green-500 hover:bg-green-600 rounded-full flex items-center justify-center transition-colors shadow-lg"
       aria-label="Scroll to top"
       @click="next"
     >

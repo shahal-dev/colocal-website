@@ -11,6 +11,8 @@
   --color-green-100: #f0fdf4; /* Tailwind v3 green-100 */
   --color-green-200: #bbf7d0; /* Tailwind v3 green-200 */
   --color-blue-gray: #0f172a; /* Tailwind v3 blue-gray-900 */
+  --color-blue-gray-50: #f8fafc; /* Tailwind v3 blue-gray-50 */
+  --color-blue-gray-100: #f1f5f9; /* Tailwind v3 blue-gray-100 */
   --color-home-carousel: #082112; /* Custom dark green for home carousel */
 }
 
