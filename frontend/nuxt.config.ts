@@ -24,4 +24,16 @@ export default defineNuxtConfig({
       },
     ],
   },
+
+  // Runtime config for Strapi
+  runtimeConfig: {
+    strapi: {
+      url: 'http://localhost:1337', // can be overridden by NUXT_STRAPI_URL
+      token: '', // read-only API token; override via NUXT_STRAPI_TOKEN
+    },
+    public: {
+      // expose only the URL if needed client-side; keep token private
+      strapiUrl: 'http://localhost:1337',
+    },
+  },
 });

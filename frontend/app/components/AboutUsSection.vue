@@ -2,12 +2,12 @@
   <section class="w-full h-[484px] p-30">
     <div class="flex flex-row justify-around items-center bg-white">
       <div class="flex-col justify-center items-start w-[488px]">
-        <h2 class="text-[32px] font-display font-medium mb-6">About Us</h2>
+        <h2 class="text-[32px] font-display font-medium mb-6">{{ title || 'About Us' }}</h2>
         <p class="text-base font-medium font-body mb-6">
-          We are a network of universities dedicated to building climate resilience in Least
-          Developed Countries (LDCs) through education, research, and policy advocacy. By
-          collaborating globally, we empower communities with the knowledge and tools to drive
-          meaningful climate action.
+          {{
+            description ||
+            'We are a network of universities dedicated to building climate resilience in Least Developed Countries (LDCs) through education, research, and policy advocacy.'
+          }}
         </p>
         <button
           class="px-5 py-3 bg-green-600 text-white rounded-sm font-body text-base font-semibold"
@@ -59,4 +59,5 @@
 import BooksIcon from './icons/BooksIcon.vue';
 import MicIcon from './icons/MicIcon.vue';
 import UniversityIcon from './icons/UniversityIcon.vue';
+defineProps<{ title?: string; description?: string }>();
 </script>

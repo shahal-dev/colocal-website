@@ -4,6 +4,8 @@ const onSubmit = (e: Event) => {
   e.preventDefault();
   console.info('Submit contact form');
 };
+
+defineProps<{ phone?: string; email?: string; address?: string }>();
 </script>
 
 <template>
@@ -36,7 +38,7 @@ const onSubmit = (e: Event) => {
             </span>
             <div>
               <p class="text-sm font-semibold">Phone</p>
-              <p class="text-sm text-gray-600">+8801813444112</p>
+              <p class="text-sm text-gray-600">{{ phone || '+8801813444112' }}</p>
             </div>
           </li>
 
@@ -54,7 +56,7 @@ const onSubmit = (e: Event) => {
             </span>
             <div>
               <p class="text-sm font-semibold">Email</p>
-              <p class="text-sm text-gray-600">hello@luccc.org</p>
+              <p class="text-sm text-gray-600">{{ email || 'hello@luccc.org' }}</p>
             </div>
           </li>
 
@@ -75,7 +77,9 @@ const onSubmit = (e: Event) => {
             </span>
             <div>
               <p class="text-sm font-semibold">Address</p>
-              <p class="text-sm text-gray-600">Plot 16 Aftab Uddin Ahmed Rd, Dhaka 1229</p>
+              <p class="text-sm text-gray-600">
+                {{ address || 'Plot 16 Aftab Uddin Ahmed Rd, Dhaka 1229' }}
+              </p>
             </div>
           </li>
         </ul>
