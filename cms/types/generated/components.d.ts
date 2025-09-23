@@ -11,6 +11,17 @@ export interface SharedMedia extends Struct.ComponentSchema {
   };
 }
 
+export interface SharedObjective extends Struct.ComponentSchema {
+  collectionName: 'components_shared_objectives';
+  info: {
+    displayName: 'Objective';
+    icon: 'check';
+  };
+  attributes: {
+    objective: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
 export interface SharedQuote extends Struct.ComponentSchema {
   collectionName: 'components_shared_quotes';
   info: {
@@ -62,14 +73,27 @@ export interface SharedSlider extends Struct.ComponentSchema {
   };
 }
 
+export interface SharedTag extends Struct.ComponentSchema {
+  collectionName: 'components_shared_tags';
+  info: {
+    displayName: 'Tag';
+    icon: 'bulletList';
+  };
+  attributes: {
+    tag: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
 declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
       'shared.media': SharedMedia;
+      'shared.objective': SharedObjective;
       'shared.quote': SharedQuote;
       'shared.rich-text': SharedRichText;
       'shared.seo': SharedSeo;
       'shared.slider': SharedSlider;
+      'shared.tag': SharedTag;
     }
   }
 }

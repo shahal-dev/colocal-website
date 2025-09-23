@@ -1,0 +1,55 @@
+{
+  "kind": "collectionType",
+  "collectionName": "research_publications",
+  "info": {
+    "singularName": "research-publication",
+    "pluralName": "research-publications",
+    "displayName": "Research/Publication"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "abstract": {
+      "type": "richtext",
+      "required": true
+    },
+    "date": {
+      "type": "date",
+      "required": true
+    },
+    "URL": {
+      "type": "string",
+      "required": true
+    },
+    "file": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "files"
+      ]
+    },
+    "tags": {
+      "type": "component",
+      "component": "shared.tag",
+      "repeatable": true
+    },
+    "project": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::project.project",
+      "inversedBy": "research_publications"
+    },
+    "authors": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::author.author",
+      "inversedBy": "research_publications"
+    }
+  }
+}

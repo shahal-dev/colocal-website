@@ -1,0 +1,15 @@
+{
+  "collectionName": "components_shared_objectives",
+  "info": {
+    "displayName": "Objective",
+    "icon": "check"
+  },
+  "options": {},
+  "attributes": {
+    "objective": {
+      "type": "string",
+      "required": true
+    }
+  },
+  "config": {}
+}
