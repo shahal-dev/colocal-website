@@ -25,24 +25,24 @@
         >
           <div class="py-1">
             <a
-              href="/our-story"
+              href="/about"
               class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 border-b-1 border-slate-200"
-              >Our Story</a
+              >About Us</a
             >
             <a
-              href="/team"
+              href="/about/universities"
               class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 border-b-1 border-slate-200"
               >List of Universities</a
             >
-            <a href="/mission" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-              >Mission</a
+            <a href="/about/team" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              >Our Team</a
             >
           </div>
         </div>
       </div>
 
       <a href="/resource-hub" class="navbar-item">Resource Hub</a>
-      <a href="/projects-programmes" class="navbar-item">Projects & Programmes</a>
+      <a href="/projects" class="navbar-item">Projects & Programmes</a>
       <a href="/education-training" class="navbar-item">Education & Training</a>
       <a href="/news-events" class="navbar-item">News & Events</a>
     </div>

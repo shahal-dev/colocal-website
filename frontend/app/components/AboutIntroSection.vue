@@ -14,7 +14,7 @@ import aboutImage from '~/assets/images/carousel-1.png';
         <br class="hidden md:block" />
         Least Developed Countries
       </h2>
-      <div class="space-y-4 text-gray-700">
+      <div class="space-y-4 text-gray-700 mb-6">
         <p>
           The Least Developed Countries (LDCs) Universities Consortium on Climate Change (LUCCC) is
           a South-South long-term capacity-building platform comprised of universities as founding
@@ -27,11 +27,12 @@ import aboutImage from '~/assets/images/carousel-1.png';
           Addis Ababa in October 2018.
         </p>
       </div>
-      <button
-        class="mt-6 px-5 py-3 bg-green-600 hover:bg-green-700 text-white rounded-sm font-semibold"
+      <a
+        href="/about/team"
+        class="px-5 py-3 bg-green-600 hover:bg-green-700 text-white rounded-sm font-semibold"
       >
         Our Team
-      </button>
+      </a>
     </div>
 
     <!-- Right: Image -->
