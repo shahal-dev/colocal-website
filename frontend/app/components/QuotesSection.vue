@@ -1,10 +1,14 @@
-<script setup>
+<script setup lang="ts">
 import { ref, computed } from 'vue';
 import QuoteCard from './QuoteCard.vue';
 import avatar1 from '~/assets/images/carousel-1.png';
 import avatar2 from '~/assets/images/carousel-2.png';
 
-const quotes = [
+const props = defineProps<{
+  quotes?: Array<{ name?: string; role?: string; quote: string; avatar?: string }>;
+}>();
+
+const fallbackQuotes = [
   {
     id: 1,
     name: 'MD Fahad Hossain',
@@ -23,18 +27,31 @@ const quotes = [
   },
 ];
 
+const normalized = computed(() => {
+  if (props.quotes && props.quotes.length) {
+    return props.quotes.map((q, i) => ({
+      id: i,
+      name: q.name || '—',
+      role: q.role || '',
+      quote: q.quote,
+      avatar: q.avatar || avatar1,
+    }));
+  }
+  return fallbackQuotes;
+});
+
 const currentIndex = ref(0);
 const transitionName = ref('slide-next');
-const currentQuote = computed(() => quotes[currentIndex.value]);
+const currentQuote = computed(() => normalized.value[currentIndex.value]);
 
 function next() {
   transitionName.value = 'slide-next';
-  currentIndex.value = (currentIndex.value + 1) % quotes.length;
+  currentIndex.value = (currentIndex.value + 1) % normalized.value.length;
 }
 
 function prev() {
   transitionName.value = 'slide-prev';
-  currentIndex.value = (currentIndex.value - 1 + quotes.length) % quotes.length;
+  currentIndex.value = (currentIndex.value - 1 + normalized.value.length) % normalized.value.length;
 }
 </script>
 
@@ -79,11 +96,13 @@ function prev() {
         <transition :name="transitionName" mode="out-in">
           <div :key="currentIndex">
             <QuoteCard
+              v-if="currentQuote"
               :name="currentQuote.name"
               :role="currentQuote.role"
               :quote="currentQuote.quote"
               :avatar="currentQuote.avatar"
             />
+            <div v-else class="text-gray-500">No quotes available.</div>
           </div>
         </transition>
       </div>

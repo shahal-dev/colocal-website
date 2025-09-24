@@ -79,12 +79,12 @@ const primaryLinks = [
   { label: 'About', path: '/about' },
   { label: 'Resource Hub', path: '/resource-hub' },
   { label: 'Projects & Programmes', path: '/projects' },
-  { label: 'Education & Training', path: '/education' },
+  { label: 'Education & Training', path: '/education-training' },
 ];
 
 const secondaryLinks = [
-  { label: 'News', path: '/news' },
-  { label: 'Events', path: '/events' },
+  { label: 'News', path: '/news-events' },
+  { label: 'Events', path: '/news-events' },
 ];
 
 const scrollToTop = () => {

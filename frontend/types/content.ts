@@ -137,3 +137,9 @@ export type Paginated<T> = {
   pageCount: number;
   total: number;
 };
+
+// --- Components used on About page --------------------------------------
+export interface Quote {
+  body: string; // quote text
+  author: Author; // relation to Author
+}

@@ -39,6 +39,13 @@
       "type": "boolean",
       "required": true,
       "default": false
+    },
+    "team": {
+      "type": "boolean",
+      "default": false
+    },
+    "title": {
+      "type": "string"
     }
   }
 }

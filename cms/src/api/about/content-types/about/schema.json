@@ -13,11 +13,46 @@
   "pluginOptions": {},
   "attributes": {
     "title": {
-      "type": "string"
+      "type": "string",
+      "required": true
     },
-    "blocks": {
-      "type": "dynamiczone",
-      "components": ["shared.media", "shared.quote", "shared.rich-text", "shared.slider"]
+    "subtitle": {
+      "type": "string",
+      "required": true
+    },
+    "about": {
+      "type": "text",
+      "required": true
+    },
+    "mission": {
+      "type": "text",
+      "required": true
+    },
+    "objectives": {
+      "type": "component",
+      "component": "shared.objective",
+      "repeatable": true,
+      "required": true
+    },
+    "quotes": {
+      "type": "component",
+      "component": "shared.quote",
+      "repeatable": true
+    },
+    "cover": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "media": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files"
+      ]
     }
   }
 }

@@ -1,13 +1,31 @@
 <script setup lang="ts">
+import { computed } from 'vue';
 import missionImage from '~/assets/images/carousel-2.png';
 
-const objectives = [
-  'Build a South-South network to strengthen climate research and expertise.',
-  'Strengthen university collaboration in climate research, teaching, and training.',
-  'Focus on supporting the most vulnerable countries and communities.',
-  'Promote two-way learning and capacity-building.',
-  'Enable LDC universities to be knowledge hubs for climate adaptation.',
-];
+const props = defineProps<{
+  mission?: string;
+  objectives?: Array<string | { objective: string }>;
+}>();
+
+const missionText = computed(
+  () =>
+    props.mission ||
+    'LUCCC aims to capacitate all the 46 LDCs to adapt effectively to the adverse impacts of climate change as well as to explore win-win options for mitigation. It aspires to develop a South-South and South-South-North knowledge sharing and capacity building network, focusing on adaptation. All the universities, research and training institutes in the LDCs will be included over time in the LUCCC network.'
+);
+
+const objectiveItems = computed(() => {
+  const fallback = [
+    'Build a South-South network to strengthen climate research and expertise.',
+    'Strengthen university collaboration in climate research, teaching, and training.',
+    'Focus on supporting the most vulnerable countries and communities.',
+    'Promote two-way learning and capacity-building.',
+    'Enable LDC universities to be knowledge hubs for climate adaptation.',
+  ];
+  if (!props.objectives || !props.objectives.length) return fallback;
+  return props.objectives
+    .map((o) => (typeof o === 'string' ? o : o?.objective || ''))
+    .filter(Boolean);
+});
 </script>
 
 <template>
@@ -19,11 +37,7 @@ const objectives = [
           Our Mission & Vision
         </h2>
         <p class="text-gray-700 mb-3">
-          LUCCC aims to capacitate all the 46 LDCs to adapt effectively to the adverse impacts of
-          climate change as well as to explore win-win options for mitigation. It aspires to develop
-          a South-South and South-South-North knowledge sharing and capacity building network,
-          focusing on adaptation. All the universities, research and training institutes in the LDCs
-          will be included over time in the LUCCC network.
+          {{ missionText }}
         </p>
       </div>
       <div>
@@ -39,7 +53,7 @@ const objectives = [
     <h3 class="text-[18px] font-display font-semibold mb-4">Objectives</h3>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
       <div
-        v-for="(text, idx) in objectives"
+        v-for="(text, idx) in objectiveItems"
         :key="idx"
         class="bg-blue-gray-50 border border-gray-200 rounded p-5 text-gray-700"
       >
