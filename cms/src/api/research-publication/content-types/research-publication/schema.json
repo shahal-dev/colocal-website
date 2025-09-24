@@ -55,6 +55,22 @@
       "type": "boolean",
       "required": true,
       "default": false
+    },
+    "publication_type": {
+      "type": "component",
+      "component": "shared.publication-type",
+      "repeatable": false,
+      "required": true
+    },
+    "theme": {
+      "type": "component",
+      "component": "shared.theme",
+      "repeatable": false
+    },
+    "country": {
+      "type": "component",
+      "component": "shared.country",
+      "repeatable": false
     }
   }
 }

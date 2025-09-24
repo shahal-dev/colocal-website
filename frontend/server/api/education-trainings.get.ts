@@ -1,0 +1,249 @@
+import { defineEventHandler, createError, getQuery } from 'h3';
+import { useRuntimeConfig } from '#imports';
+import type {
+  EducationTraining,
+  Education,
+  StrapiMedia,
+  StrapiImageFormat,
+} from '../../types/content';
+import type {
+  RawEntity,
+  RawRelationOne,
+  RawImageFormat,
+  RawMediaAttributes,
+  RawEducationComponent,
+  StrapiListResponseRaw,
+  _RawEducationTrainingAttributes,
+  FlatMedia,
+  _FlatEducationTraining,
+  StrapiListResponseFlat,
+} from '../../types/raw-strapi-types';
+
+type StrapiListResponseUnion =
+  | StrapiListResponseRaw<_RawEducationTrainingAttributes>
+  | StrapiListResponseFlat<_FlatEducationTraining>;
+
+// Helpers -------------------------------------------------------------------
+function hasDataKey(x: unknown): x is { data: unknown } {
+  return typeof x === 'object' && x !== null && 'data' in x;
+}
+
+function hasAttributes<T extends object>(x: unknown): x is RawEntity<T> {
+  return typeof x === 'object' && x !== null && 'attributes' in x;
+}
+
+function getPropAsNumber(obj: unknown, key: string): number | undefined {
+  if (typeof obj === 'object' && obj !== null && key in obj) {
+    const v = (obj as Record<string, unknown>)[key];
+    if (typeof v === 'number') return v;
+  }
+  return undefined;
+}
+
+function getPropAsString(obj: unknown, key: string): string | undefined {
+  if (typeof obj === 'object' && obj !== null && key in obj) {
+    const v = (obj as Record<string, unknown>)[key];
+    if (typeof v === 'string') return v;
+  }
+  return undefined;
+}
+
+function getProp(obj: unknown, key: string): unknown {
+  if (typeof obj === 'object' && obj !== null && key in obj) {
+    return (obj as Record<string, unknown>)[key];
+  }
+  return undefined;
+}
+
+function toAbsoluteUrl(baseUrl: string, url?: string | null): string {
+  if (!url) return '';
+  if (/^https?:\/\//i.test(url) || url.startsWith('//')) return url;
+  return `${baseUrl}${url}`;
+}
+
+function mapImageFormat(
+  baseUrl: string,
+  fmt?: RawImageFormat | null
+): StrapiImageFormat | undefined {
+  if (!fmt) return undefined;
+  return {
+    ext: fmt.ext ?? null,
+    url: toAbsoluteUrl(baseUrl, fmt.url),
+    hash: fmt.hash,
+    mime: fmt.mime,
+    name: fmt.name,
+    path: fmt.path ?? null,
+    size: fmt.size,
+    width: fmt.width,
+    height: fmt.height,
+  };
+}
+
+type RawMediaLike =
+  | RawRelationOne<RawMediaAttributes>
+  | RawEntity<RawMediaAttributes>
+  | null
+  | undefined;
+
+function mapStrapiMedia(baseUrl: string, entity: RawMediaLike): StrapiMedia | null {
+  const data = hasDataKey(entity)
+    ? (entity as RawRelationOne<RawMediaAttributes>).data
+    : (entity as RawEntity<RawMediaAttributes> | null | undefined);
+  if (!data || !data.id || !data.attributes) return null;
+  const a = data.attributes;
+  const formats = a.formats || {};
+  const mappedFormats: Record<string, StrapiImageFormat> = {};
+  for (const key of Object.keys(formats)) {
+    const fmt = mapImageFormat(baseUrl, formats[key]);
+    if (fmt) mappedFormats[key] = fmt;
+  }
+  return {
+    id: data.id,
+    url: toAbsoluteUrl(baseUrl, a.url),
+    alternativeText: a.alternativeText ?? null,
+    caption: a.caption ?? null,
+    width: a.width ?? null,
+    height: a.height ?? null,
+    formats: mappedFormats,
+    mime: a.mime,
+    size: a.size,
+    name: a.name,
+    provider: a.provider,
+    createdAt: a.createdAt,
+    updatedAt: a.updatedAt,
+  };
+}
+
+function mapFlatMedia(baseUrl: string, m?: FlatMedia | null): StrapiMedia | null {
+  if (!m) return null;
+  const formats = m.formats || {};
+  const mappedFormats: Record<string, StrapiImageFormat> = {};
+  for (const key of Object.keys(formats)) {
+    const fmt = mapImageFormat(baseUrl, formats[key]);
+    if (fmt) mappedFormats[key] = fmt;
+  }
+  return {
+    id: m.id,
+    url: toAbsoluteUrl(baseUrl, m.url),
+    alternativeText: m.alternativeText ?? null,
+    caption: m.caption ?? null,
+    width: m.width ?? null,
+    height: m.height ?? null,
+    formats: mappedFormats,
+    mime: m.mime,
+    size: m.size,
+    name: m.name,
+    provider: m.provider,
+    createdAt: m.createdAt,
+    updatedAt: m.updatedAt,
+  };
+}
+
+function mapEducation(c?: RawEducationComponent | null): Education | null {
+  if (!c) return null;
+  return { type: c.type ?? '' };
+}
+
+function mapEducationTraining(
+  baseUrl: string,
+  raw: RawEntity<_RawEducationTrainingAttributes> | null | undefined
+): EducationTraining | null {
+  if (!raw || !raw.id || !raw.attributes) return null;
+  const a = raw.attributes;
+  return {
+    id: raw.id,
+    title: a.title,
+    date: a.date,
+    cover: mapStrapiMedia(baseUrl, a.cover)!,
+    body: a.body,
+    type: mapEducation(a.type ?? null) ?? undefined,
+    lla: !!a.lla,
+    project: null,
+  };
+}
+
+function mapFlatEducationTrainings(
+  baseUrl: string,
+  list?: _FlatEducationTraining[] | null
+): EducationTraining[] | null {
+  if (!Array.isArray(list)) return null;
+  return list.map(
+    (e): EducationTraining => ({
+      id: e.id,
+      title: e.title,
+      date: e.date,
+      cover: mapFlatMedia(baseUrl, e.cover)!,
+      body: e.body,
+      type: mapEducation(e.type ?? null) ?? undefined,
+      lla: !!e.lla,
+      project: null,
+    })
+  );
+}
+
+export default defineEventHandler(async (event) => {
+  const config = useRuntimeConfig(event);
+  const q = getQuery(event) as {
+    project?: string;
+    projectSlug?: string;
+    projectId?: string;
+    id?: string;
+  };
+  const baseUrl =
+    (config?.strapi?.url as string) ||
+    (config?.public?.strapiUrl as string) ||
+    'http://localhost:1337';
+  const token = (config?.strapi?.token as string) || '';
+
+  const query: Record<string, string> = { populate: '*' };
+
+  const slug = (q.projectSlug || q.project) as string | undefined;
+  const id = q.projectId ? Number(q.projectId) : undefined;
+  const itemId = q.id ? Number(q.id) : undefined;
+  if (slug) {
+    // Education/Training expected to have a single relation 'project'
+    query['filters[project][slug][$eq]'] = String(slug);
+  } else if (typeof id === 'number' && !Number.isNaN(id)) {
+    query['filters[project][id][$eq]'] = String(id);
+  }
+  if (typeof itemId === 'number' && !Number.isNaN(itemId)) {
+    query['filters[id][$eq]'] = String(itemId);
+  }
+
+  const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+  if (token) headers.Authorization = `Bearer ${token}`;
+
+  try {
+    const res = await $fetch<StrapiListResponseUnion>(`${baseUrl}/api/education-trainings`, {
+      method: 'GET',
+      headers,
+      query,
+    });
+
+    let items: EducationTraining[] = [];
+    if (Array.isArray(res?.data)) {
+      const first: unknown = res.data[0];
+      if (first && hasAttributes<_RawEducationTrainingAttributes>(first)) {
+        const dataRaw = res as StrapiListResponseRaw<_RawEducationTrainingAttributes>;
+        items = dataRaw.data
+          .map((item) => mapEducationTraining(baseUrl, item))
+          .filter(Boolean) as EducationTraining[];
+      } else {
+        const dataFlat = res as StrapiListResponseFlat<_FlatEducationTraining>;
+        items = mapFlatEducationTrainings(baseUrl, dataFlat.data) ?? [];
+      }
+    }
+
+    return items;
+  } catch (err: unknown) {
+    throw createError({
+      statusCode: getPropAsNumber(err, 'statusCode') ?? 500,
+      statusMessage: 'Failed to fetch education/trainings from Strapi',
+      data: {
+        message:
+          err instanceof Error ? err.message : (getPropAsString(err, 'message') ?? 'Unknown error'),
+        details: getProp(err, 'data') ?? null,
+      },
+    });
+  }
+});

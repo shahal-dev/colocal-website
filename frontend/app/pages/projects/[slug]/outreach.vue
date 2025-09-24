@@ -1,8 +1,6 @@
 <script setup>
 import { computed, ref } from 'vue';
 import { useRoute } from '#app';
-import img1 from '~/assets/images/carousel-1.png';
-import img2 from '~/assets/images/carousel-2.png';
 
 // Route + derived project name
 const route = useRoute();
@@ -25,136 +23,121 @@ const tabs = computed(() => [
   { key: 'outreach', label: 'Outreach', to: `${basePath.value}/outreach` },
   { key: 'lla', label: 'LLA Hub', to: `${basePath.value}/lla` },
 ]);
-const isActive = (to) => route.path === to;
+const isActive = (to) => route.path.startsWith(to);
+const hasChild = computed(() => Boolean(route.params.id));
 
-// Sample data
-const events = ref([
-  {
-    id: 1,
-    title: 'LLA Seminar at IUB',
-    excerpt:
-      'Lorem ipsum dolor sit amet consectetur. Id id cursus iaculis duis. Pretium quam lectus magna convallis. Sed at venenatis porta nec ac mi senectus ac. Venenatis nunc semper at ultrices.',
-    image: img1,
-  },
-  {
-    id: 2,
-    title: 'UNI-Lead Mini Workshop',
-    excerpt:
-      'Lorem ipsum dolor sit amet consectetur. Id id cursus iaculis duis. Pretium quam lectus magna convallis. Sed at venenatis porta nec ac mi senectus ac. Venenatis nunc semper at ultrices.',
-    image: img2,
-  },
-  {
-    id: 3,
-    title: 'LLA Seminar at IUB',
-    excerpt:
-      'Lorem ipsum dolor sit amet consectetur. Id id cursus iaculis duis. Pretium quam lectus magna convallis. Sed at venenatis porta nec ac mi senectus ac. Venenatis nunc semper at ultrices.',
-    image: img1,
-  },
-  {
-    id: 4,
-    title: 'UNI-Lead Mini Workshop',
-    excerpt:
-      'Lorem ipsum dolor sit amet consectetur. Id id cursus iaculis duis. Pretium quam lectus magna convallis. Sed at venenatis porta nec ac mi senectus ac. Venenatis nunc semper at ultrices.',
-    image: img2,
-  },
-]);
+// Fetch News & Events for this project
+const { data: newsData } = await useAsyncData(
+  () => `news-events:${slug}`,
+  () => $fetch('/api/news-events', { params: { projectSlug: String(slug) } })
+);
+const newsEvents = computed(() => newsData.value ?? []);
 
-const dialogues = ref([
-  {
-    id: 1,
-    title: 'UNI-Lead Mini Workshop',
-    excerpt:
-      'Lorem ipsum dolor sit amet consectetur. Id id cursus iaculis duis. Pretium quam lectus magna convallis. Sed at venenatis porta nec ac mi senectus a. Venenatis nunc semper at ultrices. Lorem fringilla aenean in et semper id. Et est volutpat in in cum nullam. Dictum amet morbi neque nisi elit tortor enim ut. Quis ipsum metus elit egestas at in mi vulputate tortor. Sapien aliquam imperdiet et justo adipiscing. Consectetur justo morbi morbi vel lacinia.',
-    image: img2,
-  },
-  {
-    id: 2,
-    title: 'UNI-Lead Mini Workshop',
-    excerpt:
-      'Lorem ipsum dolor sit amet consectetur. Id id cursus iaculis duis. Pretium quam lectus magna convallis. Sed at venenatis porta nec ac mi senectus a. Venenatis nunc semper at ultrices. Lorem fringilla aenean in et semper id. Et est volutpat in in cum nullam. Dictum amet morbi neque nisi elit tortor enim ut. Quis ipsum metus elit egestas at in mi vulputate tortor. Sapien aliquam imperdiet et justo adipiscing. Consectetur justo morbi morbi vel lacinia.',
-    image: img1,
-  },
-]);
+function excerpt(text, n = 220) {
+  if (!text) return '';
+  const t = String(text);
+  return t.length > n ? t.slice(0, n) + '…' : t;
+}
+
+// Pagination
+const pageSize = 6;
+const currentPage = ref(1);
+const totalPages = computed(() =>
+  Math.max(1, Math.ceil((newsEvents.value?.length || 0) / pageSize))
+);
+const visible = computed(() => {
+  const start = (currentPage.value - 1) * pageSize;
+  return (newsEvents.value || []).slice(start, start + pageSize);
+});
+function goTo(page) {
+  if (page < 1 || page > totalPages.value) return;
+  currentPage.value = page;
+}
 </script>
 
 <template>
   <div class="flex flex-col items-center w-full justify-center">
-    <!-- Breadcrumb -->
-    <BreadCrumb
-      :breadcrumb-items="[
-        { text: 'Home', href: '/' },
-        { text: 'Projects & Programmes', href: '/projects' },
-        { text: projectName, href: basePath },
-        { text: 'Outreach', href: '' },
-      ]"
-      :page-title="projectName + ' — Outreach'"
-    />
+    <NuxtPage v-if="hasChild" />
+    <template v-else>
+      <!-- Breadcrumb -->
+      <BreadCrumb
+        :breadcrumb-items="[
+          { text: 'Home', href: '/' },
+          { text: 'Projects & Programmes', href: '/projects' },
+          { text: projectName, href: basePath },
+          { text: 'Outreach', href: '' },
+        ]"
+        :page-title="projectName + ' — Outreach'"
+      />
 
-    <!-- Secondary navbar (links to sibling pages) -->
-    <div class="w-full border-b sticky top-0 z-20 bg-white/95 backdrop-blur">
-      <nav class="max-w-6xl flex items-center gap-2 px-25 overflow-x-auto hide-scrollbar">
-        <NuxtLink
-          v-for="t in tabs"
-          :key="t.key"
-          :to="t.to"
-          class="px-4 py-3 text-base font-semibold whitespace-nowrap"
-          :class="
-            isActive(t.to)
-              ? 'bg-green-100 text-green-900 border-b-2 border-green-700'
-              : 'bg-white text-gray-700 border-gray-300 hover:border-green-300'
-          "
-        >
-          {{ t.label }}
-        </NuxtLink>
-      </nav>
-    </div>
-
-    <!-- HERO/CAROUSEL -->
-    <section class="w-full">
-      <HomeCarousel />
-    </section>
-
-    <!-- Knowledge Sharing Events -->
-    <section class="w-full max-w-6xl mx-auto px-4 md:px-0 py-10">
-      <h2 class="text-[22px] md:text-[26px] font-display font-semibold mb-4">
-        Knowledge Sharing Events
-      </h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <article
-          v-for="e in events"
-          :key="e.id"
-          class="border border-gray-200 rounded-md bg-white p-3 md:p-4 flex gap-4 items-start"
-        >
-          <div class="w-36 h-24 flex-shrink-0 rounded overflow-hidden">
-            <img :src="e.image" :alt="e.title" class="w-full h-full object-cover" />
-          </div>
-          <div class="">
-            <h3 class="text-[16px] font-semibold text-green-800 mb-1">{{ e.title }}</h3>
-            <p class="text-sm text-gray-700 line-clamp-3">{{ e.excerpt }}</p>
-          </div>
-        </article>
+      <!-- Secondary navbar (links to sibling pages) -->
+      <div class="w-full border-b sticky top-0 z-20 bg-white/95 backdrop-blur">
+        <nav class="max-w-6xl flex items-center gap-2 px-25 overflow-x-auto hide-scrollbar">
+          <NuxtLink
+            v-for="t in tabs"
+            :key="t.key"
+            :to="t.to"
+            class="px-4 py-3 text-base font-semibold whitespace-nowrap"
+            :class="
+              isActive(t.to)
+                ? 'bg-green-100 text-green-900 border-b-2 border-green-700'
+                : 'bg-white text-gray-700 border-gray-300 hover:border-green-300'
+            "
+          >
+            {{ t.label }}
+          </NuxtLink>
+        </nav>
       </div>
-    </section>
 
-    <!-- Policy Dialogues -->
-    <section class="w-full max-w-6xl mx-auto px-4 md:px-0 pb-14">
-      <h2 class="text-[22px] md:text-[26px] font-display font-semibold mb-4">Policy Dialogues</h2>
-      <div class="space-y-5">
-        <article
-          v-for="d in dialogues"
-          :key="d.id"
-          class="border border-gray-200 rounded-md bg-white p-3 md:p-4 flex gap-4 items-start"
-        >
-          <div class="w-52 h-28 flex-shrink-0 rounded overflow-hidden">
-            <img :src="d.image" :alt="d.title" class="w-full h-full object-cover" />
-          </div>
-          <div class="">
-            <h3 class="text-[16px] font-semibold text-green-800 mb-1">{{ d.title }}</h3>
-            <p class="text-sm text-gray-700">{{ d.excerpt }}</p>
-          </div>
-        </article>
-      </div>
-    </section>
+      <!-- HERO/CAROUSEL -->
+      <section class="w-full">
+        <HomeCarousel />
+      </section>
+
+      <!-- News and Events -->
+      <section class="w-full max-w-6xl mx-auto px-4 md:px-0 pb-14">
+        <h2 class="text-[22px] md:text-[26px] font-display font-semibold mb-4">News and Events</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <article
+            v-for="e in visible"
+            :key="e.id"
+            class="border border-gray-200 rounded-md bg-white p-0 overflow-hidden"
+          >
+            <NuxtLink
+              :to="`${basePath}/outreach/${e.id}`"
+              class="flex gap-4 items-start p-3 md:p-4 group"
+            >
+              <div class="w-36 h-24 flex-shrink-0 rounded overflow-hidden">
+                <img :src="e.cover?.url" :alt="e.title" class="w-full h-full object-cover" />
+              </div>
+              <div>
+                <h3 class="text-[16px] font-semibold text-green-800 mb-1 group-hover:underline">
+                  {{ e.title }}
+                </h3>
+                <p class="text-sm text-gray-700 line-clamp-3">{{ excerpt(e.body) }}</p>
+              </div>
+            </NuxtLink>
+          </article>
+        </div>
+        <!-- Pagination -->
+        <div v-if="totalPages > 1" class="mt-10 flex items-center justify-center gap-2">
+          <button
+            v-for="page in totalPages"
+            :key="page"
+            :aria-current="page === currentPage ? 'true' : 'false'"
+            class="min-w-[32px] h-7 px-2 text-sm rounded border"
+            :class="
+              page === currentPage
+                ? 'bg-green-600 text-white border-green-600'
+                : 'bg-white text-gray-800 border-gray-300'
+            "
+            @click="goTo(page)"
+          >
+            {{ page }}
+          </button>
+        </div>
+      </section>
+    </template>
   </div>
 </template>
 

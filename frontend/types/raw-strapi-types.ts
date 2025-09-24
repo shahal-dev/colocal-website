@@ -1,0 +1,185 @@
+// --- Raw Strapi REST shapes (subset we use) ---------------------------------
+export type RawEntity<T> = { id: number; attributes: T };
+export type RawRelationOne<T> = { data: RawEntity<T> | null };
+export type RawRelationMany<T> = { data: RawEntity<T>[] };
+
+export type RawImageFormat = {
+  ext?: string | null;
+  url: string;
+  hash?: string;
+  mime?: string;
+  name?: string;
+  path?: string | null;
+  size?: number;
+  width?: number;
+  height?: number;
+};
+
+export type RawMediaAttributes = {
+  url: string;
+  alternativeText?: string | null;
+  caption?: string | null;
+  width?: number | null;
+  height?: number | null;
+  formats?: Record<string, RawImageFormat>;
+  mime?: string;
+  size?: number;
+  name?: string;
+  provider?: string;
+  createdAt?: string;
+  updatedAt?: string;
+};
+
+export type RawAuthorAttributes = {
+  name: string;
+  avatar?: RawRelationOne<RawMediaAttributes>;
+  email?: string | null;
+  colocal: boolean;
+};
+
+export type RawTagComponent = { tag: string };
+export type RawObjectiveComponent = { objective: string };
+export type RawCountryComponent = { name: string };
+export type RawEducationComponent = { type: string };
+export type RawPublicationTypeComponent = { type: string };
+export type RawThemeComponent = { theme: string };
+
+export type RawPublicationAttributes = {
+  title: string;
+  abstract: string;
+  date: string;
+  authors: RawRelationMany<RawAuthorAttributes>;
+  tags?: RawTagComponent[] | null;
+  url: string;
+  file?: RawRelationOne<RawMediaAttributes>;
+  lla?: boolean; // whether it is an LLA publication
+  // project?: RawRelationOne<RawProjectAttributes> // avoid cycle
+  publication_type?: RawPublicationTypeComponent; // component
+  theme?: RawThemeComponent | null; // optional component
+  country?: RawCountryComponent | null; // optional component
+};
+
+export type RawProjectAttributes = {
+  shortTitle: string;
+  longTitle: string;
+  slug: string;
+  shortDescription: string;
+  longDescription: string;
+  about: string;
+  objectives?: RawObjectiveComponent[] | null;
+  cover: RawRelationOne<RawMediaAttributes>;
+  images?: RawRelationMany<RawMediaAttributes> | null;
+  research_publications?: RawRelationMany<RawPublicationAttributes> | null;
+  active?: boolean;
+  programme?: boolean;
+  education_trainings?: RawRelationMany<_RawEducationTrainingAttributes> | null;
+  news_events?: RawRelationMany<_RawNewsEventAttributes> | null;
+};
+
+// Strapi list responses (raw vs flattened)
+export type StrapiPagination = { page: number; pageSize: number; pageCount: number; total: number };
+export type StrapiListResponseRaw<T> = {
+  data: RawEntity<T>[];
+  meta: { pagination: StrapiPagination };
+};
+
+// --- Flattened shapes (Strapi v5 or transform enabled) --------------------
+export type FlatMedia = {
+  id: number;
+  url: string;
+  alternativeText?: string | null;
+  caption?: string | null;
+  width?: number | null;
+  height?: number | null;
+  formats?: Record<string, RawImageFormat>;
+  mime?: string;
+  size?: number;
+  name?: string;
+  provider?: string;
+  createdAt?: string;
+  updatedAt?: string;
+};
+
+export type FlatAuthor = {
+  id: number;
+  name: string;
+  avatar?: FlatMedia | null;
+  email?: string | null;
+  colocal: boolean;
+};
+
+export type FlatPublication = {
+  id: number;
+  title: string;
+  abstract: string;
+  date: string;
+  URL?: string; // original field name may be URL in Strapi
+  url?: string; // or lower-case in some setups
+  authors?: FlatAuthor[] | null;
+  tags?: RawTagComponent[] | null;
+  file?: FlatMedia | null;
+  lla?: boolean;
+  publication_type?: RawPublicationTypeComponent; // component flattened
+  theme?: RawThemeComponent | null; // optional component
+  country?: RawCountryComponent | null; // optional component
+};
+
+export type FlatProject = {
+  id: number;
+  shortTitle: string;
+  longTitle: string;
+  slug: string;
+  shortDescription: string;
+  longDescription: string;
+  about: string;
+  objectives?: RawObjectiveComponent[] | null;
+  cover: FlatMedia;
+  images?: FlatMedia[] | null;
+  research_publications?: FlatPublication[] | null;
+  active?: boolean;
+  programme?: boolean;
+  education_trainings?: _FlatEducationTraining[] | null;
+  news_events?: _FlatNewsEvent[] | null;
+};
+
+export type StrapiListResponseFlat<T> = { data: T[]; meta: { pagination: StrapiPagination } };
+export type StrapiListResponseUnion =
+  | StrapiListResponseRaw<RawProjectAttributes>
+  | StrapiListResponseFlat<FlatProject>;
+
+// Additional raw/flat shapes for future endpoints --------------------------
+export type _RawEducationTrainingAttributes = {
+  title: string;
+  date: string;
+  cover: RawRelationOne<RawMediaAttributes>;
+  body: string;
+  type?: RawEducationComponent | null;
+  lla: boolean;
+};
+
+export type _FlatEducationTraining = {
+  id: number;
+  title: string;
+  date: string;
+  cover: FlatMedia;
+  body: string;
+  type?: RawEducationComponent | null;
+  lla: boolean;
+};
+
+export type _RawNewsEventAttributes = {
+  title: string;
+  date: string;
+  cover: RawRelationOne<RawMediaAttributes>;
+  body: string;
+  lla: boolean;
+};
+
+export type _FlatNewsEvent = {
+  id: number;
+  title: string;
+  date: string;
+  cover: FlatMedia;
+  body: string;
+  lla: boolean;
+};

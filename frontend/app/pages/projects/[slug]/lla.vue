@@ -25,76 +25,30 @@ const tabs = computed(() => [
 ]);
 const isActive = (to) => route.path === to;
 
-// Publications (reused list structure)
-const allPublications = ref([
-  {
-    id: 1,
-    title: 'Integrating Gender Equality and Social Inclusion (GESI) in Climate Finance',
-    authors: ['Ranjana Bhatta', 'Laxmi Chinnal', 'Ajay Bhakta Mathema', 'Mariama Camara'],
-    excerpt:
-      'Climate change disproportionately affects vulnerable and marginalized communities, exacerbating existing inequalities. Integrating Gender Equality and Social Inclusion (GESI) into climate finance is crucial to ensuring that adaptation and mitigation efforts are fair, inclusive, and effective.',
-    tags: ['Integrating', 'Gender Equality', 'Social Inclusion', 'Climate Finance'],
-    type: 'Journal Article',
-    year: 2024,
-    theme: 'Finance',
-    country: 'Nepal',
-  },
-  {
-    id: 2,
-    title: 'Locally Led Adaptation Playbook',
-    authors: ['Team Colocal'],
-    excerpt: 'Practical guidance to operationalize LLA across universities and communities.',
-    tags: ['LLA', 'Guidance'],
-    type: 'Guide',
-    year: 2024,
-    theme: 'LLA',
-    country: 'Regional',
-  },
-]);
+// Fetch LLA publications for this project
+const { data: pubsData } = await useAsyncData(
+  () => `lla-publications:${slug}`,
+  () => $fetch('/api/publications', { params: { projectSlug: String(slug) } })
+);
+const llaPublications = computed(() => (pubsData.value || []).filter((p) => p.lla));
 
-const q = ref('');
-const type = ref('');
-const year = ref('');
-const theme = ref('');
-const country = ref('');
-
-const types = ['Journal Article', 'Report', 'Policy Brief', 'Guide'];
-const years = [2024, 2023, 2022, 2021];
-const themes = ['Finance', 'Resilience', 'Health', 'LLA', 'Ecosystems'];
-const countries = ['Bangladesh', 'Nepal', 'Mozambique', 'Regional'];
-
-const filtered = computed(() => {
-  const query = q.value.trim().toLowerCase();
-  return allPublications.value.filter((p) => {
-    if (type.value && p.type !== type.value) return false;
-    if (year.value && String(p.year) !== String(year.value)) return false;
-    if (theme.value && p.theme !== theme.value) return false;
-    if (country.value && p.country !== country.value) return false;
-    if (!query) return true;
-    return (
-      p.title.toLowerCase().includes(query) ||
-      p.authors.join(' ').toLowerCase().includes(query) ||
-      (p.excerpt && p.excerpt.toLowerCase().includes(query))
-    );
-  });
-});
-
+// Simple pagination for publications
 const pageSize = 5;
 const page = ref(1);
-const totalPages = computed(() => Math.max(1, Math.ceil(filtered.value.length / pageSize)));
+const totalPages = computed(() =>
+  Math.max(1, Math.ceil((llaPublications.value?.length || 0) / pageSize))
+);
 const visible = computed(() => {
   const start = (page.value - 1) * pageSize;
-  return filtered.value.slice(start, start + pageSize);
+  return (llaPublications.value || []).slice(start, start + pageSize);
 });
 
-function resetFilters() {
-  q.value = '';
-  type.value = '';
-  year.value = '';
-  theme.value = '';
-  country.value = '';
-  page.value = 1;
-}
+// Fetch LLA news & events for this project
+const { data: newsData } = await useAsyncData(
+  () => `lla-news-events:${slug}`,
+  () => $fetch('/api/news-events', { params: { projectSlug: String(slug) } })
+);
+const llaNewsEvents = computed(() => (newsData.value || []).filter((n) => n.lla));
 </script>
 
 <template>
@@ -139,57 +93,8 @@ function resetFilters() {
       </p>
     </section>
 
-    <!-- Search & Filters -->
+    <!-- Publications list (LLA only) -->
     <section class="w-full max-w-6xl mx-auto px-4 md:px-0 pb-12">
-      <div class="mt-2 relative">
-        <input
-          v-model="q"
-          type="text"
-          placeholder="Search for Publications"
-          class="w-full border rounded-md pl-4 pr-10 py-3 outline-none focus:border-green-600"
-        />
-        <span class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">
-          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <circle cx="11" cy="11" r="7" stroke-width="2" />
-            <line x1="21" y1="21" x2="16.65" y2="16.65" stroke-width="2" />
-          </svg>
-        </span>
-      </div>
-
-      <div class="mt-4 grid grid-cols-2 md:grid-cols-4 gap-3">
-        <div>
-          <select v-model="type" class="w-full border rounded-md px-3 py-2">
-            <option value="">Publication Type</option>
-            <option v-for="t in types" :key="t" :value="t">{{ t }}</option>
-          </select>
-        </div>
-        <div>
-          <select v-model="year" class="w-full border rounded-md px-3 py-2">
-            <option value="">Year</option>
-            <option v-for="y in years" :key="y" :value="y">{{ y }}</option>
-          </select>
-        </div>
-        <div>
-          <select v-model="theme" class="w-full border rounded-md px-3 py-2">
-            <option value="">Theme</option>
-            <option v-for="th in themes" :key="th" :value="th">{{ th }}</option>
-          </select>
-        </div>
-        <div>
-          <select v-model="country" class="w-full border rounded-md px-3 py-2">
-            <option value="">Country</option>
-            <option v-for="c in countries" :key="c" :value="c">{{ c }}</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="mt-3 text-right">
-        <button class="text-sm text-green-700 hover:underline" @click="resetFilters">
-          Reset filters
-        </button>
-      </div>
-
-      <!-- Publications list (reused card layout) -->
       <div class="mt-6 space-y-4">
         <article
           v-for="p in visible"
@@ -202,15 +107,15 @@ function resetFilters() {
               <path d="M20 21v-2a4 4 0 0 0-3-3.87M4 21v-2a4 4 0 0 1 3-3.87" stroke-width="2" />
               <circle cx="12" cy="7" r="4" stroke-width="2" />
             </svg>
-            <span>{{ p.authors.join(' • ') }}</span>
+            <span>{{ (p.authors || []).map((a) => a.name).join(' • ') }}</span>
           </div>
-          <p class="text-sm text-gray-700 mb-3">{{ p.excerpt }}</p>
+          <p class="text-sm text-gray-700 mb-3">{{ p.abstract }}</p>
           <div class="flex flex-wrap gap-2">
             <span
-              v-for="(tag, idx) in p.tags"
+              v-for="(tag, idx) in p.tags || []"
               :key="idx"
               class="inline-block text-xs px-2 py-1 rounded border border-green-200 text-green-700 bg-green-50"
-              >{{ tag }}</span
+              >{{ tag.tag }}</span
             >
           </div>
         </article>
@@ -231,6 +136,26 @@ function resetFilters() {
         >
           {{ i }}
         </button>
+      </div>
+    </section>
+
+    <!-- News and Events (LLA only) -->
+    <section class="w-full max-w-6xl mx-auto px-4 md:px-0 pb-12">
+      <h2 class="text-[22px] md:text-[26px] font-display font-semibold mb-4">News and Events</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <article
+          v-for="e in llaNewsEvents"
+          :key="e.id"
+          class="border border-gray-200 rounded-md bg-white p-3 md:p-4 flex gap-4 items-start"
+        >
+          <div class="w-36 h-24 flex-shrink-0 rounded overflow-hidden">
+            <img :src="e.cover?.url" :alt="e.title" class="w-full h-full object-cover" />
+          </div>
+          <div>
+            <h3 class="text-[16px] font-semibold text-green-800 mb-1">{{ e.title }}</h3>
+            <p class="text-sm text-gray-700 line-clamp-3">{{ e.body }}</p>
+          </div>
+        </article>
       </div>
     </section>
   </div>

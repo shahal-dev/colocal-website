@@ -8,139 +8,49 @@ import type {
   Tag,
   StrapiMedia,
   StrapiImageFormat,
+  PublicationType,
+  Theme,
+  Country,
+  EducationTraining,
+  NewsEvent,
 } from '../../types/content';
 
-// --- Raw Strapi REST shapes (subset we use) ---------------------------------
-type RawEntity<T> = { id: number; attributes: T };
-type RawRelationOne<T> = { data: RawEntity<T> | null };
-type RawRelationMany<T> = { data: RawEntity<T>[] };
+import type {
+  RawProjectAttributes,
+  RawPublicationAttributes,
+  RawAuthorAttributes,
+  RawObjectiveComponent,
+  RawTagComponent,
+  RawMediaAttributes,
+  RawRelationMany,
+  _RawEducationTrainingAttributes,
+  _RawNewsEventAttributes,
+  StrapiListResponseRaw,
+  StrapiListResponseFlat,
+  StrapiListResponseUnion,
+  FlatProject,
+  FlatPublication,
+  FlatAuthor,
+  RawPublicationTypeComponent,
+  RawThemeComponent,
+  RawCountryComponent,
+  RawEntity,
+  RawImageFormat,
+  RawRelationOne,
+  FlatMedia,
+} from '../../types/raw-strapi-types';
 
-type RawImageFormat = {
-  ext?: string | null;
-  url: string;
-  hash?: string;
-  mime?: string;
-  name?: string;
-  path?: string | null;
-  size?: number;
-  width?: number;
-  height?: number;
-};
-
-type RawMediaAttributes = {
-  url: string;
-  alternativeText?: string | null;
-  caption?: string | null;
-  width?: number | null;
-  height?: number | null;
-  formats?: Record<string, RawImageFormat>;
-  mime?: string;
-  size?: number;
-  name?: string;
-  provider?: string;
-  createdAt?: string;
-  updatedAt?: string;
-};
-
-type RawAuthorAttributes = {
-  name: string;
-  avatar?: RawRelationOne<RawMediaAttributes>;
-  email?: string | null;
-  colocal: boolean;
-};
-
-type RawTagComponent = { tag: string };
-type RawObjectiveComponent = { objective: string };
-
-type RawPublicationAttributes = {
-  title: string;
-  abstract: string;
-  date: string;
-  authors: RawRelationMany<RawAuthorAttributes>;
-  tags?: RawTagComponent[] | null;
-  url: string;
-  file?: RawRelationOne<RawMediaAttributes>;
-  lla?: boolean; // whether it is an LLA publication
-  // project?: RawRelationOne<RawProjectAttributes> // avoid cycle
-};
-
-type RawProjectAttributes = {
-  shortTitle: string;
-  longTitle: string;
-  slug: string;
-  shortDescription: string;
-  longDescription: string;
-  about: string;
-  objectives?: RawObjectiveComponent[] | null;
-  cover: RawRelationOne<RawMediaAttributes>;
-  images?: RawRelationMany<RawMediaAttributes> | null;
-  research_publications?: RawRelationMany<RawPublicationAttributes> | null;
-  active?: boolean;
-  programme?: boolean;
-};
-
-// Strapi list responses (raw vs flattened)
-type StrapiPagination = { page: number; pageSize: number; pageCount: number; total: number };
-type StrapiListResponseRaw<T> = { data: RawEntity<T>[]; meta: { pagination: StrapiPagination } };
-
-// --- Flattened shapes (Strapi v5 or transform enabled) --------------------
-type FlatMedia = {
-  id: number;
-  url: string;
-  alternativeText?: string | null;
-  caption?: string | null;
-  width?: number | null;
-  height?: number | null;
-  formats?: Record<string, RawImageFormat>;
-  mime?: string;
-  size?: number;
-  name?: string;
-  provider?: string;
-  createdAt?: string;
-  updatedAt?: string;
-};
-
-type FlatAuthor = {
-  id: number;
-  name: string;
-  avatar?: FlatMedia | null;
-  email?: string | null;
-  colocal: boolean;
-};
-
-type FlatPublication = {
-  id: number;
-  title: string;
-  abstract: string;
-  date: string;
-  URL?: string; // original field name may be URL in Strapi
-  url?: string; // or lower-case in some setups
-  authors?: FlatAuthor[] | null;
-  tags?: RawTagComponent[] | null;
-  file?: FlatMedia | null;
-  lla?: boolean;
-};
-
-type FlatProject = {
-  id: number;
-  shortTitle: string;
-  longTitle: string;
-  slug: string;
-  shortDescription: string;
-  longDescription: string;
-  about: string;
-  objectives?: RawObjectiveComponent[] | null;
-  cover: FlatMedia;
-  images?: FlatMedia[] | null;
-  research_publications?: FlatPublication[] | null;
-  active?: boolean;
-  programme?: boolean;
-};
-
-type StrapiListResponseFlat<T> = { data: T[]; meta: { pagination: StrapiPagination } };
-type StrapiListResponseUnion =
-  | StrapiListResponseRaw<RawProjectAttributes>
-  | StrapiListResponseFlat<FlatProject>;
+function mapPublicationType(c?: RawPublicationTypeComponent): PublicationType {
+  return { type: c?.type ?? '' };
+}
+function mapTheme(c?: RawThemeComponent | null): Theme | null {
+  if (!c) return null;
+  return { theme: c.theme ?? '' };
+}
+function mapCountry(c?: RawCountryComponent | null): Country | null {
+  if (!c) return null;
+  return { name: c.name ?? '' };
+}
 
 // Narrow helpers to avoid 'any'
 function hasDataKey(x: unknown): x is { data: unknown } {
@@ -253,6 +163,83 @@ function mapStrapiMultiMedia(
   return out;
 }
 
+// Map Education/Training (raw)
+function mapEducationTraining(
+  baseUrl: string,
+  raw: RawEntity<_RawEducationTrainingAttributes> | null | undefined
+): EducationTraining | null {
+  if (!raw || !raw.id || !raw.attributes) return null;
+  const a = raw.attributes;
+  return {
+    id: raw.id,
+    title: a.title,
+    date: a.date,
+    cover: mapStrapiMedia(baseUrl, a.cover)!,
+    body: a.body,
+    type: a.type ? { type: a.type.type } : null,
+    lla: !!a.lla,
+    project: null,
+  };
+}
+
+function mapEducationTrainings(
+  baseUrl: string,
+  raw:
+    | RawRelationMany<_RawEducationTrainingAttributes>
+    | RawEntity<_RawEducationTrainingAttributes>[]
+    | null
+    | undefined
+): EducationTraining[] | null {
+  const arr = hasDataKey(raw)
+    ? (raw as RawRelationMany<_RawEducationTrainingAttributes>).data
+    : (raw as RawEntity<_RawEducationTrainingAttributes>[] | null | undefined);
+  if (!Array.isArray(arr)) return null;
+  const out: EducationTraining[] = [];
+  for (const item of arr) {
+    const et = mapEducationTraining(baseUrl, item);
+    if (et) out.push(et);
+  }
+  return out;
+}
+
+// Map News/Event (raw)
+function mapNewsEvent(
+  baseUrl: string,
+  raw: RawEntity<_RawNewsEventAttributes> | null | undefined
+): NewsEvent | null {
+  if (!raw || !raw.id || !raw.attributes) return null;
+  const a = raw.attributes;
+  return {
+    id: raw.id,
+    title: a.title,
+    date: a.date,
+    cover: mapStrapiMedia(baseUrl, a.cover)!,
+    body: a.body,
+    lla: !!a.lla,
+    projects: null,
+  };
+}
+
+function mapNewsEvents(
+  baseUrl: string,
+  raw:
+    | RawRelationMany<_RawNewsEventAttributes>
+    | RawEntity<_RawNewsEventAttributes>[]
+    | null
+    | undefined
+): NewsEvent[] | null {
+  const arr = hasDataKey(raw)
+    ? (raw as RawRelationMany<_RawNewsEventAttributes>).data
+    : (raw as RawEntity<_RawNewsEventAttributes>[] | null | undefined);
+  if (!Array.isArray(arr)) return null;
+  const out: NewsEvent[] = [];
+  for (const item of arr) {
+    const ne = mapNewsEvent(baseUrl, item);
+    if (ne) out.push(ne);
+  }
+  return out;
+}
+
 // Map flattened media
 function mapFlatMedia(baseUrl: string, m?: FlatMedia | null): StrapiMedia | null {
   if (!m) return null;
@@ -310,6 +297,9 @@ function mapFlatPublications(
       file: mapFlatMedia(baseUrl, p.file ?? null),
       project: null,
       lla: !!p.lla,
+      publication_type: mapPublicationType(p.publication_type),
+      theme: mapTheme(p.theme ?? null),
+      country: mapCountry(p.country ?? null),
     })
   );
 }
@@ -331,6 +321,29 @@ function mapFlatProject(baseUrl: string, raw: FlatProject): Project {
     research_publications: mapFlatPublications(baseUrl, raw.research_publications),
     active: !!raw.active,
     programme: !!raw.programme,
+    education_trainings: Array.isArray(raw.education_trainings)
+      ? (raw.education_trainings.map((et) => ({
+          id: et.id,
+          title: et.title,
+          date: et.date,
+          cover: mapFlatMedia(baseUrl, et.cover)!,
+          body: et.body,
+          type: et.type ? { type: et.type.type } : null,
+          lla: !!et.lla,
+          project: null,
+        })) as EducationTraining[])
+      : null,
+    news_events: Array.isArray(raw.news_events)
+      ? (raw.news_events.map((ne) => ({
+          id: ne.id,
+          title: ne.title,
+          date: ne.date,
+          cover: mapFlatMedia(baseUrl, ne.cover)!,
+          body: ne.body,
+          lla: !!ne.lla,
+          projects: null,
+        })) as NewsEvent[])
+      : null,
   };
 }
 
@@ -386,6 +399,9 @@ function mapPublication(
     file: mapStrapiMedia(baseUrl, a.file),
     project: null, // avoid cycle here; populate via project mapping
     lla: !!a.lla,
+    publication_type: mapPublicationType(a.publication_type),
+    theme: mapTheme(a.theme ?? null),
+    country: mapCountry(a.country ?? null),
   };
 }
 
@@ -429,6 +445,8 @@ function mapProject(
     research_publications: null, // filled next to break circular assignment issues
     active: !!a.active,
     programme: !!a.programme,
+    education_trainings: mapEducationTrainings(baseUrl, a.education_trainings),
+    news_events: mapNewsEvents(baseUrl, a.news_events),
   };
   // Map publications now that project exists (without back-reference to project to avoid cycles)
   proj.research_publications = mapPublications(baseUrl, a.research_publications);

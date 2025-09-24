@@ -511,6 +511,44 @@ export interface ApiCategoryCategory extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiEducationTrainingEducationTraining
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'education_trainings';
+  info: {
+    displayName: 'Education/Training';
+    pluralName: 'education-trainings';
+    singularName: 'education-training';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    body: Schema.Attribute.RichText & Schema.Attribute.Required;
+    cover: Schema.Attribute.Media<'images' | 'videos'> &
+      Schema.Attribute.Required;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    date: Schema.Attribute.Date & Schema.Attribute.Required;
+    lla: Schema.Attribute.Boolean &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<false>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::education-training.education-training'
+    > &
+      Schema.Attribute.Private;
+    project: Schema.Attribute.Relation<'manyToOne', 'api::project.project'>;
+    publishedAt: Schema.Attribute.DateTime;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
+    type: Schema.Attribute.Component<'shared.education', false>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiGlobalGlobal extends Struct.SingleTypeSchema {
   collectionName: 'globals';
   info: {
@@ -583,6 +621,42 @@ export interface ApiHomeHome extends Struct.SingleTypeSchema {
   };
 }
 
+export interface ApiNewsEventNewsEvent extends Struct.CollectionTypeSchema {
+  collectionName: 'news_events';
+  info: {
+    displayName: 'News/Event';
+    pluralName: 'news-events';
+    singularName: 'news-event';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    body: Schema.Attribute.RichText & Schema.Attribute.Required;
+    cover: Schema.Attribute.Media<'images' | 'videos'> &
+      Schema.Attribute.Required;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    date: Schema.Attribute.Date & Schema.Attribute.Required;
+    lla: Schema.Attribute.Boolean &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<false>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::news-event.news-event'
+    > &
+      Schema.Attribute.Private;
+    projects: Schema.Attribute.Relation<'manyToMany', 'api::project.project'>;
+    publishedAt: Schema.Attribute.DateTime;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiProjectProject extends Struct.CollectionTypeSchema {
   collectionName: 'projects';
   info: {
@@ -603,6 +677,10 @@ export interface ApiProjectProject extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    education_trainings: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::education-training.education-training'
+    >;
     images: Schema.Attribute.Media<
       'images' | 'files' | 'videos' | 'audios',
       true
@@ -615,6 +693,10 @@ export interface ApiProjectProject extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     longDescription: Schema.Attribute.RichText & Schema.Attribute.Required;
     longTitle: Schema.Attribute.String & Schema.Attribute.Required;
+    news_events: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::news-event.news-event'
+    >;
     objectives: Schema.Attribute.Component<'shared.objective', true>;
     programme: Schema.Attribute.Boolean &
       Schema.Attribute.Required &
@@ -647,6 +729,7 @@ export interface ApiResearchPublicationResearchPublication
   attributes: {
     abstract: Schema.Attribute.RichText & Schema.Attribute.Required;
     authors: Schema.Attribute.Relation<'manyToMany', 'api::author.author'>;
+    country: Schema.Attribute.Component<'shared.country', false>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -662,8 +745,14 @@ export interface ApiResearchPublicationResearchPublication
     > &
       Schema.Attribute.Private;
     project: Schema.Attribute.Relation<'manyToOne', 'api::project.project'>;
+    publication_type: Schema.Attribute.Component<
+      'shared.publication-type',
+      false
+    > &
+      Schema.Attribute.Required;
     publishedAt: Schema.Attribute.DateTime;
     tags: Schema.Attribute.Component<'shared.tag', true>;
+    theme: Schema.Attribute.Component<'shared.theme', false>;
     title: Schema.Attribute.String & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -1223,8 +1312,10 @@ declare module '@strapi/strapi' {
       'api::article.article': ApiArticleArticle;
       'api::author.author': ApiAuthorAuthor;
       'api::category.category': ApiCategoryCategory;
+      'api::education-training.education-training': ApiEducationTrainingEducationTraining;
       'api::global.global': ApiGlobalGlobal;
       'api::home.home': ApiHomeHome;
+      'api::news-event.news-event': ApiNewsEventNewsEvent;
       'api::project.project': ApiProjectProject;
       'api::research-publication.research-publication': ApiResearchPublicationResearchPublication;
       'api::resource.resource': ApiResourceResource;

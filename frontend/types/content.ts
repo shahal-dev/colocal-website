@@ -45,6 +45,23 @@ export type Tag = {
   tag: string; // required text
 };
 
+// New simple components
+export type Country = {
+  name: string; // required text
+};
+
+export type Education = {
+  type: string; // required text
+};
+
+export type PublicationType = {
+  type: string; // required text
+};
+
+export type Theme = {
+  theme: string; // required text
+};
+
 // --- Collection Types ----------------------------------------------------
 export interface Author {
   id: number;
@@ -66,6 +83,9 @@ export interface ResearchPublication {
   file: StrapiMedia | null; // optional media → can be null
   project: Project | null; // optional relation (many-to-one to Project) → can be null
   lla: boolean | false; // whether it is a LLA publication (default: false)
+  publication_type: PublicationType; // required (component)
+  theme?: Theme | null; // optional component → can be null
+  country?: Country | null; // optional component → can be null
 }
 
 export interface Project {
@@ -82,6 +102,30 @@ export interface Project {
   research_publications: ResearchPublication[] | null; // optional relation (one-to-many) → can be null
   active: boolean | false; // whether the project is active
   programme: boolean | false; // whether it is a programme
+  news_events?: NewsEvent[] | null; // optional relation (many-to-many from News/Event)
+  education_trainings?: EducationTraining[] | null; // optional relation (one-to-many from Education/Training)
+}
+
+// New collection types ----------------------------------------------------
+export interface EducationTraining {
+  id: number;
+  title: string; // required
+  date: string; // required (Date as ISO string)
+  cover: StrapiMedia; // required media
+  body: string; // required (RichText Markdown stored as string)
+  type?: Education | null; // optional component
+  lla: boolean; // required
+  project?: Project | null; // optional relation (many-to-one to Project)
+}
+
+export interface NewsEvent {
+  id: number;
+  title: string; // required
+  date: string; // required (Date as ISO string)
+  cover: StrapiMedia; // required media
+  body: string; // required (RichText Markdown stored as string)
+  lla: boolean; // required
+  projects?: Project[] | null; // optional relation (many-to-many to Project)
 }
 
 // --- Helpers -------------------------------------------------------------

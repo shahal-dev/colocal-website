@@ -1,5 +1,27 @@
 import type { Schema, Struct } from '@strapi/strapi';
 
+export interface SharedCountry extends Struct.ComponentSchema {
+  collectionName: 'components_shared_countries';
+  info: {
+    displayName: 'Country';
+    icon: 'gate';
+  };
+  attributes: {
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
+export interface SharedEducation extends Struct.ComponentSchema {
+  collectionName: 'components_shared_educations';
+  info: {
+    displayName: 'Education';
+    icon: 'book';
+  };
+  attributes: {
+    type: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
 export interface SharedMedia extends Struct.ComponentSchema {
   collectionName: 'components_shared_media';
   info: {
@@ -19,6 +41,17 @@ export interface SharedObjective extends Struct.ComponentSchema {
   };
   attributes: {
     objective: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
+export interface SharedPublicationType extends Struct.ComponentSchema {
+  collectionName: 'components_shared_publication_types';
+  info: {
+    displayName: 'Publication Type';
+    icon: 'chartCircle';
+  };
+  attributes: {
+    type: Schema.Attribute.String & Schema.Attribute.Required;
   };
 }
 
@@ -84,16 +117,31 @@ export interface SharedTag extends Struct.ComponentSchema {
   };
 }
 
+export interface SharedTheme extends Struct.ComponentSchema {
+  collectionName: 'components_shared_themes';
+  info: {
+    displayName: 'Theme';
+    icon: 'brush';
+  };
+  attributes: {
+    theme: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
 declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
+      'shared.country': SharedCountry;
+      'shared.education': SharedEducation;
       'shared.media': SharedMedia;
       'shared.objective': SharedObjective;
+      'shared.publication-type': SharedPublicationType;
       'shared.quote': SharedQuote;
       'shared.rich-text': SharedRichText;
       'shared.seo': SharedSeo;
       'shared.slider': SharedSlider;
       'shared.tag': SharedTag;
+      'shared.theme': SharedTheme;
     }
   }
 }

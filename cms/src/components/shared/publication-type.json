@@ -1,0 +1,15 @@
+{
+  "collectionName": "components_shared_publication_types",
+  "info": {
+    "displayName": "Publication Type",
+    "icon": "chartCircle"
+  },
+  "options": {},
+  "attributes": {
+    "type": {
+      "type": "string",
+      "required": true
+    }
+  },
+  "config": {}
+}

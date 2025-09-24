@@ -1,0 +1,47 @@
+{
+  "kind": "collectionType",
+  "collectionName": "news_events",
+  "info": {
+    "singularName": "news-event",
+    "pluralName": "news-events",
+    "displayName": "News/Event"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "date": {
+      "type": "date",
+      "required": true
+    },
+    "cover": {
+      "type": "media",
+      "multiple": false,
+      "required": true,
+      "allowedTypes": [
+        "images",
+        "videos"
+      ]
+    },
+    "body": {
+      "type": "richtext",
+      "required": true
+    },
+    "lla": {
+      "type": "boolean",
+      "required": true,
+      "default": false
+    },
+    "projects": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::project.project",
+      "inversedBy": "news_events"
+    }
+  }
+}

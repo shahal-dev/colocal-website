@@ -76,6 +76,18 @@
       "type": "boolean",
       "required": true,
       "default": false
+    },
+    "news_events": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::news-event.news-event",
+      "mappedBy": "projects"
+    },
+    "education_trainings": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::education-training.education-training",
+      "mappedBy": "project"
     }
   }
 }

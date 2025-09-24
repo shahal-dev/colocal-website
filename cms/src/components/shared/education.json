@@ -1,0 +1,15 @@
+{
+  "collectionName": "components_shared_educations",
+  "info": {
+    "displayName": "Education",
+    "icon": "book"
+  },
+  "options": {},
+  "attributes": {
+    "type": {
+      "type": "string",
+      "required": true
+    }
+  },
+  "config": {}
+}
