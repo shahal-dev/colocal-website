@@ -66,6 +66,16 @@
       "relation": "oneToMany",
       "target": "api::research-publication.research-publication",
       "mappedBy": "project"
+    },
+    "active": {
+      "type": "boolean",
+      "required": true,
+      "default": true
+    },
+    "programme": {
+      "type": "boolean",
+      "required": true,
+      "default": false
     }
   }
 }

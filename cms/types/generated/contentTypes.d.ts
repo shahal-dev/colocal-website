@@ -595,6 +595,9 @@ export interface ApiProjectProject extends Struct.CollectionTypeSchema {
   };
   attributes: {
     about: Schema.Attribute.RichText & Schema.Attribute.Required;
+    active: Schema.Attribute.Boolean &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<true>;
     cover: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'> &
       Schema.Attribute.Required;
     createdAt: Schema.Attribute.DateTime;
@@ -613,6 +616,9 @@ export interface ApiProjectProject extends Struct.CollectionTypeSchema {
     longDescription: Schema.Attribute.RichText & Schema.Attribute.Required;
     longTitle: Schema.Attribute.String & Schema.Attribute.Required;
     objectives: Schema.Attribute.Component<'shared.objective', true>;
+    programme: Schema.Attribute.Boolean &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<false>;
     publishedAt: Schema.Attribute.DateTime;
     research_publications: Schema.Attribute.Relation<
       'oneToMany',
@@ -646,6 +652,9 @@ export interface ApiResearchPublicationResearchPublication
       Schema.Attribute.Private;
     date: Schema.Attribute.Date & Schema.Attribute.Required;
     file: Schema.Attribute.Media<'files'>;
+    lla: Schema.Attribute.Boolean &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<false>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',

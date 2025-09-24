@@ -65,6 +65,7 @@ export interface ResearchPublication {
   url: string; // required
   file: StrapiMedia | null; // optional media → can be null
   project: Project | null; // optional relation (many-to-one to Project) → can be null
+  lla: boolean | false; // whether it is a LLA publication (default: false)
 }
 
 export interface Project {
@@ -79,6 +80,8 @@ export interface Project {
   cover: StrapiMedia; // required media
   images: StrapiMedia[] | null; // optional multiple media → can be null
   research_publications: ResearchPublication[] | null; // optional relation (one-to-many) → can be null
+  active: boolean | false; // whether the project is active
+  programme: boolean | false; // whether it is a programme
 }
 
 // --- Helpers -------------------------------------------------------------

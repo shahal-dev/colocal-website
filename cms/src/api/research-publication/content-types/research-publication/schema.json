@@ -50,6 +50,11 @@
       "relation": "manyToMany",
       "target": "api::author.author",
       "inversedBy": "research_publications"
+    },
+    "lla": {
+      "type": "boolean",
+      "required": true,
+      "default": false
     }
   }
 }
