@@ -1,4 +1,4 @@
-import { defineEventHandler, createError } from 'h3';
+import { defineEventHandler, createError, getQuery } from 'h3';
 import { useRuntimeConfig } from '#imports';
 import type {
   Project,
@@ -60,6 +60,7 @@ type RawPublicationAttributes = {
   tags?: RawTagComponent[] | null;
   url: string;
   file?: RawRelationOne<RawMediaAttributes>;
+  lla?: boolean; // whether it is an LLA publication
   // project?: RawRelationOne<RawProjectAttributes> // avoid cycle
 };
 
@@ -74,6 +75,8 @@ type RawProjectAttributes = {
   cover: RawRelationOne<RawMediaAttributes>;
   images?: RawRelationMany<RawMediaAttributes> | null;
   research_publications?: RawRelationMany<RawPublicationAttributes> | null;
+  active?: boolean;
+  programme?: boolean;
 };
 
 // Strapi list responses (raw vs flattened)
@@ -115,6 +118,7 @@ type FlatPublication = {
   authors?: FlatAuthor[] | null;
   tags?: RawTagComponent[] | null;
   file?: FlatMedia | null;
+  lla?: boolean;
 };
 
 type FlatProject = {
@@ -129,6 +133,8 @@ type FlatProject = {
   cover: FlatMedia;
   images?: FlatMedia[] | null;
   research_publications?: FlatPublication[] | null;
+  active?: boolean;
+  programme?: boolean;
 };
 
 type StrapiListResponseFlat<T> = { data: T[]; meta: { pagination: StrapiPagination } };
@@ -303,6 +309,7 @@ function mapFlatPublications(
       url: p.url ?? p.URL ?? '',
       file: mapFlatMedia(baseUrl, p.file ?? null),
       project: null,
+      lla: !!p.lla,
     })
   );
 }
@@ -322,6 +329,8 @@ function mapFlatProject(baseUrl: string, raw: FlatProject): Project {
       ? (raw.images.map((m) => mapFlatMedia(baseUrl, m)!).filter(Boolean) as StrapiMedia[])
       : null,
     research_publications: mapFlatPublications(baseUrl, raw.research_publications),
+    active: !!raw.active,
+    programme: !!raw.programme,
   };
 }
 
@@ -376,6 +385,7 @@ function mapPublication(
     url: a.url,
     file: mapStrapiMedia(baseUrl, a.file),
     project: null, // avoid cycle here; populate via project mapping
+    lla: !!a.lla,
   };
 }
 
@@ -417,6 +427,8 @@ function mapProject(
     cover: mapStrapiMedia(baseUrl, a.cover)!,
     images: mapStrapiMultiMedia(baseUrl, a.images),
     research_publications: null, // filled next to break circular assignment issues
+    active: !!a.active,
+    programme: !!a.programme,
   };
   // Map publications now that project exists (without back-reference to project to avoid cycles)
   proj.research_publications = mapPublications(baseUrl, a.research_publications);
@@ -425,6 +437,7 @@ function mapProject(
 
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig(event);
+  const q = getQuery(event) as { slug?: string };
   const baseUrl =
     (config?.strapi?.url as string) ||
     (config?.public?.strapiUrl as string) ||
@@ -435,6 +448,9 @@ export default defineEventHandler(async (event) => {
   const query: Record<string, string> = {
     populate: '*',
   };
+  if (q.slug) {
+    query['filters[slug][$eq]'] = String(q.slug);
+  }
 
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
@@ -462,6 +478,10 @@ export default defineEventHandler(async (event) => {
       }
     }
 
+    // If requesting a single project by slug, return the first match or null
+    if (q.slug) {
+      return items[0] ?? null;
+    }
     return items;
   } catch (err: unknown) {
     // Surface Strapi errors nicely

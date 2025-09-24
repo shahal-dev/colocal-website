@@ -1,31 +1,43 @@
-<script setup>
-import { ref, computed } from 'vue';
+<script setup lang="ts">
+import { ref, computed, watchEffect } from 'vue';
 import { useRoute } from '#app';
+import type { Project } from '~~/types/content';
 import img1 from '~/assets/images/carousel-1.png';
 import img2 from '~/assets/images/carousel-2.png';
 
-// Basic mapping of slug -> project display name
 const route = useRoute();
 const slug = route.params.slug;
-const projectName = (() => {
-  const map = {
-    colocal: 'COLOCAL',
-    'mangrove-restoration': 'Mangrove Restoration',
-  };
-  return map[String(slug).toLowerCase()] || 'Project';
-})();
+
+// Fetch the specific project by slug from our Nuxt server endpoint
+const { data: project, error: _projectError } = await useAsyncData<Project | null>(
+  () => `project-${slug}`,
+  async () => {
+    const res = await $fetch('/api/projects', { query: { slug: String(slug) } });
+    return res as Project | null;
+  }
+);
+
+// Share project in state so sibling pages under this slug can access it easily
+const projectKey = `project:${slug}`;
+const sharedProject = useState<Project | null>(projectKey, () => null);
+watchEffect(() => {
+  sharedProject.value = project.value ?? null;
+});
 
 // Secondary navbar (links to sibling pages under the slug)
 const basePath = computed(() => `/projects/${slug}`);
-const tabs = computed(() => [
-  { key: 'home', label: 'Home', to: basePath.value },
-  { key: 'about', label: 'About ' + projectName, to: `${basePath.value}/about` },
-  { key: 'education', label: 'Education & Training', to: `${basePath.value}/education` },
-  { key: 'research', label: 'Research & Publications', to: `${basePath.value}/research` },
-  { key: 'outreach', label: 'Outreach', to: `${basePath.value}/outreach` },
-  { key: 'lla', label: 'LLA Hub', to: `${basePath.value}/lla` },
-]);
-const isActive = (to) => route.path === to;
+const tabs = computed(() => {
+  const shortTitle = project.value?.shortTitle || 'Project';
+  return [
+    { key: 'home', label: 'Home', to: basePath.value },
+    { key: 'about', label: 'About ' + shortTitle, to: `${basePath.value}/about` },
+    { key: 'education', label: 'Education & Training', to: `${basePath.value}/education` },
+    { key: 'research', label: 'Research & Publications', to: `${basePath.value}/research` },
+    { key: 'outreach', label: 'Outreach', to: `${basePath.value}/outreach` },
+    { key: 'lla', label: 'LLA Hub', to: `${basePath.value}/lla` },
+  ];
+});
+const isActive = (to: string) => route.path === to;
 
 // Featured publications (sample data + pagination)
 const publications = ref([
@@ -129,9 +141,9 @@ const fellows = ref([
       :breadcrumb-items="[
         { text: 'Home', href: '/' },
         { text: 'Projects & Programmes', href: '/projects' },
-        { text: projectName, href: '' },
+        { text: project?.shortTitle || 'Project', href: '' },
       ]"
-      :page-title="projectName"
+      :page-title="project?.shortTitle || 'Project'"
     />
     <!-- Secondary navbar (links to sibling pages) -->
     <div class="w-full border-b sticky top-0 z-20 bg-white/95 backdrop-blur">
@@ -157,36 +169,16 @@ const fellows = ref([
       <HomeCarousel />
     </section>
 
-    <!-- About section (static placeholder copy) -->
+    <!-- About section: bind to project data -->
     <section id="about" class="w-full max-w-6xl mx-auto px-4 md:px-0 py-12 scroll-mt-24">
       <p class="text-xs font-semibold text-green-700 uppercase tracking-wide mb-2">
-        {{ projectName }}
+        {{ project?.shortTitle }}
       </p>
       <h2 class="text-[22px] md:text-[26px] font-display font-semibold mb-3">
-        Co-creating knowledge for local adaptation to climate change in least developed countries
+        {{ project?.longTitle }}
       </h2>
       <div class="space-y-4 text-gray-700 leading-relaxed">
-        <p>
-          For universities to effectively deliver education and research for climate change
-          adaptation, they must be responsive to the perceptions, knowledges, needs and priorities
-          of local communities. This requires working with the most vulnerable communities to foster
-          collaborative learning. The capacity to offer and engage in relevant education and
-          research is, however, currently lacking.
-        </p>
-        <p>
-          Lorem ipsum dolor sit amet consectetur. Pulvinar tristique sit id accumsan. Pellentesque
-          nunc egestas enim diam quam. Tellus aliquam sodales amet quis. Tortor fringilla convallis
-          convallis amet ac mauris. Amet commodo consequat malesuada ante. Odio viverra odio turpis
-          fringilla amet sed. Faucibus vitae lectus facilisi urna. Tellus aliquet suspendisse
-          fringilla mi tortor sapien in purus.
-        </p>
-        <p>
-          Dui lorem enim sit lectus pulvinar pharetra nulla urna amet. Eget at senectus magna diam
-          sollicitudin scelerisque. Sagittis ut ipsum nullam integer porta in tortor pretium.
-          Consectetur quisque urna nibh eu tincidun t odio. Neque scelerisque vitae lorem sed enim
-          tristique condimentum. Nisi id viverra nisi vitae nibh, iaculis proin suscipit aliquam
-          vitae interdum morbi hendrerit mauris commodo.
-        </p>
+        <p>{{ project?.longDescription }}</p>
       </div>
     </section>
 

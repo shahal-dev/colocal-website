@@ -21,18 +21,13 @@
             {{ currentSlide?.subtitle }}
           </p>
           <div class="flex flex-wrap gap-4">
-            <button
-              v-for="(button, btnIndex) in currentSlide?.buttons || []"
-              :key="btnIndex"
-              class="px-6 py-4 rounded-sm hover:opacity-95 font-poppins font-semibold"
-              :class="
-                btnIndex === 0
-                  ? 'bg-green-600 hover:border-green-200 text-white'
-                  : 'bg-green-100 hover:border-green-200 text-green-800'
-              "
+            <NuxtLink
+              v-if="currentSlide && currentSlide.to"
+              :to="currentSlide.to"
+              class="px-6 py-4 rounded-sm hover:opacity-95 font-poppins font-semibold bg-green-600 text-white"
             >
-              {{ button.text }}
-            </button>
+              View Project
+            </NuxtLink>
           </div>
         </div>
 
@@ -96,7 +91,7 @@ type Slide = {
   title: string;
   subtitle: string;
   image: string;
-  buttons: { text: string }[];
+  to: string;
 };
 
 const slides = computed<Slide[]>(() => {
@@ -105,7 +100,7 @@ const slides = computed<Slide[]>(() => {
     title: p.longTitle || p.shortTitle,
     subtitle: p.shortDescription,
     image: p.cover?.formats?.large?.url || p.cover?.url || '',
-    buttons: [{ text: 'View Project' }],
+    to: `/projects/${p.slug}`,
   }));
 });
 
