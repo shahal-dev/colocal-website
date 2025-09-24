@@ -1,7 +1,6 @@
-<script setup>
+<script setup lang="ts">
 import { ref, computed } from 'vue';
-import img1 from '~/assets/images/carousel-1.png';
-import img2 from '~/assets/images/carousel-2.png';
+import type { Project } from '~~/types/content';
 
 const tabs = [
   { key: 'all', label: 'All' },
@@ -13,75 +12,25 @@ const tabs = [
 const activeTab = ref('all');
 const search = ref('');
 
-const items = ref([
-  {
-    id: 1,
-    title: 'COLOCAL',
-    description:
-      'Building the capacity of universities in the Global South, to work towards climate change adaptation through education and research.',
-    type: 'project',
-    status: 'ongoing',
-    image: img1,
-  },
-  {
-    id: 2,
-    title: 'Mangrove Restoration Pilot',
-    description:
-      'Community-led restoration to protect coastlines and enhance biodiversity while creating livelihoods.',
-    type: 'project',
-    status: 'past',
-    image: img2,
-  },
-  {
-    id: 3,
-    title: 'Climate Education Programme',
-    description:
-      'A cross-university programme focused on building climate literacy and adaptation planning skills.',
-    type: 'programme',
-    status: 'ongoing',
-    image: img1,
-  },
-  {
-    id: 4,
-    title: 'Resilient Agriculture Initiative',
-    description:
-      'Improving food security through resilient crops and sustainable water management.',
-    type: 'project',
-    status: 'ongoing',
-    image: img2,
-  },
-  {
-    id: 5,
-    title: 'Policy Fellowship Programme',
-    description:
-      'Supporting early-career researchers to translate climate science into policy action.',
-    type: 'programme',
-    status: 'ongoing',
-    image: img1,
-  },
-  {
-    id: 6,
-    title: 'Urban Heat Mapping',
-    description:
-      'Mapping urban heat islands and piloting cooling interventions in vulnerable neighborhoods.',
-    type: 'project',
-    status: 'past',
-    image: img2,
-  },
-]);
+// Fetch projects from our Nuxt server endpoint
+const { data: projects } = await useAsyncData<Project[]>(
+  'projects',
+  async () => await $fetch('/api/projects')
+);
 
 const filtered = computed(() => {
   const q = search.value.trim().toLowerCase();
-  return items.value.filter((it) => {
+  if (!projects.value) return [];
+  return projects.value.filter((it) => {
     let matchTab = true;
-    if (activeTab.value === 'ongoing') matchTab = it.type === 'project' && it.status === 'ongoing';
-    else if (activeTab.value === 'past') matchTab = it.type === 'project' && it.status === 'past';
-    else if (activeTab.value === 'programmes') matchTab = it.type === 'programme';
+    if (activeTab.value === 'ongoing') matchTab = it.active;
+    else if (activeTab.value === 'past') matchTab = !it.active;
+    else if (activeTab.value === 'programmes') matchTab = it.programme;
     if (!matchTab) return false;
     if (!q) return true;
     return (
-      it.title.toLowerCase().includes(q) ||
-      (it.description && it.description.toLowerCase().includes(q))
+      it.shortTitle.toLowerCase().includes(q) ||
+      (it.shortDescription && it.shortDescription.toLowerCase().includes(q))
     );
   });
 });
@@ -94,13 +43,13 @@ const visible = computed(() => {
   return filtered.value.slice(start, start + pageSize);
 });
 
-function setTab(key) {
+function setTab(key: string) {
   if (activeTab.value === key) return;
   activeTab.value = key;
   currentPage.value = 1;
 }
 
-function goTo(page) {
+function goTo(page: number) {
   if (page < 1 || page > totalPages.value) return;
   currentPage.value = page;
 }
@@ -170,28 +119,31 @@ function goTo(page) {
           class="border border-gray-200 rounded-md overflow-hidden bg-white hover:shadow transition-shadow"
         >
           <div class="h-44 w-full overflow-hidden">
-            <img :src="card.image" :alt="card.title" class="w-full h-full object-cover" />
+            <img
+              :src="card.cover?.formats?.large?.url || card.cover?.url || ''"
+              :alt="card.shortTitle"
+              class="w-full h-full object-cover"
+            />
           </div>
           <div class="p-4">
             <h3 class="text-sm font-semibold text-green-800 uppercase tracking-wide mb-1">
-              {{ card.title }}
+              {{ card.shortTitle }}
             </h3>
-            <p class="text-sm text-gray-700 line-clamp-3 mb-4">{{ card.description }}</p>
+            <p class="text-sm text-gray-700 line-clamp-3 mb-4">{{ card.shortDescription }}</p>
             <div class="flex items-center gap-2">
               <span
                 class="inline-block text-xs px-2 py-1 rounded border border-blue-200 text-blue-700 bg-blue-50"
-                >{{ card.type === 'programme' ? 'Programme' : 'Project' }}</span
+                >{{ card.programme ? 'Programme' : 'Project' }}</span
               >
               <span
-                v-if="card.type === 'project'"
                 class="inline-block text-xs px-2 py-1 rounded border"
                 :class="
-                  card.status === 'ongoing'
+                  card.active
                     ? 'border-green-200 text-green-700 bg-green-50'
                     : 'border-gray-200 text-gray-700 bg-gray-50'
                 "
               >
-                {{ card.status === 'ongoing' ? 'Ongoing' : 'Past' }}
+                {{ card.active ? 'Ongoing' : 'Past' }}
               </span>
             </div>
           </div>

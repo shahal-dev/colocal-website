@@ -41,14 +41,10 @@ if (error.value) {
 }
 
 // Fetch projects from our Nuxt server endpoint
-const { data: projects, error: projectsError } = await useAsyncData<Project[]>(
+const { data: projects } = await useAsyncData<Project[]>(
   'projects',
   async () => await $fetch('/api/projects')
 );
-
-if (projectsError.value) {
-  console.error('Failed to fetch projects:', projectsError.value);
-}
 </script>
 
 <template>
