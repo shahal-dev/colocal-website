@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import img1 from '~/assets/images/carousel-1.png';
-import img2 from '~/assets/images/carousel-2.png';
+import type { NewsEvent } from '~~/types/content';
 
 type NewsItem = {
   id: number;
@@ -10,37 +8,22 @@ type NewsItem = {
   image: string;
 };
 
-const newsItems = ref<NewsItem[]>([
-  {
-    id: 1,
-    title: 'New Climate Policy Framework Launched in LDCs',
-    date: 'Apr 1, 2024',
-    image: img1,
-  },
-  {
-    id: 2,
-    title: 'Latest Research Findings on Climate Change Impact in Vulnerable Regions',
-    date: 'Mar 25, 2024',
-    image: img2,
-  },
-  {
-    id: 3,
-    title: 'LUCCC Partners with Global Leaders for Climate Education',
-    date: 'Mar 25, 2024',
-    image: img1,
-  },
-  {
-    id: 4,
-    title: 'New Climate Policy Framework Launched in LDCs',
-    date: 'Apr 1, 2024',
-    image: img2,
-  },
-]);
-
-function viewAll() {
-  // Placeholder: navigate or emit event. Replace with real route.
-  console.info('View all news clicked');
-}
+const props = defineProps<{ newsEvents: NewsEvent[] | null | undefined }>();
+const newsItems = computed<NewsItem[]>(() => {
+  if (!Array.isArray(props.newsEvents)) return [];
+  return props.newsEvents.map((p) => ({
+    id: p.id,
+    title: p.title,
+    date: p.date
+      ? new Date(p.date).toLocaleDateString(undefined, {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric',
+        })
+      : '',
+    image: p.cover?.formats?.medium?.url || p.cover?.url || '',
+  }));
+});
 </script>
 
 <template>
@@ -52,13 +35,12 @@ function viewAll() {
           <h2 class="text-[32] md:text-[32px] font-display font-medium mb-6 md:mb-8">
             News & Announcements
           </h2>
-          <button
-            type="button"
+          <NuxtLink
+            to="/news-events"
             class="px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-sm font-body font-semibold transition-colors"
-            @click="viewAll"
           >
             View All
-          </button>
+          </NuxtLink>
         </div>
       </div>
 
@@ -71,9 +53,11 @@ function viewAll() {
             class="w-[102px] h-[102px] object-cover rounded"
           />
           <div class="flex-1">
-            <h3 class="m-0 text-[16px] font-semibold text-gray-900 line-clamp-2">
-              {{ item.title }}
-            </h3>
+            <NuxtLink :to="`/news-events/${item.id}`">
+              <h3 class="m-0 text-[16px] font-semibold text-gray-900 line-clamp-2">
+                {{ item.title }}
+              </h3>
+            </NuxtLink>
             <div class="mt-2 flex items-center text-gray-500 text-sm">
               <svg
                 class="w-4 h-4 mr-2 text-gray-400"

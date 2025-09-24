@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Project } from '../../types/content';
+import type { NewsEvent, Project } from '../../types/content';
 const config = useRuntimeConfig();
 
 type HomeType = {
@@ -45,6 +45,18 @@ const { data: projects } = await useAsyncData<Project[]>(
   'projects',
   async () => await $fetch('/api/projects')
 );
+
+// Fetch all News & Events
+const { data: newsData } = await useAsyncData<NewsEvent[]>(
+  'news-events-all',
+  async () => (await $fetch('/api/news-events')) as NewsEvent[]
+);
+// const items = computed(() => newsData.value?.slice(0, 4) ?? []);
+// function excerpt(text?: string | null, n = 180) {
+//   if (!text) return '';
+//   const t = String(text);
+//   return t.length > n ? t.slice(0, n) + '…' : t;
+// }
 </script>
 
 <template>
@@ -67,7 +79,7 @@ const { data: projects } = await useAsyncData<Project[]>(
     </div> -->
     <ProjectsSection :projects="projects || []" />
     <ResourceSection />
-    <NewsAndAnnouncements />
+    <NewsAndAnnouncements :news-events="newsData" />
     <GetInTouch :phone="home?.phone" :email="home?.email" :address="home?.address" />
   </div>
 </template>

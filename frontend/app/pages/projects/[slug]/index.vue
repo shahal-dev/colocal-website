@@ -1,12 +1,18 @@
 <script setup lang="ts">
 import { ref, computed, watchEffect } from 'vue';
 import { useRoute } from '#app';
-import type { Project } from '~~/types/content';
+import type { Project, ResearchPublication } from '~~/types/content';
 import img1 from '~/assets/images/carousel-1.png';
 import img2 from '~/assets/images/carousel-2.png';
 
 const route = useRoute();
 const slug = route.params.slug;
+
+function excerpt(text?: string | null, n = 180) {
+  if (!text) return '';
+  const t = String(text);
+  return t.length > n ? t.slice(0, n) + '…' : t;
+}
 
 // Fetch the specific project by slug from our Nuxt server endpoint
 const { data: project, error: _projectError } = await useAsyncData<Project | null>(
@@ -38,41 +44,51 @@ const tabs = computed(() => {
   ];
 });
 const isActive = (to: string) => route.path === to;
+const hasChild = computed(() => Boolean(route.params.id));
 
-// Featured publications (sample data + pagination)
-const publications = ref([
-  {
-    id: 1,
-    title: 'Integrating Gender Equality and Social Inclusion (GESI) in Climate Finance',
-    authors: ['Ranjana Bhatta', 'Laxmi Chinnal', 'Ajay Bhakta Mathema', 'Mariama Camara'],
-    excerpt:
-      'Climate change disproportionately affects vulnerable and marginalized communities, exacerbating existing inequalities. Integrating Gender Equality and Social Inclusion (GESI) into climate finance is crucial to ensuring that adaptation and mitigation efforts are fair, inclusive, and effective.',
-    tags: ['Integrating', 'Gender Equality', 'Social Inclusion', 'Climate Finance'],
-  },
-  {
-    id: 2,
-    title: 'Integrating Gender Equality and Social Inclusion (GESI) in Climate Finance',
-    authors: ['Ranjana Bhatta', 'Laxmi Chinnal', 'Ajay Bhakta Mathema', 'Mariama Camara'],
-    excerpt:
-      'Climate change disproportionately affects vulnerable and marginalized communities, exacerbating existing inequalities. Integrating Gender Equality and Social Inclusion (GESI) into climate finance is crucial to ensuring that adaptation and mitigation efforts are fair, inclusive, and effective.',
-    tags: ['Integrating', 'Gender Equality', 'Social Inclusion', 'Climate Finance'],
-  },
-  {
-    id: 3,
-    title: 'Community Resilience Pathways',
-    authors: ['Alex Karim', 'Rifat Hasan'],
-    excerpt:
-      'Pathways for building community resilience through inclusive adaptation planning and multi-stakeholder collaboration.',
-    tags: ['Resilience', 'Adaptation'],
-  },
-]);
-const pubPage = ref(1);
-const pubSize = 2;
-const pubTotal = computed(() => Math.max(1, Math.ceil(publications.value.length / pubSize)));
-const pubVisible = computed(() => {
-  const start = (pubPage.value - 1) * pubSize;
-  return publications.value.slice(start, start + pubSize);
-});
+// Publications data (fetch via server endpoint filtered by project slug)
+const { data: publications } = await useAsyncData<ResearchPublication[]>(
+  () => `publications-${slug}`,
+  async () => {
+    const res = await $fetch('/api/publications', { query: { projectSlug: String(slug) } });
+    return (res as ResearchPublication[]) || [];
+  }
+);
+
+// // Featured publications (sample data + pagination)
+// const publications = ref([
+//   {
+//     id: 1,
+//     title: 'Integrating Gender Equality and Social Inclusion (GESI) in Climate Finance',
+//     authors: ['Ranjana Bhatta', 'Laxmi Chinnal', 'Ajay Bhakta Mathema', 'Mariama Camara'],
+//     excerpt:
+//       'Climate change disproportionately affects vulnerable and marginalized communities, exacerbating existing inequalities. Integrating Gender Equality and Social Inclusion (GESI) into climate finance is crucial to ensuring that adaptation and mitigation efforts are fair, inclusive, and effective.',
+//     tags: ['Integrating', 'Gender Equality', 'Social Inclusion', 'Climate Finance'],
+//   },
+//   {
+//     id: 2,
+//     title: 'Integrating Gender Equality and Social Inclusion (GESI) in Climate Finance',
+//     authors: ['Ranjana Bhatta', 'Laxmi Chinnal', 'Ajay Bhakta Mathema', 'Mariama Camara'],
+//     excerpt:
+//       'Climate change disproportionately affects vulnerable and marginalized communities, exacerbating existing inequalities. Integrating Gender Equality and Social Inclusion (GESI) into climate finance is crucial to ensuring that adaptation and mitigation efforts are fair, inclusive, and effective.',
+//     tags: ['Integrating', 'Gender Equality', 'Social Inclusion', 'Climate Finance'],
+//   },
+//   {
+//     id: 3,
+//     title: 'Community Resilience Pathways',
+//     authors: ['Alex Karim', 'Rifat Hasan'],
+//     excerpt:
+//       'Pathways for building community resilience through inclusive adaptation planning and multi-stakeholder collaboration.',
+//     tags: ['Resilience', 'Adaptation'],
+//   },
+// ]);
+// const pubPage = ref(1);
+// const pubSize = 2;
+// const pubTotal = computed(() => Math.max(1, Math.ceil(publications?.value.length / pubSize)));
+// const pubVisible = computed(() => {
+//   const start = (pubPage.value - 1) * pubSize;
+//   return publications.value.slice(start, start + pubSize);
+// });
 
 // Featured news (sample data + pagination)
 const newsItems = ref([
@@ -136,83 +152,87 @@ const fellows = ref([
 
 <template>
   <div class="flex flex-col items-center w-full justify-center">
-    <!-- Breadcrumb-->
-    <BreadCrumb
-      :breadcrumb-items="[
-        { text: 'Home', href: '/' },
-        { text: 'Projects & Programmes', href: '/projects' },
-        { text: project?.shortTitle || 'Project', href: '' },
-      ]"
-      :page-title="project?.shortTitle || 'Project'"
-    />
-    <!-- Secondary navbar (links to sibling pages) -->
-    <div class="w-full border-b sticky top-0 z-20 bg-white/95 backdrop-blur">
-      <nav class="max-w-6xl flex items-center gap-2 px-25 overflow-x-auto hide-scrollbar">
-        <NuxtLink
-          v-for="t in tabs"
-          :key="t.key"
-          :to="t.to"
-          class="px-4 py-3 text-base font-semibold whitespace-nowrap"
-          :class="
-            isActive(t.to)
-              ? 'bg-green-100 text-green-900 border-b-2 border-green-700'
-              : 'bg-white text-gray-700 border-gray-300 hover:border-green-300'
-          "
-        >
-          {{ t.label }}
-        </NuxtLink>
-      </nav>
-    </div>
-
-    <!-- HERO/CAROUSEL (reuse home carousel) -->
-    <section id="home" class="w-full scroll-mt-24">
-      <HomeCarousel />
-    </section>
-
-    <!-- About section: bind to project data -->
-    <section id="about" class="w-full max-w-6xl mx-auto px-4 md:px-0 py-12 scroll-mt-24">
-      <p class="text-xs font-semibold text-green-700 uppercase tracking-wide mb-2">
-        {{ project?.shortTitle }}
-      </p>
-      <h2 class="text-[22px] md:text-[26px] font-display font-semibold mb-3">
-        {{ project?.longTitle }}
-      </h2>
-      <div class="space-y-4 text-gray-700 leading-relaxed">
-        <p>{{ project?.longDescription }}</p>
+    <NuxtPage v-if="hasChild" />
+    <template v-else>
+      <!-- Breadcrumb-->
+      <BreadCrumb
+        :breadcrumb-items="[
+          { text: 'Home', href: '/' },
+          { text: 'Projects & Programmes', href: '/projects' },
+          { text: project?.shortTitle || 'Project', href: '' },
+        ]"
+        :page-title="project?.shortTitle || 'Project'"
+      />
+      <!-- Secondary navbar (links to sibling pages) -->
+      <div class="w-full border-b sticky top-0 z-20 bg-white/95 backdrop-blur">
+        <nav class="max-w-6xl flex items-center gap-2 px-25 overflow-x-auto hide-scrollbar">
+          <NuxtLink
+            v-for="t in tabs"
+            :key="t.key"
+            :to="t.to"
+            class="px-4 py-3 text-base font-semibold whitespace-nowrap"
+            :class="
+              isActive(t.to)
+                ? 'bg-green-100 text-green-900 border-b-2 border-green-700'
+                : 'bg-white text-gray-700 border-gray-300 hover:border-green-300'
+            "
+          >
+            {{ t.label }}
+          </NuxtLink>
+        </nav>
       </div>
-    </section>
 
-    <!-- Featured Publications -->
-    <section class="w-full max-w-6xl mx-auto px-4 md:px-0 py-12">
-      <h2 class="text-center text-[24px] md:text-[28px] font-display font-medium mb-6">
-        Featured Publications
-      </h2>
-      <div class="space-y-4">
-        <article
-          v-for="p in pubVisible"
-          :key="p.id"
-          class="border border-gray-200 rounded-md bg-white p-4 md:p-5"
-        >
-          <h3 class="text-base md:text-lg font-semibold text-gray-900 mb-2">{{ p.title }}</h3>
-          <div class="flex items-center text-sm text-gray-600 mb-3">
-            <svg class="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path d="M20 21v-2a4 4 0 0 0-3-3.87M4 21v-2a4 4 0 0 1 3-3.87" stroke-width="2" />
-              <circle cx="12" cy="7" r="4" stroke-width="2" />
-            </svg>
-            <span>{{ p.authors.join(' • ') }}</span>
-          </div>
-          <p class="text-sm text-gray-700 mb-3">{{ p.excerpt }}</p>
-          <div class="flex flex-wrap gap-2">
-            <span
-              v-for="(tag, idx) in p.tags"
-              :key="idx"
-              class="inline-block text-xs px-2 py-1 rounded border border-green-200 text-green-700 bg-green-50"
-              >{{ tag }}</span
-            >
-          </div>
-        </article>
-      </div>
-      <!-- Publications pagination -->
+      <!-- HERO/CAROUSEL (reuse home carousel) -->
+      <section id="home" class="w-full scroll-mt-24">
+        <HomeCarousel />
+      </section>
+
+      <!-- About section: bind to project data -->
+      <section id="about" class="w-full max-w-6xl mx-auto px-4 md:px-0 py-12 scroll-mt-24">
+        <p class="text-xs font-semibold text-green-700 uppercase tracking-wide mb-2">
+          {{ project?.shortTitle }}
+        </p>
+        <h2 class="text-[22px] md:text-[26px] font-display font-semibold mb-3">
+          {{ project?.longTitle }}
+        </h2>
+        <div class="space-y-4 text-gray-700 leading-relaxed">
+          <p>{{ project?.longDescription }}</p>
+        </div>
+      </section>
+
+      <!-- Featured Publications -->
+      <section class="w-full max-w-6xl mx-auto px-4 md:px-0 py-12">
+        <h2 class="text-center text-[24px] md:text-[28px] font-display font-medium mb-6">
+          Featured Publications
+        </h2>
+        <div class="space-y-4">
+          <article
+            v-for="p in publications"
+            :key="p.id"
+            class="border border-gray-200 rounded-md bg-white p-4 md:p-5"
+          >
+            <NuxtLink :to="`${basePath}/research/${p.id}`">
+              <h3 class="text-base md:text-lg font-semibold text-gray-900 mb-2">{{ p.title }}</h3>
+              <div class="flex items-center text-sm text-gray-600 mb-3">
+                <svg class="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path d="M20 21v-2a4 4 0 0 0-3-3.87M4 21v-2a4 4 0 0 1 3-3.87" stroke-width="2" />
+                  <circle cx="12" cy="7" r="4" stroke-width="2" />
+                </svg>
+                <span>{{ p.authors.map((a) => a.name).join(' • ') }}</span>
+              </div>
+              <p class="text-sm text-gray-700 mb-3">{{ excerpt(p.abstract) }}</p>
+              <div class="flex flex-wrap gap-2">
+                <span
+                  v-for="(tag, idx) in p.tags"
+                  :key="idx"
+                  class="inline-block text-xs px-2 py-1 rounded border border-green-200 text-green-700 bg-green-50"
+                  >{{ tag.tag }}</span
+                >
+              </div>
+            </NuxtLink>
+          </article>
+        </div>
+        <!-- Publications pagination
       <div v-if="pubTotal > 1" class="mt-6 flex items-center justify-center gap-2">
         <button
           v-for="page in pubTotal"
@@ -227,72 +247,73 @@ const fellows = ref([
         >
           {{ page }}
         </button>
-      </div>
-    </section>
+      </div> -->
+      </section>
 
-    <!-- Featured News -->
-    <section class="w-full max-w-6xl mx-auto px-4 md:px-0 py-12">
-      <h2 class="text-center text-[24px] md:text-[28px] font-display font-medium mb-6">
-        Featured News
-      </h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <article
-          v-for="n in newsVisible"
-          :key="n.id"
-          class="border border-gray-200 rounded-md bg-white overflow-hidden flex"
-        >
-          <div class="w-40 h-28 flex-shrink-0">
-            <img :src="n.image" :alt="n.title" class="w-full h-full object-cover" />
-          </div>
-          <div class="p-4">
-            <h3 class="text-[15px] font-semibold text-green-700 mb-1">{{ n.title }}</h3>
-            <p class="text-sm text-gray-700 line-clamp-2">{{ n.excerpt }}</p>
-          </div>
-        </article>
-      </div>
-      <!-- News pagination -->
-      <div v-if="newsTotal > 1" class="mt-6 flex items-center justify-center gap-2">
-        <button
-          v-for="page in newsTotal"
-          :key="page"
-          class="min-w-[32px] h-7 px-2 text-sm rounded border"
-          :class="
-            page === newsPage
-              ? 'bg-green-600 text-white border-green-600'
-              : 'bg-white text-gray-800 border-gray-300'
-          "
-          @click="newsPage = page"
-        >
-          {{ page }}
-        </button>
-      </div>
-    </section>
-
-    <!-- Our Fellows -->
-    <section class="w-full max-w-6xl mx-auto px-4 md:px-0 py-12">
-      <h2 class="text-center text-[24px] md:text-[28px] font-display font-medium mb-8">
-        Our Fellows
-      </h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div
-          v-for="f in fellows"
-          :key="f.id"
-          class="bg-blue-gray-50 border border-gray-200 rounded-md p-8 flex flex-col items-center text-center"
-        >
-          <div
-            class="w-16 h-16 rounded-full border-4 border-blue-300 text-blue-500 flex items-center justify-center mb-4"
+      <!-- Featured News -->
+      <section class="w-full max-w-6xl mx-auto px-4 md:px-0 py-12">
+        <h2 class="text-center text-[24px] md:text-[28px] font-display font-medium mb-6">
+          Featured News
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <article
+            v-for="n in newsVisible"
+            :key="n.id"
+            class="border border-gray-200 rounded-md bg-white overflow-hidden flex"
           >
-            <!-- Simple person icon -->
-            <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <circle cx="12" cy="8" r="4" stroke-width="2" />
-              <path d="M4 20c0-3.314 3.582-6 8-6s8 2.686 8 6" stroke-width="2" />
-            </svg>
-          </div>
-          <p class="m-0 font-medium text-gray-900">{{ f.name }}</p>
-          <p class="m-0 text-sm text-gray-600 max-w-[220px]">{{ f.affiliation }}</p>
+            <div class="w-40 h-28 flex-shrink-0">
+              <img :src="n.image" :alt="n.title" class="w-full h-full object-cover" />
+            </div>
+            <div class="p-4">
+              <h3 class="text-[15px] font-semibold text-green-700 mb-1">{{ n.title }}</h3>
+              <p class="text-sm text-gray-700 line-clamp-2">{{ n.excerpt }}</p>
+            </div>
+          </article>
         </div>
-      </div>
-    </section>
+        <!-- News pagination -->
+        <div v-if="newsTotal > 1" class="mt-6 flex items-center justify-center gap-2">
+          <button
+            v-for="page in newsTotal"
+            :key="page"
+            class="min-w-[32px] h-7 px-2 text-sm rounded border"
+            :class="
+              page === newsPage
+                ? 'bg-green-600 text-white border-green-600'
+                : 'bg-white text-gray-800 border-gray-300'
+            "
+            @click="newsPage = page"
+          >
+            {{ page }}
+          </button>
+        </div>
+      </section>
+
+      <!-- Our Fellows -->
+      <section class="w-full max-w-6xl mx-auto px-4 md:px-0 py-12">
+        <h2 class="text-center text-[24px] md:text-[28px] font-display font-medium mb-8">
+          Our Fellows
+        </h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div
+            v-for="f in fellows"
+            :key="f.id"
+            class="bg-blue-gray-50 border border-gray-200 rounded-md p-8 flex flex-col items-center text-center"
+          >
+            <div
+              class="w-16 h-16 rounded-full border-4 border-blue-300 text-blue-500 flex items-center justify-center mb-4"
+            >
+              <!-- Simple person icon -->
+              <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <circle cx="12" cy="8" r="4" stroke-width="2" />
+                <path d="M4 20c0-3.314 3.582-6 8-6s8 2.686 8 6" stroke-width="2" />
+              </svg>
+            </div>
+            <p class="m-0 font-medium text-gray-900">{{ f.name }}</p>
+            <p class="m-0 text-sm text-gray-600 max-w-[220px]">{{ f.affiliation }}</p>
+          </div>
+        </div>
+      </section>
+    </template>
   </div>
 </template>
 
