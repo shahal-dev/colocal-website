@@ -76,7 +76,7 @@ function formatMonthYear(iso) {
 
     <section class="w-full max-w-6xl mx-auto px-4 md:px-0 py-8">
       <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
-        <div class="md:col-span-8">
+        <div class="md:col-span-8 mr-4 md:mr-12">
           <div v-if="item">
             <h1 class="text-2xl md:text-3xl font-display font-semibold mb-2">{{ item.title }}</h1>
             <div class="text-sm text-gray-600 flex flex-wrap items-center gap-2 mb-2">
@@ -96,7 +96,7 @@ function formatMonthYear(iso) {
             </div>
 
             <h2 class="text-xl font-semibold mb-2">Abstract</h2>
-            <p class="text-gray-800 leading-relaxed mb-6">{{ item.abstract }}</p>
+            <MDC :value="item.abstract" class="prose max-w-none text-gray-800 space-y-6" />
 
             <div v-if="item.file" class="mt-6">
               <a

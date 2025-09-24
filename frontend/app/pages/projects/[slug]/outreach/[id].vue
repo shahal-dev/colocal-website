@@ -99,9 +99,7 @@ function formatDate(iso) {
               </svg>
               <span>{{ formatDate(item.date) }}</span>
             </div>
-            <div class="prose max-w-none text-gray-800 space-y-6">
-              <p v-for="(para, idx) in (item.body || '').split('\n\n')" :key="idx">{{ para }}</p>
-            </div>
+            <MDC :value="item.body" class="prose max-w-none text-gray-800 space-y-6" />
           </div>
         </div>
 

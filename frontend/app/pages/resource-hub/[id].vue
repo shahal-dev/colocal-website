@@ -80,7 +80,7 @@ function formatMonthYear(iso) {
               </div>
 
               <h2 class="text-xl font-semibold mb-2">Abstract</h2>
-              <p class="text-gray-800 leading-relaxed mb-6">{{ item.abstract }}</p>
+              <MDC :value="item.abstract" class="prose max-w-none text-gray-800 space-y-6" />
 
               <div v-if="item.file" class="mt-6">
                 <a

@@ -8,7 +8,7 @@ export default defineNuxtConfig({
     plugins: [tailwindcss()],
   },
 
-  modules: ['@nuxt/fonts', '@nuxt/icon', '@nuxt/image', '@nuxt/eslint'],
+  modules: ['@nuxt/fonts', '@nuxt/icon', '@nuxt/image', '@nuxt/eslint', '@nuxtjs/mdc'],
 
   fonts: {
     families: [

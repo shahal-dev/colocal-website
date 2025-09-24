@@ -40,7 +40,7 @@ function formatDate(iso) {
 
     <section class="w-full max-w-6xl mx-auto px-4 md:px-0 py-8">
       <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
-        <div class="md:col-span-8">
+        <div class="md:col-span-8 mr-8 md:mr-12">
           <div v-if="item">
             <div class="w-full h-64 md:h-72 rounded-lg overflow-hidden mb-5">
               <img :src="item.cover?.url" :alt="item.title" class="w-full h-full object-cover" />
@@ -55,9 +55,7 @@ function formatDate(iso) {
               </svg>
               <span>{{ formatDate(item.date) }}</span>
             </div>
-            <div class="prose max-w-none text-gray-800 space-y-6">
-              <p v-for="(para, idx) in (item.body || '').split('\n\n')" :key="idx">{{ para }}</p>
-            </div>
+            <MDC :value="item.body" class="prose max-w-none text-gray-800 space-y-6" />
           </div>
         </div>
 
