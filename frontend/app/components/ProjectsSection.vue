@@ -5,89 +5,86 @@
       <transition :name="transitionName" mode="out-in">
         <div :key="currentIndex">
           <ProjectCard
-            :image-url="currentProject.imageUrl"
-            :title="currentProject.title"
-            :description="currentProject.description"
+            :image-url="currentProject?.imageUrl || ''"
+            :title="currentProject?.title || ''"
+            :description="currentProject?.description || ''"
           />
         </div>
       </transition>
     </div>
-    <button
-      class="absolute left-30 top-1/2 translate-y-1/2 w-12 h-12 bg-green-100 hover:bg-green-200 border-green-200 rounded-full flex items-center justify-center transition-colors"
-      aria-label="Previous project"
-      @click="prev"
-    >
-      <svg
-        class="w-6 h-6 text-green-800"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-        xmlns="http://www.w3.org/2000/svg"
+    <div v-if="items.length > 1">
+      <button
+        class="absolute left-30 top-1/2 translate-y-1/2 w-12 h-12 bg-green-100 hover:bg-green-200 border-green-200 rounded-full flex items-center justify-center transition-colors"
+        aria-label="Previous project"
+        @click="prev"
       >
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-      </svg>
-    </button>
-    <button
-      class="absolute right-30 top-1/2 translate-y-1/2 w-12 h-12 bg-green-100 hover:bg-green-200 border-green-200 rounded-full flex items-center justify-center transition-colors"
-      aria-label="Next project"
-      @click="next"
-    >
-      <svg
-        class="w-6 h-6 text-green-800"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-        xmlns="http://www.w3.org/2000/svg"
+        <svg
+          class="w-6 h-6 text-green-800"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M15 19l-7-7 7-7"
+          />
+        </svg>
+      </button>
+      <button
+        class="absolute right-30 top-1/2 translate-y-1/2 w-12 h-12 bg-green-100 hover:bg-green-200 border-green-200 rounded-full flex items-center justify-center transition-colors"
+        aria-label="Next project"
+        @click="next"
       >
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-      </svg>
-    </button>
+        <svg
+          class="w-6 h-6 text-green-800"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
+    </div>
   </section>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed } from 'vue';
-import CarouselImage1 from '~/assets/images/carousel-1.png';
-import CarouselImage2 from '~/assets/images/carousel-2.png';
+import type { Project } from '../../types/content';
 
-const projects = [
-  {
-    id: 1,
-    title:
-      'Co-creating knowledge for local adaptation to climate change in least developed countries (COLOCAL)',
-    description:
-      'Building the capacity of universities in the Global South, to work towards climate change adaptation through education and research.',
-    imageUrl: CarouselImage1,
-  },
-  {
-    id: 2,
-    title: 'Another Project Title',
-    description: 'A short description for the second project.',
-    imageUrl: CarouselImage2,
-  },
-  {
-    id: 3,
-    title: 'Third Project Example',
-    description: 'This is the description for the third project in the carousel.',
-    imageUrl: CarouselImage1,
-  },
-];
+type ProjectCardItem = { id: number; title: string; description: string; imageUrl: string };
 
-const currentIndex = ref(0);
-const transitionName = ref('slide-next');
+const props = defineProps<{ projects: Project[] | null | undefined }>();
 
-const currentProject = computed(() => {
-  return projects[currentIndex.value];
+const items = computed<ProjectCardItem[]>(() => {
+  if (!Array.isArray(props.projects)) return [];
+  return props.projects.map((p) => ({
+    id: p.id,
+    title: p.longTitle || p.shortTitle,
+    description: p.shortDescription,
+    imageUrl: p.cover?.formats?.medium?.url || p.cover?.url || '',
+  }));
 });
 
+const currentIndex = ref(0);
+const transitionName = ref<'slide-next' | 'slide-prev'>('slide-next');
+
+const currentProject = computed<ProjectCardItem | undefined>(() => items.value[currentIndex.value]);
+
 function next() {
+  if (!items.value.length) return;
   transitionName.value = 'slide-next';
-  currentIndex.value = (currentIndex.value + 1) % projects.length;
+  currentIndex.value = (currentIndex.value + 1) % items.value.length;
 }
 
 function prev() {
+  if (!items.value.length) return;
   transitionName.value = 'slide-prev';
-  currentIndex.value = (currentIndex.value - 1 + projects.length) % projects.length;
+  currentIndex.value = (currentIndex.value - 1 + items.value.length) % items.value.length;
 }
 </script>
 

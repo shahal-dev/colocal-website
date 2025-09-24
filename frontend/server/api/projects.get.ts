@@ -1,0 +1,478 @@
+import { defineEventHandler, createError } from 'h3';
+import { useRuntimeConfig } from '#imports';
+import type {
+  Project,
+  ResearchPublication,
+  Author,
+  Objective,
+  Tag,
+  StrapiMedia,
+  StrapiImageFormat,
+} from '../../types/content';
+
+// --- Raw Strapi REST shapes (subset we use) ---------------------------------
+type RawEntity<T> = { id: number; attributes: T };
+type RawRelationOne<T> = { data: RawEntity<T> | null };
+type RawRelationMany<T> = { data: RawEntity<T>[] };
+
+type RawImageFormat = {
+  ext?: string | null;
+  url: string;
+  hash?: string;
+  mime?: string;
+  name?: string;
+  path?: string | null;
+  size?: number;
+  width?: number;
+  height?: number;
+};
+
+type RawMediaAttributes = {
+  url: string;
+  alternativeText?: string | null;
+  caption?: string | null;
+  width?: number | null;
+  height?: number | null;
+  formats?: Record<string, RawImageFormat>;
+  mime?: string;
+  size?: number;
+  name?: string;
+  provider?: string;
+  createdAt?: string;
+  updatedAt?: string;
+};
+
+type RawAuthorAttributes = {
+  name: string;
+  avatar?: RawRelationOne<RawMediaAttributes>;
+  email?: string | null;
+  colocal: boolean;
+};
+
+type RawTagComponent = { tag: string };
+type RawObjectiveComponent = { objective: string };
+
+type RawPublicationAttributes = {
+  title: string;
+  abstract: string;
+  date: string;
+  authors: RawRelationMany<RawAuthorAttributes>;
+  tags?: RawTagComponent[] | null;
+  url: string;
+  file?: RawRelationOne<RawMediaAttributes>;
+  // project?: RawRelationOne<RawProjectAttributes> // avoid cycle
+};
+
+type RawProjectAttributes = {
+  shortTitle: string;
+  longTitle: string;
+  slug: string;
+  shortDescription: string;
+  longDescription: string;
+  about: string;
+  objectives?: RawObjectiveComponent[] | null;
+  cover: RawRelationOne<RawMediaAttributes>;
+  images?: RawRelationMany<RawMediaAttributes> | null;
+  research_publications?: RawRelationMany<RawPublicationAttributes> | null;
+};
+
+// Strapi list responses (raw vs flattened)
+type StrapiPagination = { page: number; pageSize: number; pageCount: number; total: number };
+type StrapiListResponseRaw<T> = { data: RawEntity<T>[]; meta: { pagination: StrapiPagination } };
+
+// --- Flattened shapes (Strapi v5 or transform enabled) --------------------
+type FlatMedia = {
+  id: number;
+  url: string;
+  alternativeText?: string | null;
+  caption?: string | null;
+  width?: number | null;
+  height?: number | null;
+  formats?: Record<string, RawImageFormat>;
+  mime?: string;
+  size?: number;
+  name?: string;
+  provider?: string;
+  createdAt?: string;
+  updatedAt?: string;
+};
+
+type FlatAuthor = {
+  id: number;
+  name: string;
+  avatar?: FlatMedia | null;
+  email?: string | null;
+  colocal: boolean;
+};
+
+type FlatPublication = {
+  id: number;
+  title: string;
+  abstract: string;
+  date: string;
+  URL?: string; // original field name may be URL in Strapi
+  url?: string; // or lower-case in some setups
+  authors?: FlatAuthor[] | null;
+  tags?: RawTagComponent[] | null;
+  file?: FlatMedia | null;
+};
+
+type FlatProject = {
+  id: number;
+  shortTitle: string;
+  longTitle: string;
+  slug: string;
+  shortDescription: string;
+  longDescription: string;
+  about: string;
+  objectives?: RawObjectiveComponent[] | null;
+  cover: FlatMedia;
+  images?: FlatMedia[] | null;
+  research_publications?: FlatPublication[] | null;
+};
+
+type StrapiListResponseFlat<T> = { data: T[]; meta: { pagination: StrapiPagination } };
+type StrapiListResponseUnion =
+  | StrapiListResponseRaw<RawProjectAttributes>
+  | StrapiListResponseFlat<FlatProject>;
+
+// Narrow helpers to avoid 'any'
+function hasDataKey(x: unknown): x is { data: unknown } {
+  return typeof x === 'object' && x !== null && 'data' in x;
+}
+
+function getPropAsNumber(obj: unknown, key: string): number | undefined {
+  if (typeof obj === 'object' && obj !== null && key in obj) {
+    const v = (obj as Record<string, unknown>)[key];
+    if (typeof v === 'number') return v;
+  }
+  return undefined;
+}
+
+function getPropAsString(obj: unknown, key: string): string | undefined {
+  if (typeof obj === 'object' && obj !== null && key in obj) {
+    const v = (obj as Record<string, unknown>)[key];
+    if (typeof v === 'string') return v;
+  }
+  return undefined;
+}
+
+function getProp(obj: unknown, key: string): unknown {
+  if (typeof obj === 'object' && obj !== null && key in obj) {
+    return (obj as Record<string, unknown>)[key];
+  }
+  return undefined;
+}
+
+function hasAttributes<T extends object>(x: unknown): x is RawEntity<T> {
+  return typeof x === 'object' && x !== null && 'attributes' in x;
+}
+
+// Helper: build absolute URLs for media when Strapi returns relative paths
+function toAbsoluteUrl(baseUrl: string, url?: string | null): string {
+  if (!url) return '';
+  // if already absolute or protocol-relative
+  if (/^https?:\/\//i.test(url) || url.startsWith('//')) return url;
+  return `${baseUrl}${url}`;
+}
+
+// Map Strapi media attributes to our StrapiMedia type
+function mapImageFormat(
+  baseUrl: string,
+  fmt?: RawImageFormat | null
+): StrapiImageFormat | undefined {
+  if (!fmt) return undefined;
+  return {
+    ext: fmt.ext ?? null,
+    url: toAbsoluteUrl(baseUrl, fmt.url),
+    hash: fmt.hash,
+    mime: fmt.mime,
+    name: fmt.name,
+    path: fmt.path ?? null,
+    size: fmt.size,
+    width: fmt.width,
+    height: fmt.height,
+  };
+}
+
+type RawMediaLike =
+  | RawRelationOne<RawMediaAttributes>
+  | RawEntity<RawMediaAttributes>
+  | null
+  | undefined;
+
+function mapStrapiMedia(baseUrl: string, entity: RawMediaLike): StrapiMedia | null {
+  // handle both { data } relation and raw entity
+  const data = hasDataKey(entity)
+    ? (entity as RawRelationOne<RawMediaAttributes>).data
+    : (entity as RawEntity<RawMediaAttributes> | null | undefined);
+  if (!data || !data.id || !data.attributes) return null;
+  const a = data.attributes;
+  const formats = a.formats || {};
+  const mappedFormats: Record<string, StrapiImageFormat> = {};
+  for (const key of Object.keys(formats)) {
+    const fmt = mapImageFormat(baseUrl, formats[key]);
+    if (fmt) mappedFormats[key] = fmt;
+  }
+  return {
+    id: data.id,
+    url: toAbsoluteUrl(baseUrl, a.url),
+    alternativeText: a.alternativeText ?? null,
+    caption: a.caption ?? null,
+    width: a.width ?? null,
+    height: a.height ?? null,
+    formats: mappedFormats,
+    mime: a.mime,
+    size: a.size,
+    name: a.name,
+    provider: a.provider,
+    createdAt: a.createdAt,
+    updatedAt: a.updatedAt,
+  };
+}
+
+function mapStrapiMultiMedia(
+  baseUrl: string,
+  entity: RawRelationMany<RawMediaAttributes> | RawEntity<RawMediaAttributes>[] | null | undefined
+): StrapiMedia[] | null {
+  const arr = hasDataKey(entity)
+    ? (entity as RawRelationMany<RawMediaAttributes>).data
+    : (entity as RawEntity<RawMediaAttributes>[] | null | undefined);
+  if (!Array.isArray(arr)) return null;
+  const out: StrapiMedia[] = [];
+  for (const item of arr) {
+    const m = mapStrapiMedia(baseUrl, item);
+    if (m) out.push(m);
+  }
+  return out;
+}
+
+// Map flattened media
+function mapFlatMedia(baseUrl: string, m?: FlatMedia | null): StrapiMedia | null {
+  if (!m) return null;
+  const formats = m.formats || {};
+  const mappedFormats: Record<string, StrapiImageFormat> = {};
+  for (const key of Object.keys(formats)) {
+    const fmt = mapImageFormat(baseUrl, formats[key]);
+    if (fmt) mappedFormats[key] = fmt;
+  }
+  return {
+    id: m.id,
+    url: toAbsoluteUrl(baseUrl, m.url),
+    alternativeText: m.alternativeText ?? null,
+    caption: m.caption ?? null,
+    width: m.width ?? null,
+    height: m.height ?? null,
+    formats: mappedFormats,
+    mime: m.mime,
+    size: m.size,
+    name: m.name,
+    provider: m.provider,
+    createdAt: m.createdAt,
+    updatedAt: m.updatedAt,
+  };
+}
+
+function mapFlatAuthors(baseUrl: string, list?: FlatAuthor[] | null): Author[] | null {
+  if (!Array.isArray(list)) return null;
+  return list.map(
+    (a): Author => ({
+      id: a.id,
+      name: a.name,
+      avatar: mapFlatMedia(baseUrl, a.avatar ?? null),
+      email: a.email ?? null,
+      research_publications: null,
+      colocal: !!a.colocal,
+    })
+  );
+}
+
+function mapFlatPublications(
+  baseUrl: string,
+  list?: FlatPublication[] | null
+): ResearchPublication[] | null {
+  if (!Array.isArray(list)) return null;
+  return list.map(
+    (p): ResearchPublication => ({
+      id: p.id,
+      title: p.title,
+      abstract: p.abstract,
+      date: p.date,
+      authors: mapFlatAuthors(baseUrl, p.authors) ?? [],
+      tags: mapTags(p.tags),
+      url: p.url ?? p.URL ?? '',
+      file: mapFlatMedia(baseUrl, p.file ?? null),
+      project: null,
+    })
+  );
+}
+
+function mapFlatProject(baseUrl: string, raw: FlatProject): Project {
+  return {
+    id: raw.id,
+    shortTitle: raw.shortTitle,
+    longTitle: raw.longTitle,
+    slug: raw.slug,
+    shortDescription: raw.shortDescription,
+    longDescription: raw.longDescription,
+    about: raw.about,
+    objectives: mapObjectives(raw.objectives),
+    cover: mapFlatMedia(baseUrl, raw.cover)!,
+    images: Array.isArray(raw.images)
+      ? (raw.images.map((m) => mapFlatMedia(baseUrl, m)!).filter(Boolean) as StrapiMedia[])
+      : null,
+    research_publications: mapFlatPublications(baseUrl, raw.research_publications),
+  };
+}
+
+// Map components
+function mapObjectives(raw: RawObjectiveComponent[] | null | undefined): Objective[] | null {
+  if (!Array.isArray(raw)) return null;
+  return raw
+    .map((o) => ({ objective: o?.objective ?? '' }))
+    .filter((o) => o.objective.trim().length > 0);
+}
+
+function mapTags(raw: RawTagComponent[] | null | undefined): Tag[] | null {
+  if (!Array.isArray(raw)) return null;
+  return raw.map((t) => ({ tag: t?.tag ?? '' })).filter((t) => t.tag.trim().length > 0);
+}
+
+// Map relations
+function mapAuthors(
+  baseUrl: string,
+  raw: RawRelationMany<RawAuthorAttributes> | RawEntity<RawAuthorAttributes>[] | null | undefined
+): Author[] | null {
+  const arr = hasDataKey(raw)
+    ? (raw as RawRelationMany<RawAuthorAttributes>).data
+    : (raw as RawEntity<RawAuthorAttributes>[] | null | undefined);
+  if (!Array.isArray(arr)) return null;
+  return arr.map((item) => {
+    const a = item.attributes || ({} as RawAuthorAttributes);
+    return {
+      id: item.id,
+      name: a.name,
+      avatar: mapStrapiMedia(baseUrl, a.avatar),
+      email: a.email ?? null,
+      research_publications: null, // avoid deep recursion. Populate on dedicated endpoints if needed
+      colocal: !!a.colocal,
+    } as Author;
+  });
+}
+
+function mapPublication(
+  baseUrl: string,
+  raw: RawEntity<RawPublicationAttributes> | null | undefined
+): ResearchPublication | null {
+  if (!raw || !raw.id || !raw.attributes) return null;
+  const a = raw.attributes;
+  return {
+    id: raw.id,
+    title: a.title,
+    abstract: a.abstract,
+    date: a.date, // ISO string
+    authors: mapAuthors(baseUrl, a.authors) ?? [],
+    tags: mapTags(a.tags),
+    url: a.url,
+    file: mapStrapiMedia(baseUrl, a.file),
+    project: null, // avoid cycle here; populate via project mapping
+  };
+}
+
+function mapPublications(
+  baseUrl: string,
+  raw:
+    | RawRelationMany<RawPublicationAttributes>
+    | RawEntity<RawPublicationAttributes>[]
+    | null
+    | undefined
+): ResearchPublication[] | null {
+  const arr = hasDataKey(raw)
+    ? (raw as RawRelationMany<RawPublicationAttributes>).data
+    : (raw as RawEntity<RawPublicationAttributes>[] | null | undefined);
+  if (!Array.isArray(arr)) return null;
+  const out: ResearchPublication[] = [];
+  for (const item of arr) {
+    const pub = mapPublication(baseUrl, item);
+    if (pub) out.push(pub);
+  }
+  return out;
+}
+
+function mapProject(
+  baseUrl: string,
+  raw: RawEntity<RawProjectAttributes> | null | undefined
+): Project | null {
+  if (!raw || !raw.id || !raw.attributes) return null;
+  const a = raw.attributes;
+  const proj: Project = {
+    id: raw.id,
+    shortTitle: a.shortTitle,
+    longTitle: a.longTitle,
+    slug: a.slug,
+    shortDescription: a.shortDescription,
+    longDescription: a.longDescription,
+    about: a.about,
+    objectives: mapObjectives(a.objectives),
+    cover: mapStrapiMedia(baseUrl, a.cover)!,
+    images: mapStrapiMultiMedia(baseUrl, a.images),
+    research_publications: null, // filled next to break circular assignment issues
+  };
+  // Map publications now that project exists (without back-reference to project to avoid cycles)
+  proj.research_publications = mapPublications(baseUrl, a.research_publications);
+  return proj;
+}
+
+export default defineEventHandler(async (event) => {
+  const config = useRuntimeConfig(event);
+  const baseUrl =
+    (config?.strapi?.url as string) ||
+    (config?.public?.strapiUrl as string) ||
+    'http://localhost:1337';
+  const token = (config?.strapi?.token as string) || '';
+
+  // Build Strapi query params
+  const query: Record<string, string> = {
+    populate: '*',
+  };
+
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+  };
+  if (token) headers.Authorization = `Bearer ${token}`;
+
+  try {
+    const res = await $fetch<StrapiListResponseUnion>(`${baseUrl}/api/projects`, {
+      method: 'GET',
+      headers,
+      query,
+    });
+
+    let items: Project[] = [];
+    if (Array.isArray(res?.data)) {
+      const first: unknown = res.data[0];
+      if (first && hasAttributes<RawProjectAttributes>(first)) {
+        // Raw entity/attributes shape
+        const dataRaw = res as StrapiListResponseRaw<RawProjectAttributes>;
+        items = dataRaw.data.map((item) => mapProject(baseUrl, item)).filter(Boolean) as Project[];
+      } else {
+        // Flattened shape
+        const dataFlat = res as StrapiListResponseFlat<FlatProject>;
+        items = dataFlat.data.map((p) => mapFlatProject(baseUrl, p));
+      }
+    }
+
+    return items;
+  } catch (err: unknown) {
+    // Surface Strapi errors nicely
+    throw createError({
+      statusCode: getPropAsNumber(err, 'statusCode') ?? 500,
+      statusMessage: 'Failed to fetch projects from Strapi',
+      data: {
+        message:
+          err instanceof Error ? err.message : (getPropAsString(err, 'message') ?? 'Unknown error'),
+        details: getProp(err, 'data') ?? null,
+      },
+    });
+  }
+});
