@@ -1,24 +1,16 @@
 import path from 'path';
 
 export default ({ env }) => {
-  const client = env('DATABASE_CLIENT', 'postgres');
-
-  // Require credentials for SQL DB clients to avoid using insecure defaults.
-  // if ((client === 'mysql' || client === 'postgres') && (!env('DATABASE_USERNAME') || !env('DATABASE_PASSWORD')) && !env('DATABASE_URL')) {
-  //   throw new Error(
-  //     `Database credentials are required for client "${client}". Set DATABASE_USERNAME and DATABASE_PASSWORD (or DATABASE_URL).`
-  //   );
-  // }
+  const client = env('DATABASE_CLIENT', 'sqlite');
 
   const connections = {
     mysql: {
       connection: {
         host: env('DATABASE_HOST', 'localhost'),
         port: env.int('DATABASE_PORT', 3306),
-        // database name can have a reasonable default for dev, but credentials must be provided
-        database: env('DATABASE_NAME', 'colocal_db'),
-        user: env('DATABASE_USERNAME'),
-        password: env('DATABASE_PASSWORD'),
+        database: env('DATABASE_NAME', 'strapi'),
+        user: env('DATABASE_USERNAME', 'strapi'),
+        password: env('DATABASE_PASSWORD', 'strapi'),
         ssl: env.bool('DATABASE_SSL', false) && {
           key: env('DATABASE_SSL_KEY', undefined),
           cert: env('DATABASE_SSL_CERT', undefined),
@@ -33,12 +25,12 @@ export default ({ env }) => {
     postgres: {
       connection: {
         connectionString: env('DATABASE_URL'),
-        host: env('DATABASE_HOST' ),
-        port: env.int('DATABASE_PORT'),
-        database: env('DATABASE_NAME'),
-        user: env('DATABASE_USERNAME'),
-        password: env('DATABASE_PASSWORD'),
-        ssl: env.bool('DATABASE_SSL', true) && {
+        host: env('DATABASE_HOST', 'localhost'),
+        port: env.int('DATABASE_PORT', 5432),
+        database: env('DATABASE_NAME', 'strapi'),
+        user: env('DATABASE_USERNAME', 'strapi'),
+        password: env('DATABASE_PASSWORD', 'strapi'),
+        ssl: env.bool('DATABASE_SSL', false) && {
           key: env('DATABASE_SSL_KEY', undefined),
           cert: env('DATABASE_SSL_CERT', undefined),
           ca: env('DATABASE_SSL_CA', undefined),
