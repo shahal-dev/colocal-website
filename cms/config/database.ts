@@ -1,16 +1,24 @@
 import path from 'path';
 
 export default ({ env }) => {
-  const client = env('DATABASE_CLIENT', 'sqlite');
+  const client = env('DATABASE_CLIENT', 'postgres');
+
+  // Require credentials for SQL DB clients to avoid using insecure defaults.
+  // if ((client === 'mysql' || client === 'postgres') && (!env('DATABASE_USERNAME') || !env('DATABASE_PASSWORD')) && !env('DATABASE_URL')) {
+  //   throw new Error(
+  //     `Database credentials are required for client "${client}". Set DATABASE_USERNAME and DATABASE_PASSWORD (or DATABASE_URL).`
+  //   );
+  // }
 
   const connections = {
     mysql: {
       connection: {
         host: env('DATABASE_HOST', 'localhost'),
         port: env.int('DATABASE_PORT', 3306),
+        // database name can have a reasonable default for dev, but credentials must be provided
         database: env('DATABASE_NAME', 'colocal_db'),
-        user: env('DATABASE_USERNAME', 'colocal_user'),
-        password: env('DATABASE_PASSWORD', 'password'),
+        user: env('DATABASE_USERNAME'),
+        password: env('DATABASE_PASSWORD'),
         ssl: env.bool('DATABASE_SSL', false) && {
           key: env('DATABASE_SSL_KEY', undefined),
           cert: env('DATABASE_SSL_CERT', undefined),
@@ -28,8 +36,8 @@ export default ({ env }) => {
         host: env('DATABASE_HOST', 'localhost'),
         port: env.int('DATABASE_PORT', 5432),
         database: env('DATABASE_NAME', 'colocal_db'),
-        user: env('DATABASE_USERNAME', 'colocal_user'),
-        password: env('DATABASE_PASSWORD', 'password'),
+        user: env('DATABASE_USERNAME'),
+        password: env('DATABASE_PASSWORD'),
         ssl: env.bool('DATABASE_SSL', false) && {
           key: env('DATABASE_SSL_KEY', undefined),
           cert: env('DATABASE_SSL_CERT', undefined),
