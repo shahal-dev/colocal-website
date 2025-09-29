@@ -56,55 +56,73 @@ function prev() {
 </script>
 
 <template>
-  <section class="w-full bg-blue-gray-100 py-14">
-    <div class="max-w-6xl mx-auto">
-      <div class="flex items-center justify-between mb-6">
-        <h2 class="text-[28px] md:text-[32px] font-display font-medium">Quotes</h2>
-        <div class="flex items-center gap-3">
-          <button
-            class="w-10 h-10 bg-green-100 text-green-800 rounded-full flex items-center justify-center"
-            aria-label="Previous quote"
-            @click="prev"
-          >
-            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M15 19l-7-7 7-7"
-              />
-            </svg>
-          </button>
-          <button
-            class="w-10 h-10 bg-green-100 text-green-800 rounded-full flex items-center justify-center"
-            aria-label="Next quote"
-            @click="next"
-          >
-            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 5l7 7-7 7"
-              />
-            </svg>
-          </button>
+  <section class="w-full bg-blue-gray-100 py-10 sm:py-14">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4 sm:gap-0">
+        <h2 class="text-2xl sm:text-[28px] md:text-[32px] font-display font-medium">Quotes</h2>
+
+        <!-- Controls: stacked on small screens, inline on larger -->
+        <div class="flex flex-col-reverse sm:flex-row sm:items-center gap-3 sm:gap-3">
+          <div class="flex items-center gap-3 justify-start sm:justify-end">
+            <button
+              class="w-9 h-9 sm:w-10 sm:h-10 bg-green-100 text-green-800 rounded-full flex items-center justify-center"
+              aria-label="Previous quote"
+              @click="prev"
+            >
+              <svg
+                class="w-4 h-4 sm:w-5 sm:h-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15 19l-7-7 7-7"
+                />
+              </svg>
+            </button>
+            <button
+              class="w-9 h-9 sm:w-10 sm:h-10 bg-green-100 text-green-800 rounded-full flex items-center justify-center"
+              aria-label="Next quote"
+              @click="next"
+            >
+              <svg
+                class="w-4 h-4 sm:w-5 sm:h-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
 
       <div class="flex justify-center">
-        <transition :name="transitionName" mode="out-in">
-          <div :key="currentIndex">
-            <QuoteCard
-              v-if="currentQuote"
-              :name="currentQuote.name"
-              :role="currentQuote.role"
-              :quote="currentQuote.quote"
-              :avatar="currentQuote.avatar"
-            />
-            <div v-else class="text-gray-500">No quotes available.</div>
-          </div>
-        </transition>
+        <!-- container with responsive max widths so QuoteCard can be full width inside -->
+        <div class="w-full max-w-md sm:max-w-xl md:max-w-3xl px-2 sm:px-0">
+          <transition :name="transitionName" mode="out-in">
+            <div :key="currentIndex">
+              <QuoteCard
+                v-if="currentQuote"
+                class="w-full"
+                :name="currentQuote.name"
+                :role="currentQuote.role"
+                :quote="currentQuote.quote"
+                :avatar="currentQuote.avatar"
+              />
+              <div v-else class="text-gray-500 text-center py-6">No quotes available.</div>
+            </div>
+          </transition>
+        </div>
       </div>
     </div>
   </section>
@@ -163,6 +181,16 @@ function prev() {
 .slide-prev-leave-to {
   opacity: 0;
   transform: translateX(40px) scale(0.995);
+}
+
+/* small tweak so transitions feel snappier on small screens */
+@media (max-width: 640px) {
+  .slide-next-enter-active,
+  .slide-next-leave-active,
+  .slide-prev-enter-active,
+  .slide-prev-leave-active {
+    transition-duration: 360ms;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

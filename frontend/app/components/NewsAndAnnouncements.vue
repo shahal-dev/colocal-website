@@ -27,43 +27,59 @@ const newsItems = computed<NewsItem[]>(() => {
 </script>
 
 <template>
-  <section class="flex justify-center items-center w-full max-w-6xl mx-auto h-[484px]">
-    <div class="grid grid-cols-12 gap-10">
+  <section class="w-full max-w-6xl mx-auto py-8 px-4">
+    <div class="grid grid-cols-12 gap-6 md:gap-10">
       <!-- Left rail -->
-      <div class="col-span-12 md:col-span-4 flex md:block items-start gap-6">
+      <div class="col-span-12 md:col-span-4 flex items-center justify-between md:block gap-4">
         <div>
-          <h2 class="text-[32] md:text-[32px] font-display font-medium mb-6 md:mb-8">
+          <h2 class="text-2xl md:text-[32px] font-display font-medium mb-4 md:mb-6">
             News & Announcements
           </h2>
-          <NuxtLink
-            to="/news-events"
-            class="px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-sm font-body font-semibold transition-colors"
-          >
-            View All
-          </NuxtLink>
         </div>
+        <NuxtLink
+          to="/news-events"
+          class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-sm font-body font-semibold transition-colors whitespace-nowrap"
+        >
+          View All
+        </NuxtLink>
       </div>
 
       <!-- News grid -->
-      <div class="col-span-12 md:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-x-14 gap-y-9">
-        <article v-for="item in newsItems" :key="item.id" class="flex items-start gap-4">
-          <img
-            :src="item.image"
-            :alt="item.title"
-            class="w-[102px] h-[102px] object-cover rounded"
-          />
-          <div class="flex-1">
-            <NuxtLink :to="`/news-events/${item.id}`">
-              <h3 class="m-0 text-[16px] font-semibold text-gray-900 line-clamp-2">
+      <div
+        class="col-span-12 md:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-x-6 sm:gap-x-8 gap-y-6"
+      >
+        <article v-for="item in newsItems" :key="item.id" class="flex items-start gap-4 sm:gap-5">
+          <template v-if="item.image">
+            <img
+              :src="item.image"
+              :alt="item.title"
+              class="w-20 h-20 sm:w-24 sm:h-24 md:w-[102px] md:h-[102px] object-cover rounded flex-shrink-0"
+            />
+          </template>
+          <template v-else>
+            <div
+              class="w-20 h-20 sm:w-24 sm:h-24 md:w-[102px] md:h-[102px] bg-gray-100 rounded flex-shrink-0 flex items-center justify-center text-gray-400 text-sm"
+              aria-hidden="true"
+            >
+              No Image
+            </div>
+          </template>
+
+          <div class="flex-1 min-w-0">
+            <NuxtLink :to="`/news-events/${item.id}`" class="block">
+              <h3
+                class="m-0 text-sm sm:text-[16px] md:text-[16px] font-semibold text-gray-900 line-clamp-2"
+              >
                 {{ item.title }}
               </h3>
             </NuxtLink>
-            <div class="mt-2 flex items-center text-gray-500 text-sm">
+            <div class="mt-2 flex items-center text-gray-500 text-xs sm:text-sm">
               <svg
-                class="w-4 h-4 mr-2 text-gray-400"
+                class="w-4 h-4 mr-2 text-gray-400 flex-shrink-0"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
+                aria-hidden="true"
               >
                 <rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke-width="2" />
                 <line x1="16" y1="2" x2="16" y2="6" stroke-width="2" />
@@ -84,7 +100,6 @@ const newsItems = computed<NewsItem[]>(() => {
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
-  line-clamp: 2;
   overflow: hidden;
 }
 </style>

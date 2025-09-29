@@ -35,21 +35,45 @@ const quotesForUi = computed(() => {
 </script>
 
 <template>
-  <div class="flex flex-col items-center w-full justify-center">
-    <BreadCrumb
-      :breadcrumb-items="[
-        { text: 'Home', href: '/' },
-        { text: 'About Us', href: '/about' },
-      ]"
-      :page-title="aboutData?.title || 'About Us'"
-    />
-    <AboutIntroSection
-      :subtitle="aboutData?.subtitle"
-      :title="aboutData?.title"
-      :about="aboutData?.about"
-    />
-    <QuotesSection :quotes="quotesForUi" />
-    <MissionSection :mission="aboutData?.mission" :objectives="aboutData?.objectives || []" />
-    <UniversitiesTeaser />
+  <!-- responsive container with comfortable padding and max width -->
+  <div class="w-full lg:py-8 mx-auto max-w-7xl">
+    <!-- breadcrumb stretched full width on small screens -->
+    <div class="w-full mb-2">
+      <BreadCrumb
+        :breadcrumb-items="[
+          { text: 'Home', href: '/' },
+          { text: 'About Us', href: '/about' },
+        ]"
+        :page-title="aboutData?.title || 'About Us'"
+      />
+    </div>
+
+    <!-- Intro section: full width, centered content, responsive max width -->
+    <div class="w-full mb-10">
+      <AboutIntroSection
+        :subtitle="aboutData?.subtitle"
+        :title="aboutData?.title"
+        :about="aboutData?.about"
+        class="mx-auto max-w-3xl"
+      />
+    </div>
+
+    <!-- Responsive grid: on small screens stack, on lg show 3 columns -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 w-full mb-10">
+      <!-- Quotes take one column on lg, full width on sm -->
+      <div class="w-full lg:col-span-1">
+        <QuotesSection :quotes="quotesForUi" />
+      </div>
+
+      <!-- Mission + Objectives take two columns on lg, full width on sm -->
+      <div class="w-full lg:col-span-2">
+        <MissionSection :mission="aboutData?.mission" :objectives="aboutData?.objectives || []" />
+      </div>
+    </div>
+
+    <!-- Teaser at bottom, centered and responsive -->
+    <div class="w-full mt-4">
+      <UniversitiesTeaser class="mx-auto max-w-4xl" />
+    </div>
   </div>
 </template>

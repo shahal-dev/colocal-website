@@ -1,23 +1,45 @@
 <template>
-  <div class="w-full h-[348px] bg-green-700">
-    <div class="flex flex-row justify-center items-center h-full">
-      <div class="flex flex-col justify-around items-center text-white">
-        <div class="flex flex-row gap-40">
-          <div class="flex flex-col items-center">
-            <span class="text-[56px] font-body font-semibold">{{ countries ?? 16 }}</span>
-            <span class="text-2xl font-body font-semibold">Country Affiliations</span>
-          </div>
-          <div class="flex flex-col items-center">
-            <span class="text-[56px] font-body font-semibold">{{ projects ?? 13 }}</span>
-            <span class="text-2xl font-body font-semibold">Projects</span>
-          </div>
-          <div class="flex flex-col items-center">
-            <span class="text-[56px] font-body font-semibold">{{ years ?? 7 }}</span>
-            <span class="text-2xl font-body font-semibold">Years</span>
-          </div>
-          <div class="flex flex-col items-center">
-            <span class="text-[56px] font-body font-semibold">{{ members ?? '48+' }}</span>
-            <span class="text-2xl font-body font-semibold">Members</span>
+  <div class="w-full bg-green-700">
+    <div class="max-w-6xl mx-auto px-4 py-8">
+      <div class="flex justify-center">
+        <div class="w-full">
+          <!-- responsive: stack on small, row on md+; wrap if needed -->
+          <div
+            class="grid grid-cols-1 gap-y-6 gap-x-8 sm:grid-cols-2 md:grid-cols-4 items-center text-white text-center"
+          >
+            <div class="flex flex-col items-center">
+              <span class="font-body font-semibold text-3xl sm:text-4xl md:text-[56px]">
+                {{ props.countries ?? 16 }}
+              </span>
+              <span class="font-body font-semibold text-base sm:text-lg md:text-2xl">
+                Country Affiliations
+              </span>
+            </div>
+
+            <div class="flex flex-col items-center">
+              <span class="font-body font-semibold text-3xl sm:text-4xl md:text-[56px]">
+                {{ props.projects ?? 13 }}
+              </span>
+              <span class="font-body font-semibold text-base sm:text-lg md:text-2xl">
+                Projects
+              </span>
+            </div>
+
+            <div class="flex flex-col items-center">
+              <span class="font-body font-semibold text-3xl sm:text-4xl md:text-[56px]">
+                {{ props.years ?? 7 }}
+              </span>
+              <span class="font-body font-semibold text-base sm:text-lg md:text-2xl"> Years </span>
+            </div>
+
+            <div class="flex flex-col items-center">
+              <span class="font-body font-semibold text-3xl sm:text-4xl md:text-[56px]">
+                {{ props.members ?? '48+' }}
+              </span>
+              <span class="font-body font-semibold text-base sm:text-lg md:text-2xl">
+                Members
+              </span>
+            </div>
           </div>
         </div>
       </div>
@@ -26,7 +48,7 @@
 </template>
 
 <script setup lang="ts">
-defineProps<{
+const props = defineProps<{
   countries?: number;
   projects?: number;
   years?: number;

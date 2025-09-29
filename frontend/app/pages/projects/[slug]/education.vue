@@ -9,17 +9,8 @@ const slug = route.params.slug;
 const project = useState<Project | null>(`project:${slug}`, () => null);
 const projectName = computed(() => project.value?.shortTitle || 'Project');
 
-// Secondary navbar (links to sibling pages under the slug)
+// Use shared project navbar
 const basePath = computed(() => `/projects/${slug}`);
-const tabs = computed(() => [
-  { key: 'home', label: 'Home', to: basePath.value },
-  { key: 'about', label: 'About ' + projectName.value, to: `${basePath.value}/about` },
-  { key: 'education', label: 'Education & Training', to: `${basePath.value}/education` },
-  { key: 'research', label: 'Research & Publications', to: `${basePath.value}/research` },
-  { key: 'outreach', label: 'Outreach', to: `${basePath.value}/outreach` },
-  { key: 'lla', label: 'LLA Hub', to: `${basePath.value}/lla` },
-]);
-const isActive = (to: string) => route.path.startsWith(to);
 const hasChild = computed(() => Boolean(route.params.id));
 
 // Fetch education/trainings for this project
@@ -59,23 +50,7 @@ function goTo(page: number) {
       />
 
       <!-- Secondary navbar (links to sibling pages) -->
-      <div class="w-full border-b sticky top-0 z-20 bg-white/95 backdrop-blur">
-        <nav class="max-w-6xl flex items-center gap-2 px-25 overflow-x-auto hide-scrollbar">
-          <NuxtLink
-            v-for="t in tabs"
-            :key="t.key"
-            :to="t.to"
-            class="px-4 py-3 text-base font-semibold whitespace-nowrap"
-            :class="
-              isActive(t.to)
-                ? 'bg-green-100 text-green-900 border-b-2 border-green-700'
-                : 'bg-white text-gray-700 border-gray-300 hover:border-green-300'
-            "
-          >
-            {{ t.label }}
-          </NuxtLink>
-        </nav>
-      </div>
+      <ProjectNavbar :project="project" :slug="String(slug)" />
 
       <section class="w-full max-w-6xl mx-auto py-10 px-4 md:px-0">
         <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

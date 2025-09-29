@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed } from 'vue';
 import aboutImage from '~/assets/images/carousel-1.png';
 
 const props = defineProps<{ subtitle?: string; title?: string; about?: string }>();
@@ -14,7 +15,6 @@ const aboutParagraphs = computed(() => {
   ];
   const text = props.about?.trim();
   if (!text) return fallback;
-  // Split on blank lines for paragraphs
   return text
     .split(/\n\s*\n/)
     .map((p) => p.trim())
@@ -24,36 +24,54 @@ const aboutParagraphs = computed(() => {
 
 <template>
   <section
-    class="w-full max-w-6xl mx-auto py-14 grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 items-center"
+    class="w-full max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-14 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-center"
   >
     <!-- Left: Text -->
-    <div>
+    <div class="order-2 md:order-1">
       <p class="text-sm font-semibold text-green-700 mb-2">{{ subtitleText }}</p>
+
       <h2
-        class="text-[28px] md:text-[32px] leading-tight font-display font-semibold mb-5 whitespace-pre-line"
+        class="text-2xl sm:text-[28px] md:text-[32px] leading-tight md:leading-tight font-display font-semibold mb-4 sm:mb-5 whitespace-pre-line"
       >
         {{ titleText }}
       </h2>
+
       <div class="space-y-4 text-gray-700 mb-6">
-        <p v-for="(para, idx) in aboutParagraphs" :key="idx">{{ para }}</p>
+        <p v-for="(para, idx) in aboutParagraphs" :key="idx" class="text-sm sm:text-base">
+          {{ para }}
+        </p>
       </div>
-      <a
-        href="/about/team"
-        class="px-5 py-3 bg-green-600 hover:bg-green-700 text-white rounded-sm font-semibold"
-      >
-        Our Team
-      </a>
+
+      <div class="flex md:block">
+        <a
+          href="/about/team"
+          class="w-full md:w-auto text-center px-5 py-3 bg-green-600 hover:bg-green-700 text-white rounded-sm font-semibold"
+        >
+          Our Team
+        </a>
+      </div>
     </div>
 
     <!-- Right: Image -->
-    <div>
-      <img
-        :src="aboutImage"
-        alt="LUCCC team working"
-        class="w-full h-[360px] object-cover rounded"
-      />
+    <div class="order-1 md:order-2">
+      <figure class="w-full rounded overflow-hidden shadow-sm">
+        <img
+          :src="aboutImage"
+          alt="LUCCC team working"
+          loading="lazy"
+          decoding="async"
+          class="w-full h-56 sm:h-72 md:h-[360px] object-cover object-center block"
+        />
+      </figure>
     </div>
   </section>
 </template>
 
-<style scoped></style>
+<style scoped>
+/* optional small helpers if you want tighter control on very small screens */
+@media (max-width: 420px) {
+  .font-display {
+    font-size: 1.05rem;
+  }
+}
+</style>

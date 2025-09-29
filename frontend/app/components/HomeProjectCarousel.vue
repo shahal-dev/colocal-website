@@ -3,7 +3,7 @@
     role="region"
     aria-label="Homepage project carousel"
     tabindex="0"
-    class="relative overflow-hidden h-96 md:h-[600px] w-full bg-home-carousel"
+    class="relative overflow-hidden w-full bg-home-carousel h-[420px] sm:h-96 md:h-[600px]"
     @mouseenter="pauseAutoplay"
     @mouseleave="startAutoplay"
     @focusin="pauseAutoplay"
@@ -12,41 +12,77 @@
   >
     <transition :name="transitionName" mode="out-in">
       <div :key="currentIndex" class="h-full w-full flex flex-col md:flex-row">
+        <!-- Image (mobile first: full-background; desktop: static side image) -->
+        <div
+          class="absolute inset-0 md:static md:w-[720px] md:h-full flex items-center justify-center md:order-2 order-1 z-0"
+        >
+          <picture v-if="currentSlide && currentSlide.image" class="w-full h-full">
+            <!-- use available formats in srcset; fall back to single src -->
+            <source
+              v-if="currentSlide.srcset"
+              :srcset="currentSlide.srcset"
+              sizes="(min-width: 768px) 720px, 100vw"
+            />
+            <img
+              :src="currentSlide.image"
+              :alt="currentSlide.title || 'Project image'"
+              class="w-full h-full object-cover"
+              loading="lazy"
+              decoding="async"
+            />
+          </picture>
+        </div>
+
+        <!-- Mobile overlay (only shown on small screens) -->
+        <div class="absolute inset-0 bg-black/60 md:hidden z-10 pointer-events-none" />
+
         <!-- Content -->
-        <div class="flex flex-col justify-center items-start px-6 md:pl-24 md:pr-20 flex-1">
-          <h1 class="m-0 mb-2 text-white text-[32px] font-semibold font-display">
+        <div
+          class="relative z-20 flex flex-col justify-center items-start px-4 sm:px-6 md:pl-24 md:pr-20 flex-1 md:order-1 order-2"
+        >
+          <h1
+            class="m-0 mb-2 text-white text-xl md:text-[32px] lg:text-4xl font-semibold font-display"
+          >
             {{ currentSlide?.title }}
           </h1>
-          <p class="m-0 mb-8 text-lg md:text-lg font-display font-medium text-white line-clamp-4">
+          <p class="m-0 mb-6 text-sm md:text-lg font-display font-medium text-white line-clamp-4">
             {{ currentSlide?.subtitle }}
           </p>
           <div class="flex flex-wrap gap-4">
             <NuxtLink
               v-if="currentSlide && currentSlide.to"
               :to="currentSlide.to"
-              class="px-6 py-4 rounded-sm hover:opacity-95 font-poppins font-semibold bg-green-600 text-white"
+              class="px-5 py-3 rounded-sm hover:opacity-95 font-poppins font-semibold bg-green-600 text-white text-sm md:text-base"
             >
               View Project
             </NuxtLink>
           </div>
-        </div>
 
-        <!-- Image -->
-        <div class="md:w-[720px] w-full h-48 md:h-full flex items-center justify-center">
-          <img
-            v-if="currentSlide && currentSlide.image"
-            :src="currentSlide.image"
-            :alt="currentSlide?.title || 'Project image'"
-            class="w-full h-full object-cover"
-          />
+          <!-- Mobile controls (visible only on small screens) -->
+          <div class="flex gap-3 mt-6 md:hidden">
+            <button
+              aria-label="Previous slide"
+              class="px-3 py-2 bg-white/10 text-white rounded-md"
+              @click="prev"
+            >
+              ‹
+            </button>
+            <button
+              aria-label="Next slide"
+              class="px-3 py-2 bg-green-600 text-white rounded-md"
+              @click="next"
+            >
+              ›
+            </button>
+          </div>
         </div>
       </div>
     </transition>
 
     <div v-if="slides.length > 1">
-      <!-- Controls -->
+      <!-- Desktop Controls -->
       <button
-        class="absolute left-6 top-1/2 -translate-y-1/2 -rotate-90 w-8 h-8 p-2 bg-green-500 hover:bg-green-600 rounded-full flex items-center justify-center transition-colors shadow-lg"
+        class="hidden md:flex absolute left-6 top-1/2 -translate-y-1/2 -rotate-90 w-8 h-8 p-2 bg-green-500 hover:bg-green-600 rounded-full items-center justify-center transition-colors shadow-lg"
         aria-label="Previous slide"
         @click="prev"
       >
@@ -55,7 +91,7 @@
         </svg>
       </button>
       <button
-        class="absolute right-6 top-1/2 -translate-y-1/2 rotate-90 w-8 h-8 p-2 bg-green-500 hover:bg-green-600 rounded-full flex items-center justify-center transition-colors shadow-lg"
+        class="hidden md:flex absolute right-6 top-1/2 -translate-y-1/2 rotate-90 w-8 h-8 p-2 bg-green-500 hover:bg-green-600 rounded-full items-center justify-center transition-colors shadow-lg"
         aria-label="Next slide"
         @click="next"
       >
@@ -63,15 +99,16 @@
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
         </svg>
       </button>
+
       <!-- Slide indicators -->
-      <div class="absolute left-1/2 -translate-x-1/2 bottom-6 flex items-center gap-3">
+      <div class="absolute left-1/2 -translate-x-1/2 bottom-4 sm:bottom-6 flex items-center gap-3">
         <button
           v-for="(item, idx) in slides"
           :key="idx"
           :aria-label="`Go to slide ${idx + 1}`"
           :aria-current="idx === currentIndex ? 'true' : 'false'"
-          class="w-10 h-1 rounded-sm"
-          :class="idx === currentIndex ? 'bg-green-600' : 'bg-white'"
+          class="w-8 sm:w-10 h-1 rounded-sm"
+          :class="idx === currentIndex ? 'bg-green-600' : 'bg-white/80'"
           @click="goTo(idx)"
         />
       </div>
@@ -81,6 +118,7 @@
     <p class="sr-only" aria-live="polite">{{ liveMessage }}</p>
   </div>
 </template>
+
 <script setup lang="ts">
 import { ref, computed, onMounted, onBeforeUnmount, watchEffect } from 'vue';
 import type { Project } from '../../types/content';
@@ -92,16 +130,29 @@ type Slide = {
   subtitle: string;
   image: string;
   to: string;
+  srcset?: string;
 };
 
 const slides = computed<Slide[]>(() => {
   if (!Array.isArray(props.projects) || props.projects.length === 0) return [];
-  return props.projects.map((p) => ({
-    title: p.longTitle || p.shortTitle,
-    subtitle: p.shortDescription,
-    image: p.cover?.formats?.large?.url || p.cover?.url || '',
-    to: `/projects/${p.slug}`,
-  }));
+  return props.projects.map((p) => {
+    // build a simple srcset from available formats (common Strapi-like structure)
+    const formats = (p.cover && (p.cover as any).formats) || {};
+    const srcCandidates: string[] = [];
+    if (formats.small?.url) srcCandidates.push(`${formats.small.url} 480w`);
+    if (formats.medium?.url) srcCandidates.push(`${formats.medium.url} 768w`);
+    if (formats.large?.url) srcCandidates.push(`${formats.large.url} 1024w`);
+    if (p.cover?.url) srcCandidates.push(`${p.cover.url} 1200w`);
+    const srcset = srcCandidates.length ? srcCandidates.join(', ') : undefined;
+
+    return {
+      title: p.longTitle || p.shortTitle,
+      subtitle: p.shortDescription,
+      image: formats.large?.url || p.cover?.url || '',
+      to: `/projects/${p.slug}`,
+      srcset,
+    };
+  });
 });
 
 const currentIndex = ref(0);
@@ -178,9 +229,9 @@ onBeforeUnmount(() => {
   stopAutoplay();
 });
 </script>
+
 <style scoped>
-/* Direction-aware slide transitions (larger motion) */
-/* slide-next: new slide enters from right -> center, old slides exit to left */
+/* transitions unchanged (kept for clarity) */
 .slide-next-enter-from {
   opacity: 0;
   transform: translateX(40px) scale(0.995);
@@ -207,8 +258,6 @@ onBeforeUnmount(() => {
   opacity: 0;
   transform: translateX(-40px) scale(0.995);
 }
-
-/* slide-prev: new slide enters from left -> center, old slides exit to right */
 .slide-prev-enter-from {
   opacity: 0;
   transform: translateX(-40px) scale(0.995);
@@ -235,8 +284,6 @@ onBeforeUnmount(() => {
   opacity: 0;
   transform: translateX(40px) scale(0.995);
 }
-
-/* Fallback fade (kept for any components still using name="fade") */
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
@@ -253,8 +300,6 @@ onBeforeUnmount(() => {
   opacity: 1;
   transform: translateX(0);
 }
-
-/* Respect user preference for reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .slide-next-enter-active,
   .slide-next-leave-active,

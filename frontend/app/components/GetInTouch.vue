@@ -9,13 +9,13 @@ defineProps<{ phone?: string; email?: string; address?: string }>();
 </script>
 
 <template>
-  <section class="h-[690px] w-full max-w-6xl mx-auto py-10 px-20">
+  <section class="w-full max-w-6xl mx-auto py-10 px-4 sm:px-6 lg:px-20">
     <div
-      class="bg-blue-gray-100 grid grid-cols-1 md:grid-cols-2 gap-0 rounded-sm overflow-hidden shadow-sm"
+      class="bg-blue-gray-100 grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-0 rounded-sm overflow-hidden shadow-sm divide-y md:divide-y-0 md:divide-x divide-gray-200"
     >
       <!-- Left: Contact details -->
-      <div class="p-8 md:p-10">
-        <h3 class="text-2xl font-display font-medium mb-2">Get in Touch</h3>
+      <div class="p-6 md:p-10">
+        <h3 class="text-xl md:text-2xl font-display font-medium mb-2">Get in Touch</h3>
         <p class="font-body text-sm text-gray-600 max-w-prose mb-6">
           We'd love to hear from you! Reach out to collaborate, ask questions, or learn more about
           LUCCC’s initiatives.
@@ -86,16 +86,16 @@ defineProps<{ phone?: string; email?: string; address?: string }>();
 
         <div class="mt-8">
           <p class="text-sm font-semibold mb-3">Follow our social media</p>
-          <div class="flex items-center gap-3">
+          <div class="flex items-center gap-3 flex-wrap">
             <button
-              class="w-7 h-7 p-2 rounded bg-green-200 text-green-700 inline-flex items-center justify-center"
+              class="w-9 h-9 p-2 rounded bg-green-200 text-green-700 inline-flex items-center justify-center"
+              aria-label="Logo"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="1200"
-                height="1227"
-                fill="none"
+                class="w-4 h-4"
                 viewBox="0 0 1200 1227"
+                fill="none"
               >
                 <path
                   fill="#000"
@@ -104,12 +104,12 @@ defineProps<{ phone?: string; email?: string; address?: string }>();
               </svg>
             </button>
             <button
-              class="w-7 h-7 p-1 rounded bg-green-200 text-green-700 inline-flex items-center justify-center"
+              class="w-9 h-9 p-1 rounded bg-green-200 text-green-700 inline-flex items-center justify-center"
+              aria-label="YouTube"
             >
               <svg
                 viewBox="0 0 256 180"
-                width="256"
-                height="180"
+                class="w-5 h-5"
                 xmlns="http://www.w3.org/2000/svg"
                 preserveAspectRatio="xMidYMid"
               >
@@ -125,9 +125,9 @@ defineProps<{ phone?: string; email?: string; address?: string }>();
       </div>
 
       <!-- Right: Form -->
-      <div class="p-8 md:p-10 bg-white/60">
-        <h3 class="text-2xl font-display font-medium mb-5">Send us a message</h3>
-        <form class="space-y-4" @submit="onSubmit">
+      <div class="p-6 md:p-10 bg-white/60">
+        <h3 class="text-xl md:text-2xl font-display font-medium mb-5">Send us a message</h3>
+        <form class="space-y-4" @submit.prevent="onSubmit">
           <input
             type="text"
             placeholder="Name*"

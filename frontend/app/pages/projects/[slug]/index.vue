@@ -30,20 +30,8 @@ watchEffect(() => {
   sharedProject.value = project.value ?? null;
 });
 
-// Secondary navbar (links to sibling pages under the slug)
+// Use shared project navbar
 const basePath = computed(() => `/projects/${slug}`);
-const tabs = computed(() => {
-  const shortTitle = project.value?.shortTitle || 'Project';
-  return [
-    { key: 'home', label: 'Home', to: basePath.value },
-    { key: 'about', label: 'About ' + shortTitle, to: `${basePath.value}/about` },
-    { key: 'education', label: 'Education & Training', to: `${basePath.value}/education` },
-    { key: 'research', label: 'Research & Publications', to: `${basePath.value}/research` },
-    { key: 'outreach', label: 'Outreach', to: `${basePath.value}/outreach` },
-    { key: 'lla', label: 'LLA Hub', to: `${basePath.value}/lla` },
-  ];
-});
-const isActive = (to: string) => route.path === to;
 const hasChild = computed(() => Boolean(route.params.id));
 
 // Publications data (fetch via server endpoint filtered by project slug)
@@ -164,28 +152,12 @@ const fellows = ref([
         :page-title="project?.shortTitle || 'Project'"
       />
       <!-- Secondary navbar (links to sibling pages) -->
-      <div class="w-full border-b sticky top-0 z-20 bg-white/95 backdrop-blur">
-        <nav class="max-w-6xl flex items-center gap-2 px-25 overflow-x-auto hide-scrollbar">
-          <NuxtLink
-            v-for="t in tabs"
-            :key="t.key"
-            :to="t.to"
-            class="px-4 py-3 text-base font-semibold whitespace-nowrap"
-            :class="
-              isActive(t.to)
-                ? 'bg-green-100 text-green-900 border-b-2 border-green-700'
-                : 'bg-white text-gray-700 border-gray-300 hover:border-green-300'
-            "
-          >
-            {{ t.label }}
-          </NuxtLink>
-        </nav>
-      </div>
+      <ProjectNavbar :project="project" :slug="String(slug)" />
 
       <!-- HERO/CAROUSEL (reuse home carousel) -->
-      <section id="home" class="w-full scroll-mt-24">
+      <!-- <section id="home" class="w-full scroll-mt-24">
         <HomeCarousel />
-      </section>
+      </section> -->
 
       <!-- About section: bind to project data -->
       <section id="about" class="w-full max-w-6xl mx-auto px-4 md:px-0 py-12 scroll-mt-24">
@@ -196,7 +168,7 @@ const fellows = ref([
           {{ project?.longTitle }}
         </h2>
         <div class="space-y-4 text-gray-700 leading-relaxed">
-          <p>{{ project?.longDescription }}</p>
+          <MDC :value="project?.longDescription" class="prose max-w-none text-gray-800 space-y-6" />
         </div>
       </section>
 
@@ -251,7 +223,7 @@ const fellows = ref([
       </section>
 
       <!-- Featured News -->
-      <section class="w-full max-w-6xl mx-auto px-4 md:px-0 py-12">
+      <!-- <section class="w-full max-w-6xl mx-auto px-4 md:px-0 py-12">
         <h2 class="text-center text-[24px] md:text-[28px] font-display font-medium mb-6">
           Featured News
         </h2>
@@ -269,9 +241,9 @@ const fellows = ref([
               <p class="text-sm text-gray-700 line-clamp-2">{{ n.excerpt }}</p>
             </div>
           </article>
-        </div>
-        <!-- News pagination -->
-        <div v-if="newsTotal > 1" class="mt-6 flex items-center justify-center gap-2">
+        </div> -->
+      <!-- News pagination -->
+      <!-- <div v-if="newsTotal > 1" class="mt-6 flex items-center justify-center gap-2">
           <button
             v-for="page in newsTotal"
             :key="page"
@@ -286,7 +258,7 @@ const fellows = ref([
             {{ page }}
           </button>
         </div>
-      </section>
+      </section> -->
 
       <!-- Our Fellows -->
       <section class="w-full max-w-6xl mx-auto px-4 md:px-0 py-12">

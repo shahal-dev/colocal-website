@@ -27,18 +27,23 @@ const resources = [
 </script>
 
 <template>
-  <section
-    class="flex flex-col h-[528px] w-full justify-center items-center relative bg-blue-gray-100"
-  >
-    <h2 class="text-[32px] font-display font-medium mb-12">Resource Hub</h2>
-    <div class="flex flex-row justify-center items-center space-x-6">
-      <ResourceCard
-        v-for="res in resources"
-        :key="res.id"
-        :icon="res.icon"
-        :title="res.title"
-        :description="res.description"
-      />
+  <section class="w-full bg-blue-gray-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <h2 class="text-2xl sm:text-3xl md:text-4xl font-display font-medium mb-8 text-center">
+        Resource Hub
+      </h2>
+
+      <!-- responsive grid: 1 column on mobile, 2 on small, 3 on large -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
+        <ResourceCard
+          v-for="res in resources"
+          :key="res.id"
+          :icon="res.icon"
+          :title="res.title"
+          :description="res.description"
+          class="w-full"
+        />
+      </div>
     </div>
   </section>
 </template>

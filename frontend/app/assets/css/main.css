@@ -14,6 +14,9 @@
   --color-blue-gray-50: #f8fafc; /* Tailwind v3 blue-gray-50 */
   --color-blue-gray-100: #f1f5f9; /* Tailwind v3 blue-gray-100 */
   --color-home-carousel: #082112; /* Custom dark green for home carousel */
+  --breakpoint-md: 80rem; /* 1280px */
+  --breakpoint-lg: 96rem; /* 1536px */
+  --breakpoint-xl: 112rem; /* 1792px */
 }
 
 /* Set default font family for body using Tailwind utility */
