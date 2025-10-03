@@ -261,7 +261,7 @@ const fellows = ref([
       </section> -->
 
       <!-- Our Fellows -->
-      <section class="w-full max-w-6xl mx-auto px-4 md:px-0 py-12">
+      <!-- <section class="w-full max-w-6xl mx-auto px-4 md:px-0 py-12">
         <h2 class="text-center text-[24px] md:text-[28px] font-display font-medium mb-8">
           Our Fellows
         </h2>
@@ -273,9 +273,9 @@ const fellows = ref([
           >
             <div
               class="w-16 h-16 rounded-full border-4 border-blue-300 text-blue-500 flex items-center justify-center mb-4"
-            >
-              <!-- Simple person icon -->
-              <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            > -->
+      <!-- Simple person icon -->
+      <!-- <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <circle cx="12" cy="8" r="4" stroke-width="2" />
                 <path d="M4 20c0-3.314 3.582-6 8-6s8 2.686 8 6" stroke-width="2" />
               </svg>
@@ -284,7 +284,7 @@ const fellows = ref([
             <p class="m-0 text-sm text-gray-600 max-w-[220px]">{{ f.affiliation }}</p>
           </div>
         </div>
-      </section>
+      </section> -->
     </template>
   </div>
 </template>
