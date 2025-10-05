@@ -548,6 +548,7 @@ export interface ApiEducationTrainingEducationTraining
       Schema.Attribute.Private;
     project: Schema.Attribute.Relation<'manyToOne', 'api::project.project'>;
     publishedAt: Schema.Attribute.DateTime;
+    secondary_title: Schema.Attribute.String;
     title: Schema.Attribute.String & Schema.Attribute.Required;
     type: Schema.Attribute.Component<'shared.education', false>;
     updatedAt: Schema.Attribute.DateTime;
@@ -657,6 +658,7 @@ export interface ApiNewsEventNewsEvent extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     projects: Schema.Attribute.Relation<'manyToMany', 'api::project.project'>;
     publishedAt: Schema.Attribute.DateTime;
+    secondary_title: Schema.Attribute.String;
     title: Schema.Attribute.String & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -742,6 +744,7 @@ export interface ApiResearchPublicationResearchPublication
       Schema.Attribute.Private;
     date: Schema.Attribute.Date & Schema.Attribute.Required;
     file: Schema.Attribute.Media<'files'>;
+    image_cover: Schema.Attribute.Media<'images'>;
     lla: Schema.Attribute.Boolean &
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<false>;
@@ -758,6 +761,7 @@ export interface ApiResearchPublicationResearchPublication
     > &
       Schema.Attribute.Required;
     publishedAt: Schema.Attribute.DateTime;
+    secondary_title: Schema.Attribute.String;
     tags: Schema.Attribute.Component<'shared.tag', true>;
     theme: Schema.Attribute.Component<'shared.theme', false>;
     title: Schema.Attribute.String & Schema.Attribute.Required;

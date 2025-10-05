@@ -15,6 +15,9 @@
       "type": "string",
       "required": true
     },
+    "secondary_title": {
+      "type": "string"
+    },
     "date": {
       "type": "date",
       "required": true

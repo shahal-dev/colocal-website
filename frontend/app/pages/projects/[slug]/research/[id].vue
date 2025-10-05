@@ -83,7 +83,13 @@ function formatMonthYear(iso) {
               <span>{{ (item.authors || []).map((a) => a.name).join(' • ') }}</span>
             </div>
             <div class="text-sm text-gray-600 mb-4">
-              <span>{{ formatMonthYear(item.date) }}</span>
+              <span>{{
+                item.date
+                  ? isNaN(new Date(item.date).getFullYear())
+                    ? item.date
+                    : new Date(item.date).getFullYear()
+                  : ''
+              }}</span>
             </div>
             <div v-if="item.publication_type?.type" class="text-sm mb-1">
               Publisher:

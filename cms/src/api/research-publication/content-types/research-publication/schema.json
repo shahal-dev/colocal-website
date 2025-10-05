@@ -15,6 +15,9 @@
       "type": "string",
       "required": true
     },
+    "secondary_title": {
+      "type": "string"
+    },
     "abstract": {
       "type": "richtext",
       "required": true
@@ -71,6 +74,13 @@
       "type": "component",
       "component": "shared.country",
       "repeatable": false
+    },
+    "image_cover": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
     }
   }
 }

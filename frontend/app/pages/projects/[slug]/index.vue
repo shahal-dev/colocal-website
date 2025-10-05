@@ -167,7 +167,7 @@ const fellows = ref([
         <h2 class="text-[22px] md:text-[26px] font-display font-semibold mb-3">
           {{ project?.longTitle }}
         </h2>
-        <div class="space-y-4 text-gray-700 leading-relaxed">
+        <div v-if="project?.longDescription" class="space-y-4 text-gray-700 leading-relaxed">
           <MDC :value="project?.longDescription" class="prose max-w-none text-gray-800 space-y-6" />
         </div>
       </section>

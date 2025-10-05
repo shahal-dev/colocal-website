@@ -80,6 +80,6 @@ const { data: newsData } = await useAsyncData<NewsEvent[]>(
     <ProjectsSection :projects="projects || []" />
     <ResourceSection />
     <NewsAndAnnouncements :news-events="newsData" />
-    <GetInTouch :phone="home?.phone" :email="home?.email" :address="home?.address" />
+    <!-- <GetInTouch :phone="home?.phone" :email="home?.email" :address="home?.address" /> -->
   </div>
 </template>

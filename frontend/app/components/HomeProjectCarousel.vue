@@ -59,7 +59,7 @@
           </div>
 
           <!-- Mobile controls (visible only on small screens) -->
-          <div class="flex gap-3 mt-6 md:hidden">
+          <!-- <div class="flex gap-3 mt-6 md:hidden">
             <button
               aria-label="Previous slide"
               class="px-3 py-2 bg-white/10 text-white rounded-md"
@@ -74,14 +74,14 @@
             >
               ›
             </button>
-          </div>
+          </div> -->
         </div>
       </div>
     </transition>
 
     <div v-if="slides.length > 1">
       <!-- Desktop Controls -->
-      <button
+      <!-- <button
         class="hidden md:flex absolute left-6 top-1/2 -translate-y-1/2 -rotate-90 w-8 h-8 p-2 bg-green-500 hover:bg-green-600 rounded-full items-center justify-center transition-colors shadow-lg"
         aria-label="Previous slide"
         @click="prev"
@@ -98,7 +98,7 @@
         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
         </svg>
-      </button>
+      </button> -->
 
       <!-- Slide indicators -->
       <div class="absolute left-1/2 -translate-x-1/2 bottom-4 sm:bottom-6 flex items-center gap-3">

@@ -30,15 +30,16 @@ const year = ref('');
 const theme = ref('');
 const country = ref('');
 
-const types = ['Journal Article', 'Report', 'Policy Brief', 'Guide'];
-const years = [2024, 2023, 2022, 2021];
-const themes = ['Finance', 'Resilience', 'Health', 'LLA', 'Ecosystems'];
-const countries = ['Bangladesh', 'Nepal', 'Mozambique', 'Regional'];
+const types = ['Journal Publications', 'Conference Proceedings', 'Policy Brief', 'Thesis'];
+// const years = [2024, 2023, 2022, 2021];
+// const themes = ['Finance', 'Resilience', 'Health', 'LLA', 'Ecosystems'];
+// const countries = ['Bangladesh', 'Nepal', 'Mozambique', 'Regional'];
 
 const filtered = computed(() => {
   const query = q.value.trim().toLowerCase();
   return allPublications.value.filter((p) => {
-    if (type.value && p.publication_type.type !== type.value) return false;
+    if (type.value && p.publication_type.type.toLowerCase() !== type.value.toLowerCase())
+      return false;
     if (year.value) {
       const pubYear = new Date(p.date).getFullYear();
       if (String(pubYear) !== String(year.value)) return false;
@@ -119,29 +120,11 @@ function resetFilters() {
         </div>
 
         <!-- Dropdown filters -->
-        <div class="mt-5 grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div class="mt-5 grid grid-cols-1 md:grid-cols-1 gap-3">
           <div>
             <select v-model="type" class="w-full border rounded-md px-3 py-2">
               <option value="">Publication Type</option>
               <option v-for="t in types" :key="t" :value="t">{{ t }}</option>
-            </select>
-          </div>
-          <div>
-            <select v-model="year" class="w-full border rounded-md px-3 py-2">
-              <option value="">Year</option>
-              <option v-for="y in years" :key="y" :value="y">{{ y }}</option>
-            </select>
-          </div>
-          <div>
-            <select v-model="theme" class="w-full border rounded-md px-3 py-2">
-              <option value="">Theme</option>
-              <option v-for="th in themes" :key="th" :value="th">{{ th }}</option>
-            </select>
-          </div>
-          <div>
-            <select v-model="country" class="w-full border rounded-md px-3 py-2">
-              <option value="">Country</option>
-              <option v-for="c in countries" :key="c" :value="c">{{ c }}</option>
             </select>
           </div>
         </div>
