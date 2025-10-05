@@ -79,7 +79,7 @@ function goTo(page: number) {
               class="flex gap-4 items-start p-3 md:p-4 group"
             >
               <div class="w-36 h-24 flex-shrink-0 rounded overflow-hidden">
-                <img :src="e.cover?.url" :alt="e.title" class="w-full h-full object-cover" />
+                <img :src="e.cover?.url" :alt="e.title" class="w-full h-full object-cover" >
               </div>
               <div>
                 <h3 class="text-[16px] font-semibold text-green-800 mb-1 group-hover:underline">

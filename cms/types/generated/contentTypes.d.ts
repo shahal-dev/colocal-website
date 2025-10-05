@@ -537,6 +537,10 @@ export interface ApiEducationTrainingEducationTraining
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     date: Schema.Attribute.Date & Schema.Attribute.Required;
+    images: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios',
+      true
+    >;
     lla: Schema.Attribute.Boolean &
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<false>;
@@ -647,6 +651,7 @@ export interface ApiNewsEventNewsEvent extends Struct.CollectionTypeSchema {
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     date: Schema.Attribute.Date & Schema.Attribute.Required;
+    images: Schema.Attribute.Media<'images', true>;
     lla: Schema.Attribute.Boolean &
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<false>;
@@ -745,6 +750,10 @@ export interface ApiResearchPublicationResearchPublication
     date: Schema.Attribute.Date & Schema.Attribute.Required;
     file: Schema.Attribute.Media<'files'>;
     image_cover: Schema.Attribute.Media<'images'>;
+    images: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios',
+      true
+    >;
     lla: Schema.Attribute.Boolean &
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<false>;

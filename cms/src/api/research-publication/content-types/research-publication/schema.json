@@ -81,6 +81,16 @@
       "allowedTypes": [
         "images"
       ]
+    },
+    "images": {
+      "type": "media",
+      "multiple": true,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
     }
   }
 }

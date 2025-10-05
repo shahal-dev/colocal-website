@@ -50,6 +50,16 @@
       "relation": "manyToOne",
       "target": "api::project.project",
       "inversedBy": "education_trainings"
+    },
+    "images": {
+      "type": "media",
+      "multiple": true,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
     }
   }
 }

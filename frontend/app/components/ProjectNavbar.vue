@@ -37,7 +37,7 @@ const isActive = (to: string) => {
 </script>
 
 <template>
-  <div class="w-full sticky top-0 z-20 bg-white/95 backdrop-blur mb-8">
+  <div class="w-full sticky top-0 z-20 bg-white/95 backdrop-blur mb-2">
     <nav
       class="max-w-6xl mx-auto flex items-center gap-2 px-4 md:px-6 lg:px-8 overflow-x-auto hide-scrollbar"
     >

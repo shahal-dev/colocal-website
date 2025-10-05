@@ -46,12 +46,15 @@ export type RawThemeComponent = { theme: string };
 
 export type RawPublicationAttributes = {
   title: string;
+  secondary_title?: string | null;
   abstract: string;
   date: string;
   authors: RawRelationMany<RawAuthorAttributes>;
   tags?: RawTagComponent[] | null;
   url: string;
   file?: RawRelationOne<RawMediaAttributes>;
+  image_cover?: RawRelationOne<RawMediaAttributes> | null;
+  images?: RawRelationMany<RawMediaAttributes> | null;
   lla?: boolean; // whether it is an LLA publication
   // project?: RawRelationOne<RawProjectAttributes> // avoid cycle
   publication_type?: RawPublicationTypeComponent; // component
@@ -111,6 +114,7 @@ export type FlatAuthor = {
 export type FlatPublication = {
   id: number;
   title: string;
+  secondary_title?: string | null;
   abstract: string;
   date: string;
   URL?: string; // original field name may be URL in Strapi
@@ -118,6 +122,8 @@ export type FlatPublication = {
   authors?: FlatAuthor[] | null;
   tags?: RawTagComponent[] | null;
   file?: FlatMedia | null;
+  image_cover?: FlatMedia | null;
+  images?: FlatMedia[] | null;
   lla?: boolean;
   publication_type?: RawPublicationTypeComponent; // component flattened
   theme?: RawThemeComponent | null; // optional component
@@ -150,8 +156,10 @@ export type StrapiListResponseUnion =
 // Additional raw/flat shapes for future endpoints --------------------------
 export type _RawEducationTrainingAttributes = {
   title: string;
+  secondary_title?: string | null;
   date: string;
   cover: RawRelationOne<RawMediaAttributes>;
+  images?: RawRelationMany<RawMediaAttributes> | null;
   body: string;
   type?: RawEducationComponent | null;
   lla: boolean;
@@ -160,8 +168,10 @@ export type _RawEducationTrainingAttributes = {
 export type _FlatEducationTraining = {
   id: number;
   title: string;
+  secondary_title?: string | null;
   date: string;
   cover: FlatMedia;
+  images?: FlatMedia[] | null;
   body: string;
   type?: RawEducationComponent | null;
   lla: boolean;
@@ -169,8 +179,10 @@ export type _FlatEducationTraining = {
 
 export type _RawNewsEventAttributes = {
   title: string;
+  secondary_title?: string | null;
   date: string;
   cover: RawRelationOne<RawMediaAttributes>;
+  images?: RawRelationMany<RawMediaAttributes> | null;
   body: string;
   lla: boolean;
 };
@@ -178,8 +190,10 @@ export type _RawNewsEventAttributes = {
 export type _FlatNewsEvent = {
   id: number;
   title: string;
+  secondary_title?: string | null;
   date: string;
   cover: FlatMedia;
+  images?: FlatMedia[] | null;
   body: string;
   lla: boolean;
 };

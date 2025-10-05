@@ -48,7 +48,7 @@ const objectiveItems = computed(() => {
           alt="Mission team"
           loading="lazy"
           class="w-full h-[180px] sm:h-[200px] md:h-[260px] lg:h-[320px] object-cover rounded shadow-sm"
-        />
+        >
       </div>
     </div>
 

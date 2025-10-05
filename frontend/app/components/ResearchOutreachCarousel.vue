@@ -1,7 +1,7 @@
 <template>
   <div
     role="region"
-    aria-label="Homepage project carousel"
+    aria-label="Research and outreach carousel"
     tabindex="0"
     class="relative overflow-hidden w-full bg-home-carousel h-[420px] sm:h-96 md:h-[600px]"
     @mouseenter="pauseAutoplay"
@@ -25,7 +25,7 @@
             />
             <img
               :src="currentSlide.image"
-              :alt="currentSlide.title || 'Project image'"
+              :alt="currentSlide.alt || 'Feature image'"
               class="w-full h-full object-cover"
               loading="lazy"
               decoding="async"
@@ -54,52 +54,14 @@
               :to="currentSlide.to"
               class="px-5 py-3 rounded-sm hover:opacity-95 font-poppins font-semibold bg-green-600 text-white text-sm md:text-base"
             >
-              View Project
+              {{ currentSlide?.cta }}
             </NuxtLink>
           </div>
-
-          <!-- Mobile controls (visible only on small screens) -->
-          <!-- <div class="flex gap-3 mt-6 md:hidden">
-            <button
-              aria-label="Previous slide"
-              class="px-3 py-2 bg-white/10 text-white rounded-md"
-              @click="prev"
-            >
-              ‹
-            </button>
-            <button
-              aria-label="Next slide"
-              class="px-3 py-2 bg-green-600 text-white rounded-md"
-              @click="next"
-            >
-              ›
-            </button>
-          </div> -->
         </div>
       </div>
     </transition>
 
     <div v-if="slides.length > 1">
-      <!-- Desktop Controls -->
-      <!-- <button
-        class="hidden md:flex absolute left-6 top-1/2 -translate-y-1/2 -rotate-90 w-8 h-8 p-2 bg-green-500 hover:bg-green-600 rounded-full items-center justify-center transition-colors shadow-lg"
-        aria-label="Previous slide"
-        @click="prev"
-      >
-        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
-        </svg>
-      </button>
-      <button
-        class="hidden md:flex absolute right-6 top-1/2 -translate-y-1/2 rotate-90 w-8 h-8 p-2 bg-green-500 hover:bg-green-600 rounded-full items-center justify-center transition-colors shadow-lg"
-        aria-label="Next slide"
-        @click="next"
-      >
-        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
-        </svg>
-      </button> -->
-
       <!-- Slide indicators -->
       <div class="absolute left-1/2 -translate-x-1/2 bottom-4 sm:bottom-6 flex items-center gap-3">
         <button
@@ -121,37 +83,61 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onBeforeUnmount, watchEffect } from 'vue';
-import type { Project } from '../../types/content';
+import type { StrapiMedia } from '~~/types/content';
 
-const props = defineProps<{ projects: Project[] | null | undefined }>();
+export type ResearchOutreachCarouselItem = {
+  id: string;
+  title: string;
+  description: string;
+  cover: string | StrapiMedia | null | undefined;
+  type: 'research' | 'outreach';
+  slug: string;
+};
+
+const props = defineProps<{ items: ResearchOutreachCarouselItem[] | null | undefined }>();
 
 type Slide = {
   title: string;
   subtitle: string;
   image: string;
-  to: string;
   srcset?: string;
+  alt: string;
+  to: string;
+  cta: string;
 };
 
-const slides = computed<Slide[]>(() => {
-  if (!Array.isArray(props.projects) || props.projects.length === 0) return [];
-  return props.projects.map((p) => {
-    // build a simple srcset from available formats (common Strapi-like structure)
-    const formats = p.cover?.formats;
-    const srcCandidates: string[] = [];
-    if (formats?.small?.url) srcCandidates.push(`${formats.small.url} 480w`);
-    if (formats?.medium?.url) srcCandidates.push(`${formats.medium.url} 768w`);
-    if (formats?.large?.url) srcCandidates.push(`${formats.large.url} 1024w`);
-    if (p.cover?.url) srcCandidates.push(`${p.cover.url} 1200w`);
-    const srcset = srcCandidates.length ? srcCandidates.join(', ') : undefined;
+function resolveCover(cover: ResearchOutreachCarouselItem['cover'], title: string) {
+  if (!cover) {
+    return { image: '', alt: `${title} cover image` };
+  }
+  if (typeof cover === 'string') {
+    return { image: cover, alt: `${title} cover image` };
+  }
+  const formats = cover.formats || {};
+  const srcCandidates: string[] = [];
+  if (formats.small?.url) srcCandidates.push(`${formats.small.url} 480w`);
+  if (formats.medium?.url) srcCandidates.push(`${formats.medium.url} 768w`);
+  if (formats.large?.url) srcCandidates.push(`${formats.large.url} 1024w`);
+  if (cover.url) srcCandidates.push(`${cover.url} 1200w`);
+  const srcset = srcCandidates.length ? srcCandidates.join(', ') : undefined;
+  const image = formats.large?.url || formats.medium?.url || formats.small?.url || cover.url || '';
+  const alt = cover.alternativeText || `${title} cover image`;
+  return { image, srcset, alt };
+}
 
+const slides = computed<Slide[]>(() => {
+  if (!Array.isArray(props.items) || props.items.length === 0) return [];
+  return props.items.map((item) => {
+    const { image, srcset, alt } = resolveCover(item.cover, item.title);
     return {
-      title: p.longTitle || p.shortTitle,
-      subtitle: p.shortDescription,
-      image: formats?.large?.url || p.cover?.url || '',
-      to: `/projects/${p.slug}`,
+      title: item.title,
+      subtitle: item.description,
+      image,
       srcset,
-    };
+      alt,
+      to: `${item.slug}/${item.type}/${item.id}`,
+      cta: item.type === 'research' ? 'View Research' : 'View Outreach',
+    } satisfies Slide;
   });
 });
 
@@ -165,7 +151,7 @@ const currentSlide = computed<Slide | undefined>(() => slides.value[currentIndex
 const liveMessage = ref('');
 watchEffect(() => {
   if (!slides.value.length) {
-    liveMessage.value = 'No slides';
+    liveMessage.value = 'No slides available';
   } else if (currentSlide.value) {
     liveMessage.value = `Slide ${currentIndex.value + 1} of ${slides.value.length}: ${currentSlide.value.title}`;
   } else {
@@ -176,6 +162,7 @@ watchEffect(() => {
 function goTo(idx: number) {
   if (idx === currentIndex.value) return;
   const len = slides.value.length;
+  if (!len) return;
   const current = currentIndex.value;
   const forwardDistance = (idx - current + len) % len;
   const backwardDistance = (current - idx + len) % len;
@@ -207,6 +194,7 @@ function prev() {
 
 function startAutoplay() {
   stopAutoplay();
+  if (slides.value.length <= 1) return;
   autoplayTimer = setInterval(() => next(), autoplayDelay);
 }
 
@@ -228,10 +216,26 @@ onMounted(() => {
 onBeforeUnmount(() => {
   stopAutoplay();
 });
+
+watchEffect(() => {
+  const length = slides.value.length;
+  if (!length) {
+    currentIndex.value = 0;
+    stopAutoplay();
+    return;
+  }
+  if (currentIndex.value >= length) {
+    currentIndex.value = 0;
+  }
+  if (length <= 1) {
+    stopAutoplay();
+  } else if (!autoplayTimer) {
+    startAutoplay();
+  }
+});
 </script>
 
 <style scoped>
-/* transitions unchanged (kept for clarity) */
 .slide-next-enter-from {
   opacity: 0;
   transform: translateX(40px) scale(0.995);

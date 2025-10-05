@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watchEffect } from 'vue';
 import { useRoute } from '#app';
-import type { Project, ResearchPublication } from '~~/types/content';
+import type { Project, ResearchPublication, NewsEvent, StrapiMedia } from '~~/types/content';
 import img1 from '~/assets/images/carousel-1.png';
 import img2 from '~/assets/images/carousel-2.png';
 
@@ -78,45 +78,79 @@ const { data: publications } = await useAsyncData<ResearchPublication[]>(
 //   return publications.value.slice(start, start + pubSize);
 // });
 
-// Featured news (sample data + pagination)
-const newsItems = ref([
+type NewsCard = {
+  id: number | string;
+  title: string;
+  excerpt: string;
+  image: string;
+  to: string;
+};
+
+type CarouselItem = {
+  id: string;
+  title: string;
+  description: string;
+  cover: StrapiMedia | string | null | undefined;
+  type: 'research' | 'outreach';
+  slug: string;
+};
+
+const fallbackNews: NewsCard[] = [
   {
     id: 1,
     title: 'LLA Seminar at IUB',
     excerpt: 'Lorem ipsum dolor sit amet consectetur. Id id cursus iaculis duis.',
     image: img1,
+    to: '#',
   },
   {
     id: 2,
     title: 'UNI-Lead Mini Workshop',
     excerpt: 'Pretium quam lectus magna convallis. Sed at venenatis porta.',
     image: img2,
+    to: '#',
   },
   {
     id: 3,
-    title: 'LLA Seminar at IUB',
+    title: 'Community Resilience Dialogue',
     excerpt: 'A venenatis nunc senectus arcu sem.',
     image: img1,
+    to: '#',
   },
   {
     id: 4,
-    title: 'UNI-Lead Mini Workshop',
+    title: 'COLOCAL Workshop Series',
     excerpt: 'Lorem ipsum dolor sit amet consectetur.',
     image: img2,
+    to: '#',
   },
-  {
-    id: 5,
-    title: 'LLA Seminar at IUB',
-    excerpt: 'Pretium quam lectus magna convallis.',
-    image: img1,
-  },
-  {
-    id: 6,
-    title: 'UNI-Lead Mini Workshop',
-    excerpt: 'Sed at venenatis porta nec ac mi.',
-    image: img2,
-  },
-]);
+];
+
+const { data: newsEvents } = await useAsyncData<NewsEvent[] | null>(
+  () => `news-events-${slug}`,
+  async () => {
+    const res = await $fetch('/api/news-events', { query: { projectSlug: String(slug) } });
+    return (res as NewsEvent[]) || [];
+  }
+);
+
+const newsItems = computed<NewsCard[]>(() => {
+  const items = newsEvents.value;
+  if (Array.isArray(items) && items.length) {
+    return items.map((item) => {
+      const formats = item.cover?.formats || {};
+      const image = formats.medium?.url || formats.small?.url || item.cover?.url || '';
+      return {
+        id: item.id,
+        title: item.title,
+        excerpt: excerpt(item.body, 160),
+        image,
+        to: `${basePath.value}/outreach/${item.id}`,
+      } satisfies NewsCard;
+    });
+  }
+  return fallbackNews;
+});
 const newsPage = ref(1);
 const newsSize = 4;
 const newsTotal = computed(() => Math.max(1, Math.ceil(newsItems.value.length / newsSize)));
@@ -125,8 +159,54 @@ const newsVisible = computed(() => {
   return newsItems.value.slice(start, start + newsSize);
 });
 
+watchEffect(() => {
+  if (newsPage.value > newsTotal.value) {
+    newsPage.value = 1;
+  }
+});
+
+const researchCarouselItems = computed<CarouselItem[]>(() => {
+  const list = Array.isArray(publications.value) ? publications.value : [];
+  return list
+    .filter((p) => {
+      const media = p.imageCover;
+      return Boolean(media && media.url);
+    })
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .slice(0, 3)
+    .map((p) => ({
+      id: String(p.id),
+      title: p.secondaryTitle || p.title,
+      description: excerpt(p.abstract, 140),
+      cover: p.imageCover ?? null,
+      type: 'research',
+      slug: basePath.value,
+    }));
+});
+
+const outreachCarouselItems = computed<CarouselItem[]>(() => {
+  const list = Array.isArray(newsEvents.value) ? newsEvents.value : [];
+  return list
+    .filter((n) => Boolean(n.cover && n.cover.url))
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .slice(0, 3)
+    .map((n) => ({
+      id: String(n.id),
+      title: n.secondaryTitle || n.title,
+      description: excerpt(n.body, 140),
+      cover: n.cover,
+      slug: basePath.value,
+      type: 'outreach',
+    }));
+});
+
+const carouselItems = computed<CarouselItem[]>(() => [
+  ...researchCarouselItems.value,
+  ...outreachCarouselItems.value,
+]);
+
 // Fellows (static grid)
-const fellows = ref([
+const _fellows = ref([
   { id: 1, name: 'António Guterres', affiliation: 'Universidade Eduardo Mondlane' },
   { id: 2, name: 'Rafia Anjum Rimi', affiliation: 'Independent University, Bangladesh' },
   { id: 3, name: 'Tenzing Norgay', affiliation: 'Pokhara University' },
@@ -153,6 +233,10 @@ const fellows = ref([
       />
       <!-- Secondary navbar (links to sibling pages) -->
       <ProjectNavbar :project="project" :slug="String(slug)" />
+
+      <section v-if="carouselItems.length" class="w-full mx-auto px-0 md:px-0">
+        <ResearchOutreachCarousel :items="carouselItems" />
+      </section>
 
       <!-- HERO/CAROUSEL (reuse home carousel) -->
       <!-- <section id="home" class="w-full scroll-mt-24">
@@ -223,7 +307,7 @@ const fellows = ref([
       </section>
 
       <!-- Featured News -->
-      <!-- <section class="w-full max-w-6xl mx-auto px-4 md:px-0 py-12">
+      <section class="w-full max-w-6xl mx-auto px-4 md:px-0 py-12">
         <h2 class="text-center text-[24px] md:text-[28px] font-display font-medium mb-6">
           Featured News
         </h2>
@@ -233,17 +317,22 @@ const fellows = ref([
             :key="n.id"
             class="border border-gray-200 rounded-md bg-white overflow-hidden flex"
           >
-            <div class="w-40 h-28 flex-shrink-0">
-              <img :src="n.image" :alt="n.title" class="w-full h-full object-cover" />
-            </div>
-            <div class="p-4">
-              <h3 class="text-[15px] font-semibold text-green-700 mb-1">{{ n.title }}</h3>
-              <p class="text-sm text-gray-700 line-clamp-2">{{ n.excerpt }}</p>
-            </div>
+            <NuxtLink
+              :to="n.to"
+              class="flex flex-1 hover:bg-green-50 transition-colors duration-150"
+            >
+              <div class="w-40 h-28 flex-shrink-0">
+                <img :src="n.image" :alt="n.title" class="w-full h-full object-cover" />
+              </div>
+              <div class="p-4 flex flex-col justify-center">
+                <h3 class="text-[15px] font-semibold text-green-700 mb-1">{{ n.title }}</h3>
+                <p class="text-sm text-gray-700 line-clamp-2">{{ n.excerpt }}</p>
+              </div>
+            </NuxtLink>
           </article>
-        </div> -->
-      <!-- News pagination -->
-      <!-- <div v-if="newsTotal > 1" class="mt-6 flex items-center justify-center gap-2">
+        </div>
+        <!-- News pagination -->
+        <div v-if="newsTotal > 1" class="mt-6 flex items-center justify-center gap-2">
           <button
             v-for="page in newsTotal"
             :key="page"
@@ -258,7 +347,7 @@ const fellows = ref([
             {{ page }}
           </button>
         </div>
-      </section> -->
+      </section>
 
       <!-- Our Fellows -->
       <!-- <section class="w-full max-w-6xl mx-auto px-4 md:px-0 py-12">

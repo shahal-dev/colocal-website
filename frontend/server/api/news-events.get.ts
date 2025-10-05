@@ -4,6 +4,7 @@ import type { NewsEvent, StrapiMedia, StrapiImageFormat } from '../../types/cont
 import type {
   RawEntity,
   RawRelationOne,
+  RawRelationMany,
   RawImageFormat,
   RawMediaAttributes,
   StrapiListResponseRaw,
@@ -133,6 +134,28 @@ function mapFlatMedia(baseUrl: string, m?: FlatMedia | null): StrapiMedia | null
   };
 }
 
+function mapStrapiMediaMany(
+  baseUrl: string,
+  relation?: RawRelationMany<RawMediaAttributes> | RawEntity<RawMediaAttributes>[] | null
+): StrapiMedia[] | null {
+  const data = hasDataKey(relation)
+    ? (relation as RawRelationMany<RawMediaAttributes>).data
+    : (relation as RawEntity<RawMediaAttributes>[] | null | undefined);
+  if (!Array.isArray(data)) return null;
+  const mapped = data
+    .map((item) => mapStrapiMedia(baseUrl, item))
+    .filter((m): m is StrapiMedia => Boolean(m));
+  return mapped.length ? mapped : null;
+}
+
+function mapFlatMediaList(baseUrl: string, list?: FlatMedia[] | null): StrapiMedia[] | null {
+  if (!Array.isArray(list)) return null;
+  const mapped = list
+    .map((item) => mapFlatMedia(baseUrl, item))
+    .filter((m): m is StrapiMedia => Boolean(m));
+  return mapped.length ? mapped : null;
+}
+
 function mapNewsEvent(
   baseUrl: string,
   raw: RawEntity<_RawNewsEventAttributes> | null | undefined
@@ -142,8 +165,10 @@ function mapNewsEvent(
   return {
     id: raw.id,
     title: a.title,
+    secondaryTitle: a.secondary_title ?? null,
     date: a.date,
     cover: mapStrapiMedia(baseUrl, a.cover)!,
+    images: mapStrapiMediaMany(baseUrl, a.images),
     body: a.body,
     lla: !!a.lla,
     projects: null,
@@ -156,8 +181,10 @@ function mapFlatNewsEvents(baseUrl: string, list?: _FlatNewsEvent[] | null): New
     (e): NewsEvent => ({
       id: e.id,
       title: e.title,
+      secondaryTitle: e.secondary_title ?? null,
       date: e.date,
       cover: mapFlatMedia(baseUrl, e.cover)!,
+      images: mapFlatMediaList(baseUrl, e.images ?? null),
       body: e.body,
       lla: !!e.lla,
       projects: null,

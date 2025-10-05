@@ -110,7 +110,7 @@ function resetFilters() {
             type="text"
             placeholder="Search for Publications"
             class="w-full border rounded-md pl-4 pr-10 py-3 outline-none focus:border-green-600"
-          />
+          >
           <span class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">
             <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <circle cx="11" cy="11" r="7" stroke-width="2" />
@@ -148,9 +148,18 @@ function resetFilters() {
             >
               <h3 class="text-base md:text-lg font-semibold text-gray-900 mb-2">{{ p.title }}</h3>
               <div class="flex items-center text-sm text-gray-600 mb-3">
-                <svg class="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path d="M20 21v-2a4 4 0 0 0-3-3.87M4 21v-2a4 4 0 0 1 3-3.87" stroke-width="2" />
-                  <circle cx="12" cy="7" r="4" stroke-width="2" />
+                <svg
+                  class="w-4 h-4 mr-2"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                  <path d="M12 11v4" />
+                  <circle cx="12" cy="7" r="4" />
                 </svg>
                 <span>{{ p.authors.map((a) => a.name).join(' • ') }}</span>
               </div>

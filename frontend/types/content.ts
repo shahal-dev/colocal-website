@@ -75,12 +75,15 @@ export interface Author {
 export interface ResearchPublication {
   id: number;
   title: string; // required
+  secondaryTitle?: string | null;
   abstract: string; // required (RichText Markdown stored as string)
   date: string; // required (Date as ISO string)
   authors: Author[]; // required relation (one-to-many to Author)
   tags: Tag[] | null; // optional repeatable component → can be null
   url: string; // required
   file: StrapiMedia | null; // optional media → can be null
+  imageCover?: StrapiMedia | null; // optional hero/feature image
+  images?: StrapiMedia[] | null; // optional gallery
   project: Project | null; // optional relation (many-to-one to Project) → can be null
   lla: boolean | false; // whether it is a LLA publication (default: false)
   publication_type: PublicationType; // required (component)
@@ -110,8 +113,10 @@ export interface Project {
 export interface EducationTraining {
   id: number;
   title: string; // required
+  secondaryTitle?: string | null;
   date: string; // required (Date as ISO string)
   cover: StrapiMedia; // required media
+  images?: StrapiMedia[] | null; // optional gallery
   body: string; // required (RichText Markdown stored as string)
   type?: Education | null; // optional component
   lla: boolean; // required
@@ -121,8 +126,10 @@ export interface EducationTraining {
 export interface NewsEvent {
   id: number;
   title: string; // required
+  secondaryTitle?: string | null;
   date: string; // required (Date as ISO string)
   cover: StrapiMedia; // required media
+  images?: StrapiMedia[] | null; // optional gallery
   body: string; // required (RichText Markdown stored as string)
   lla: boolean; // required
   projects?: Project[] | null; // optional relation (many-to-many to Project)

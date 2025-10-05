@@ -149,6 +149,28 @@ function mapFlatMedia(baseUrl: string, m?: FlatMedia | null): StrapiMedia | null
   };
 }
 
+function mapStrapiMediaMany(
+  baseUrl: string,
+  relation?: RawRelationMany<RawMediaAttributes> | RawEntity<RawMediaAttributes>[] | null
+): StrapiMedia[] | null {
+  const data = hasDataKey(relation)
+    ? (relation as RawRelationMany<RawMediaAttributes>).data
+    : (relation as RawEntity<RawMediaAttributes>[] | null | undefined);
+  if (!Array.isArray(data)) return null;
+  const mapped = data
+    .map((item) => mapStrapiMedia(baseUrl, item))
+    .filter((m): m is StrapiMedia => Boolean(m));
+  return mapped.length ? mapped : null;
+}
+
+function mapFlatMediaList(baseUrl: string, list?: FlatMedia[] | null): StrapiMedia[] | null {
+  if (!Array.isArray(list)) return null;
+  const mapped = list
+    .map((item) => mapFlatMedia(baseUrl, item))
+    .filter((m): m is StrapiMedia => Boolean(m));
+  return mapped.length ? mapped : null;
+}
+
 function mapTags(raw: RawTagComponent[] | null | undefined): Tag[] | null {
   if (!Array.isArray(raw)) return null;
   return raw.map((t) => ({ tag: t?.tag ?? '' })).filter((t) => t.tag.trim().length > 0);
@@ -210,12 +232,15 @@ function mapPublication(
   return {
     id: raw.id,
     title: a.title,
+    secondaryTitle: a.secondary_title ?? null,
     abstract: a.abstract,
     date: a.date,
     authors: mapAuthors(baseUrl, a.authors) ?? [],
     tags: mapTags(a.tags),
     url: a.url,
     file: mapStrapiMedia(baseUrl, a.file),
+    imageCover: mapStrapiMedia(baseUrl, a.image_cover) ?? null,
+    images: mapStrapiMediaMany(baseUrl, a.images),
     project: null,
     lla: !!a.lla,
     publication_type: mapPublicationType(a.publication_type),
@@ -233,12 +258,15 @@ function mapFlatPublications(
     (p): ResearchPublication => ({
       id: p.id,
       title: p.title,
+      secondaryTitle: p.secondary_title ?? null,
       abstract: p.abstract,
       date: p.date,
       authors: mapFlatAuthors(baseUrl, p.authors) ?? [],
       tags: mapTags(p.tags),
       url: p.url ?? p.URL ?? '',
       file: mapFlatMedia(baseUrl, p.file ?? null),
+      imageCover: mapFlatMedia(baseUrl, p.image_cover ?? null),
+      images: mapFlatMediaList(baseUrl, p.images ?? null),
       project: null,
       lla: !!p.lla,
       publication_type: mapPublicationType(p.publication_type),

@@ -45,7 +45,7 @@ function formatDate(iso) {
         <div class="md:col-span-8">
           <div v-if="item">
             <div class="w-full h-64 md:h-72 rounded-lg overflow-hidden mb-5">
-              <img :src="item.cover?.url" :alt="item.title" class="w-full h-full object-cover" />
+              <img :src="item.cover?.url" :alt="item.title" class="w-full h-full object-cover" >
             </div>
             <h1 class="text-2xl md:text-3xl font-display font-semibold mb-2">{{ item.title }}</h1>
             <div class="text-sm text-gray-600 flex items-center gap-2 mb-4">
@@ -71,7 +71,7 @@ function formatDate(iso) {
               class="flex gap-3 items-center group"
             >
               <div class="w-20 h-14 rounded overflow-hidden flex-shrink-0">
-                <img :src="m.cover?.url" :alt="m.title" class="w-full h-full object-cover" />
+                <img :src="m.cover?.url" :alt="m.title" class="w-full h-full object-cover" >
               </div>
               <div class="min-w-0">
                 <p class="text-sm text-green-700 group-hover:underline truncate">{{ m.title }}</p>

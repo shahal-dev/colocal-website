@@ -9,6 +9,7 @@ import type {
 import type {
   RawEntity,
   RawRelationOne,
+  RawRelationMany,
   RawImageFormat,
   RawMediaAttributes,
   RawEducationComponent,
@@ -139,6 +140,28 @@ function mapFlatMedia(baseUrl: string, m?: FlatMedia | null): StrapiMedia | null
   };
 }
 
+function mapStrapiMediaMany(
+  baseUrl: string,
+  relation?: RawRelationMany<RawMediaAttributes> | RawEntity<RawMediaAttributes>[] | null
+): StrapiMedia[] | null {
+  const data = hasDataKey(relation)
+    ? (relation as RawRelationMany<RawMediaAttributes>).data
+    : (relation as RawEntity<RawMediaAttributes>[] | null | undefined);
+  if (!Array.isArray(data)) return null;
+  const mapped = data
+    .map((item) => mapStrapiMedia(baseUrl, item))
+    .filter((m): m is StrapiMedia => Boolean(m));
+  return mapped.length ? mapped : null;
+}
+
+function mapFlatMediaList(baseUrl: string, list?: FlatMedia[] | null): StrapiMedia[] | null {
+  if (!Array.isArray(list)) return null;
+  const mapped = list
+    .map((item) => mapFlatMedia(baseUrl, item))
+    .filter((m): m is StrapiMedia => Boolean(m));
+  return mapped.length ? mapped : null;
+}
+
 function mapEducation(c?: RawEducationComponent | null): Education | null {
   if (!c) return null;
   return { type: c.type ?? '' };
@@ -153,8 +176,10 @@ function mapEducationTraining(
   return {
     id: raw.id,
     title: a.title,
+    secondaryTitle: a.secondary_title ?? null,
     date: a.date,
     cover: mapStrapiMedia(baseUrl, a.cover)!,
+    images: mapStrapiMediaMany(baseUrl, a.images),
     body: a.body,
     type: mapEducation(a.type ?? null) ?? undefined,
     lla: !!a.lla,
@@ -171,8 +196,10 @@ function mapFlatEducationTrainings(
     (e): EducationTraining => ({
       id: e.id,
       title: e.title,
+      secondaryTitle: e.secondary_title ?? null,
       date: e.date,
       cover: mapFlatMedia(baseUrl, e.cover)!,
+      images: mapFlatMediaList(baseUrl, e.images ?? null),
       body: e.body,
       type: mapEducation(e.type ?? null) ?? undefined,
       lla: !!e.lla,

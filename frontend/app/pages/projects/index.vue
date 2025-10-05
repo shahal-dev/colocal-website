@@ -129,7 +129,7 @@ const pageWindow = computed(() => {
             type="text"
             placeholder="Search for a project/programme"
             class="w-full border rounded-md pl-4 pr-10 py-3 outline-none focus:border-green-600 text-sm"
-          />
+          >
           <span class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">
             <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <circle cx="11" cy="11" r="7" stroke-width="2" />
@@ -151,7 +151,7 @@ const pageWindow = computed(() => {
                 :src="card.cover?.formats?.large?.url || card.cover?.url || ''"
                 :alt="card.shortTitle"
                 class="w-full h-full object-cover"
-              />
+              >
             </div>
             <div class="p-4 flex-1 flex flex-col justify-between">
               <div>
@@ -190,8 +190,8 @@ const pageWindow = computed(() => {
             <button
               class="px-3 py-1 border rounded text-sm"
               :class="currentPage === 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-100'"
-              @click="prevPage"
               :disabled="currentPage === 1"
+              @click="prevPage"
             >
               Prev
             </button>
@@ -201,8 +201,8 @@ const pageWindow = computed(() => {
               :class="
                 currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-100'
               "
-              @click="nextPage"
               :disabled="currentPage === totalPages"
+              @click="nextPage"
             >
               Next
             </button>
@@ -213,9 +213,9 @@ const pageWindow = computed(() => {
             <button
               class="px-3 py-1 border rounded text-sm"
               :class="currentPage === 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-100'"
-              @click="prevPage"
               :disabled="currentPage === 1"
               aria-label="Previous page"
+              @click="prevPage"
             >
               ‹
             </button>
@@ -223,7 +223,6 @@ const pageWindow = computed(() => {
             <button
               v-for="page in pageWindow"
               :key="page"
-              @click="goTo(page)"
               class="min-w-[36px] h-8 px-2 text-sm rounded border"
               :class="
                 page === currentPage
@@ -231,6 +230,7 @@ const pageWindow = computed(() => {
                   : 'bg-white text-gray-800 border-gray-300 hover:bg-gray-50'
               "
               :aria-current="page === currentPage ? 'true' : 'false'"
+              @click="goTo(page)"
             >
               {{ page }}
             </button>
@@ -240,9 +240,9 @@ const pageWindow = computed(() => {
               :class="
                 currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-100'
               "
-              @click="nextPage"
               :disabled="currentPage === totalPages"
               aria-label="Next page"
+              @click="nextPage"
             >
               ›
             </button>

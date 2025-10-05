@@ -120,7 +120,7 @@ const llaNewsEvents = computed(() => (newsData.value || []).filter((n) => n.lla)
           class="border border-gray-200 rounded-md bg-white p-3 md:p-4 flex gap-4 items-start"
         >
           <div class="w-36 h-24 flex-shrink-0 rounded overflow-hidden">
-            <img :src="e.cover?.url" :alt="e.title" class="w-full h-full object-cover" />
+            <img :src="e.cover?.url" :alt="e.title" class="w-full h-full object-cover" >
           </div>
           <div>
             <h3 class="text-[16px] font-semibold text-green-800 mb-1">{{ e.title }}</h3>
