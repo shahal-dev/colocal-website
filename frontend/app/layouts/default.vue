@@ -12,7 +12,7 @@ const project = useState<Project | null>(`project:${slug}`, () => null);
 <template>
   <div class="flex flex-col min-h-screen">
     <AppNavbar v-if="!hideNavbar" />
-    <ProjectNavbar v-if="project && hideNavbar" :project="project" :slug="String(slug)" />
+    <ProjectNavbar v-if="hideNavbar" :project="project" :slug="String(slug)" />
     <main class="flex-1"><slot /></main>
     <AppFooter />
   </div>
