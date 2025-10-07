@@ -106,7 +106,7 @@ function onTouchEnd() {
 <template>
   <div class="flex flex-col items-center w-full justify-center">
     <!-- Breadcrumb -->
-    <BreadCrumb
+    <!-- <BreadCrumb
       :breadcrumb-items="[
         { text: 'Home', href: '/' },
         { text: 'Projects & Programmes', href: '/projects' },
@@ -114,10 +114,10 @@ function onTouchEnd() {
         { text: 'Outreach', href: `${basePath}/outreach` },
       ]"
       :page-title="item?.title ? item.title : projectName + ' — Outreach'"
-    />
+    /> -->
 
     <!-- Secondary navbar (links to sibling pages) -->
-    <div class="w-full border-b sticky top-0 z-20 bg-white/95 backdrop-blur">
+    <!-- <div class="w-full sticky top-0 z-20 bg-white/95 backdrop-blur">
       <nav class="max-w-6xl flex items-center gap-2 px-25 overflow-x-auto hide-scrollbar">
         <NuxtLink
           v-for="t in tabs"
@@ -133,7 +133,8 @@ function onTouchEnd() {
           {{ t.label }}
         </NuxtLink>
       </nav>
-    </div>
+    </div> -->
+    <ProjectNavbar :project="project" :slug="String(slug)" />
 
     <section class="w-full max-w-6xl mx-auto px-4 md:px-0 py-8">
       <div class="grid grid-cols-1 md:grid-cols-12 gap-8">

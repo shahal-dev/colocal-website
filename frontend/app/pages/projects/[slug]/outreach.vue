@@ -47,7 +47,7 @@ function goTo(page: number) {
     <NuxtPage v-if="hasChild" />
     <template v-else>
       <!-- Breadcrumb -->
-      <BreadCrumb
+      <!-- <BreadCrumb
         :breadcrumb-items="[
           { text: 'Home', href: '/' },
           { text: 'Projects & Programmes', href: '/projects' },
@@ -55,7 +55,7 @@ function goTo(page: number) {
           { text: 'Outreach', href: '' },
         ]"
         :page-title="projectName + ' — Outreach'"
-      />
+      /> -->
 
       <!-- Secondary navbar (links to sibling pages) -->
       <ProjectNavbar :project="project" :slug="String(slug)" />
@@ -66,7 +66,7 @@ function goTo(page: number) {
       </section> -->
 
       <!-- News and Events -->
-      <section class="w-full max-w-6xl mx-auto px-4 md:px-0 pb-14">
+      <section class="w-full max-w-6xl mx-auto px-4 md:px-0 pb-14 mt-8">
         <h2 class="text-[22px] md:text-[26px] font-display font-semibold mb-4">News and Events</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <article
@@ -79,7 +79,7 @@ function goTo(page: number) {
               class="flex gap-4 items-start p-3 md:p-4 group"
             >
               <div class="w-36 h-24 flex-shrink-0 rounded overflow-hidden">
-                <img :src="e.cover?.url" :alt="e.title" class="w-full h-full object-cover" >
+                <img :src="e.cover?.url" :alt="e.title" class="w-full h-full object-cover" />
               </div>
               <div>
                 <h3 class="text-[16px] font-semibold text-green-800 mb-1 group-hover:underline">

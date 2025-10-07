@@ -37,10 +37,17 @@ const isActive = (to: string) => {
 </script>
 
 <template>
-  <div class="w-full sticky top-0 z-20 bg-white/95 backdrop-blur mb-2">
+  <div class="w-full sticky top-0 z-20 bg-white/95 backdrop-blur">
     <nav
       class="max-w-6xl mx-auto flex items-center gap-2 px-4 md:px-6 lg:px-8 overflow-x-auto hide-scrollbar"
     >
+      <NuxtLink
+        v-if="projectName === 'COLOCAL'"
+        :to="basePath"
+        class="flex items-center shrink-0 mr-2 px-1 py-0.5 h-6"
+      >
+        <img src="~/assets/logos/colocal.png" alt="CoLocal logo" class="h-4 w-auto" />
+      </NuxtLink>
       <NuxtLink
         v-for="t in tabs"
         :key="t.key"
@@ -53,6 +60,12 @@ const isActive = (to: string) => {
         "
       >
         {{ t.label }}
+      </NuxtLink>
+      <NuxtLink
+        to="/"
+        class="ml-auto px-4 py-3 text-sm md:text-base font-semibold whitespace-nowrap transition-colors duration-200 bg-white text-gray-700 hover:text-green-700"
+      >
+        Back to LUCCC
       </NuxtLink>
     </nav>
   </div>

@@ -22,14 +22,14 @@
               v-if="currentSlide.srcset"
               :srcset="currentSlide.srcset"
               sizes="(min-width: 768px) 720px, 100vw"
-            />
+            >
             <img
               :src="currentSlide.image"
               :alt="currentSlide.alt || 'Feature image'"
               class="w-full h-full object-cover"
               loading="lazy"
               decoding="async"
-            />
+            >
           </picture>
         </div>
 
@@ -90,7 +90,7 @@ export type ResearchOutreachCarouselItem = {
   title: string;
   description: string;
   cover: string | StrapiMedia | null | undefined;
-  type: 'research' | 'outreach';
+  type: 'research' | 'outreach' | 'education';
   slug: string;
 };
 
@@ -125,6 +125,8 @@ function resolveCover(cover: ResearchOutreachCarouselItem['cover'], title: strin
   return { image, srcset, alt };
 }
 
+const isClient = import.meta.client;
+
 const slides = computed<Slide[]>(() => {
   if (!Array.isArray(props.items) || props.items.length === 0) return [];
   return props.items.map((item) => {
@@ -136,7 +138,7 @@ const slides = computed<Slide[]>(() => {
       srcset,
       alt,
       to: `${item.slug}/${item.type}/${item.id}`,
-      cta: item.type === 'research' ? 'View Research' : 'View Outreach',
+      cta: item.type === 'research' ? 'View Full Article' : 'View Full Article',
     } satisfies Slide;
   });
 });
@@ -194,6 +196,7 @@ function prev() {
 
 function startAutoplay() {
   stopAutoplay();
+  if (!isClient) return;
   if (slides.value.length <= 1) return;
   autoplayTimer = setInterval(() => next(), autoplayDelay);
 }

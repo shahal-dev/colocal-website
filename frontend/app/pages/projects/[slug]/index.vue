@@ -1,7 +1,13 @@
 <script setup lang="ts">
 import { ref, computed, watchEffect } from 'vue';
 import { useRoute } from '#app';
-import type { Project, ResearchPublication, NewsEvent, StrapiMedia } from '~~/types/content';
+import type {
+  EducationTraining,
+  Project,
+  ResearchPublication,
+  NewsEvent,
+  StrapiMedia,
+} from '~~/types/content';
 import img1 from '~/assets/images/carousel-1.png';
 import img2 from '~/assets/images/carousel-2.png';
 
@@ -91,7 +97,7 @@ type CarouselItem = {
   title: string;
   description: string;
   cover: StrapiMedia | string | null | undefined;
-  type: 'research' | 'outreach';
+  type: 'research' | 'outreach' | 'education';
   slug: string;
 };
 
@@ -133,6 +139,28 @@ const { data: newsEvents } = await useAsyncData<NewsEvent[] | null>(
     return (res as NewsEvent[]) || [];
   }
 );
+
+const { data: educationTraining } = await useAsyncData<EducationTraining[] | null>(
+  () => `education-training-${slug}`,
+  async () => {
+    const res = await $fetch('/api/education-training', { query: { projectSlug: String(slug) } });
+    return (res as EducationTraining[]) || [];
+  }
+);
+
+// const educationItems = computed(() => {
+//   const items = educationTraining.value;
+//   if (Array.isArray(items) && items.length) {
+//     return items.map((item) => ({
+//       id: item.id,
+//       title: item.title,
+//       excerpt: excerpt(item.body, 160),
+//       image: item.cover?.url || '',
+//       to: `${basePath.value}/education/${item.id}`,
+//     }));
+//   }
+//   return [];
+// });
 
 const newsItems = computed<NewsCard[]>(() => {
   const items = newsEvents.value;
@@ -200,9 +228,26 @@ const outreachCarouselItems = computed<CarouselItem[]>(() => {
     }));
 });
 
+const educationCarouselItems = computed<CarouselItem[]>(() => {
+  const list = Array.isArray(educationTraining.value) ? educationTraining.value : [];
+  return list
+    .filter((e) => Boolean(e.cover && e.cover.url))
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .slice(0, 3)
+    .map((e) => ({
+      id: String(e.id),
+      title: e.title,
+      description: excerpt(e.body, 140),
+      cover: e.cover,
+      slug: basePath.value,
+      type: 'education',
+    }));
+});
+
 const carouselItems = computed<CarouselItem[]>(() => [
   ...researchCarouselItems.value,
   ...outreachCarouselItems.value,
+  ...educationCarouselItems.value,
 ]);
 
 // Fellows (static grid)
@@ -223,14 +268,14 @@ const _fellows = ref([
     <NuxtPage v-if="hasChild" />
     <template v-else>
       <!-- Breadcrumb-->
-      <BreadCrumb
+      <!-- <BreadCrumb
         :breadcrumb-items="[
           { text: 'Home', href: '/' },
           { text: 'Projects & Programmes', href: '/projects' },
           { text: project?.shortTitle || 'Project', href: '' },
         ]"
         :page-title="project?.shortTitle || 'Project'"
-      />
+      /> -->
       <!-- Secondary navbar (links to sibling pages) -->
       <ProjectNavbar :project="project" :slug="String(slug)" />
 

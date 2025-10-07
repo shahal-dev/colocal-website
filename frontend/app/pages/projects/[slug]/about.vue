@@ -16,7 +16,7 @@ const basePath = computed(() => `/projects/${slug}`);
 <template>
   <div class="flex flex-col items-center w-full justify-center">
     <!-- Breadcrumb -->
-    <BreadCrumb
+    <!-- <BreadCrumb
       :breadcrumb-items="[
         { text: 'Home', href: '/' },
         { text: 'Projects & Programmes', href: '/projects' },
@@ -24,7 +24,7 @@ const basePath = computed(() => `/projects/${slug}`);
         { text: 'About', href: '' },
       ]"
       :page-title="projectName + ' — About'"
-    />
+    /> -->
 
     <!-- Secondary navbar (links to sibling pages) -->
     <ProjectNavbar :project="project" :slug="String(slug)" />

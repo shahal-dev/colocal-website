@@ -41,7 +41,7 @@ const llaNewsEvents = computed(() => (newsData.value || []).filter((n) => n.lla)
 <template>
   <div class="flex flex-col items-center w-full justify-center">
     <!-- Breadcrumb -->
-    <BreadCrumb
+    <!-- <BreadCrumb
       :breadcrumb-items="[
         { text: 'Home', href: '/' },
         { text: 'Projects & Programmes', href: '/projects' },
@@ -49,7 +49,7 @@ const llaNewsEvents = computed(() => (newsData.value || []).filter((n) => n.lla)
         { text: 'LLA Hub', href: '' },
       ]"
       :page-title="projectName + ' — LLA Hub'"
-    />
+    /> -->
 
     <!-- Secondary navbar (links to sibling pages) -->
     <ProjectNavbar :project="project" :slug="String(slug)" />
@@ -120,7 +120,7 @@ const llaNewsEvents = computed(() => (newsData.value || []).filter((n) => n.lla)
           class="border border-gray-200 rounded-md bg-white p-3 md:p-4 flex gap-4 items-start"
         >
           <div class="w-36 h-24 flex-shrink-0 rounded overflow-hidden">
-            <img :src="e.cover?.url" :alt="e.title" class="w-full h-full object-cover" >
+            <img :src="e.cover?.url" :alt="e.title" class="w-full h-full object-cover" />
           </div>
           <div>
             <h3 class="text-[16px] font-semibold text-green-800 mb-1">{{ e.title }}</h3>

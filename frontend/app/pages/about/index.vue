@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { computed } from 'vue';
 import type { Author } from '~~/types/content';
 
 // Normalized About payload from our server API
@@ -21,17 +20,17 @@ if (error?.value) {
 }
 
 // Normalize quotes for QuotesSection
-const quotesForUi = computed(() => {
-  const list = aboutData.value?.quotes || [];
-  return list
-    .filter((q) => q && q.body)
-    .map((q) => ({
-      name: q.author?.name || '',
-      role: '',
-      quote: q.body,
-      avatar: q.author?.avatar?.url || undefined,
-    }));
-});
+// const quotesForUi = computed(() => {
+//   const list = aboutData.value?.quotes || [];
+//   return list
+//     .filter((q) => q && q.body)
+//     .map((q) => ({
+//       name: q.author?.name || '',
+//       role: '',
+//       quote: q.body,
+//       avatar: q.author?.avatar?.url || undefined,
+//     }));
+// });
 </script>
 
 <template>
@@ -59,17 +58,17 @@ const quotesForUi = computed(() => {
     </div>
 
     <!-- Responsive grid: on small screens stack, on lg show 3 columns -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 w-full mb-10">
-      <!-- Quotes take one column on lg, full width on sm -->
-      <div class="w-full lg:col-span-1">
+    <!-- <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 w-full mb-10"> -->
+    <!-- Quotes take one column on lg, full width on sm -->
+    <!-- <div class="w-full lg:col-span-1">
         <QuotesSection :quotes="quotesForUi" />
-      </div>
+      </div> -->
 
-      <!-- Mission + Objectives take two columns on lg, full width on sm -->
-      <div class="w-full lg:col-span-2">
+    <!-- Mission + Objectives take two columns on lg, full width on sm -->
+    <!-- <div class="w-full lg:col-span-2">
         <MissionSection :mission="aboutData?.mission" :objectives="aboutData?.objectives || []" />
       </div>
-    </div>
+    </div> -->
 
     <!-- Teaser at bottom, centered and responsive -->
     <div class="w-full mt-4">

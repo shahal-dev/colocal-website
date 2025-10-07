@@ -82,7 +82,7 @@ function resetFilters() {
     <NuxtPage v-if="hasChild" />
     <template v-else>
       <!-- Breadcrumb -->
-      <BreadCrumb
+      <!-- <BreadCrumb
         :breadcrumb-items="[
           { text: 'Home', href: '/' },
           { text: 'Projects & Programmes', href: '/projects' },
@@ -90,7 +90,7 @@ function resetFilters() {
           { text: 'Research & Publications', href: '' },
         ]"
         :page-title="projectName + ' — Research & Publications'"
-      />
+      /> -->
 
       <!-- Secondary navbar (links to sibling pages) -->
       <ProjectNavbar :project="project" :slug="String(slug)" />
@@ -110,7 +110,7 @@ function resetFilters() {
             type="text"
             placeholder="Search for Publications"
             class="w-full border rounded-md pl-4 pr-10 py-3 outline-none focus:border-green-600"
-          >
+          />
           <span class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">
             <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <circle cx="11" cy="11" r="7" stroke-width="2" />
