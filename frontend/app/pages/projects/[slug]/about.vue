@@ -27,7 +27,7 @@ const basePath = computed(() => `/projects/${slug}`);
     /> -->
 
     <!-- Secondary navbar (links to sibling pages) -->
-    <ProjectNavbar :project="project" :slug="String(slug)" />
+    <!-- <ProjectNavbar :project="project" :slug="String(slug)" /> -->
 
     <!-- About content -->
     <section class="w-full max-w-6xl mx-auto px-4 md:px-0 py-12">

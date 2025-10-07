@@ -20,6 +20,20 @@ const education = computed(() => (eduData.value && eduData.value[0]) || null);
 
 // Fallback resolution: if neither returned, item is null
 const item = computed(() => publication.value || education.value || null);
+
+const images = computed(() => {
+  const arr = [];
+  if (item.value?.imageCover?.url) arr.push(item.value.imageCover.url);
+  if (item.value?.images && Array.isArray(item.value.images)) {
+    // allow item.images to be array of strings or objects with url
+    item.value.images.forEach((it) => {
+      if (!it) return;
+      arr.push(typeof it === 'string' ? it : it.url);
+    });
+  }
+  return arr;
+});
+
 const kind = computed(() =>
   publication.value ? 'publication' : education.value ? 'education' : null
 );
@@ -44,6 +58,47 @@ function formatMonthYear(iso) {
     return iso;
   }
 }
+
+/* Carousel state & handlers */
+const activeIndex = ref(0);
+
+// Reset to 0 when image list changes (e.g., navigation)
+watch(images, () => {
+  activeIndex.value = 0;
+});
+
+// click indicator
+function goTo(i) {
+  activeIndex.value = i;
+}
+
+// Touch/swipe handling
+let touchStartX = 0;
+let touchDeltaX = 0;
+
+function onTouchStart(e) {
+  touchDeltaX = 0;
+  touchStartX = (e.touches && e.touches[0] && e.touches[0].clientX) || e.clientX || 0;
+}
+
+function onTouchMove(e) {
+  const x = (e.touches && e.touches[0] && e.touches[0].clientX) || e.clientX || 0;
+  touchDeltaX = x - touchStartX;
+}
+
+function onTouchEnd() {
+  const threshold = 50; // px
+  if (Math.abs(touchDeltaX) > threshold) {
+    if (touchDeltaX < 0) {
+      // swipe left -> next
+      if (activeIndex.value < images.value.length - 1) activeIndex.value += 1;
+    } else {
+      // swipe right -> prev
+      if (activeIndex.value > 0) activeIndex.value -= 1;
+    }
+  }
+  touchDeltaX = 0;
+}
 </script>
 
 <template>
@@ -62,7 +117,66 @@ function formatMonthYear(iso) {
           <div v-if="item">
             <!-- Publication layout -->
             <template v-if="kind === 'publication'">
+              <div
+                v-if="images.length > 1"
+                class="w-full h-64 md:h-72 rounded-lg overflow-hidden mb-5 relative"
+              >
+                <!-- track -->
+                <div
+                  class="h-full flex transition-transform duration-300 ease-out"
+                  :style="{
+                    width: `${images.length * 100}%`,
+                    transform: `translateX(-${activeIndex * (100 / images.length)}%)`,
+                  }"
+                  @touchstart.passive="onTouchStart"
+                  @touchmove.passive="onTouchMove"
+                  @touchend.passive="onTouchEnd"
+                  @mousedown.prevent="onTouchStart"
+                  @mousemove.prevent="onTouchMove"
+                  @mouseup.prevent="onTouchEnd"
+                >
+                  <div v-for="(src, i) in images" :key="i" class="flex-none w-full h-full">
+                    <img :src="src" :alt="item.title" class="w-full h-full object-cover" >
+                  </div>
+                </div>
+
+                <!-- indicators: dots + index -->
+                <div
+                  class="absolute left-0 right-0 bottom-2 flex items-center justify-center gap-3 pointer-events-none"
+                >
+                  <div
+                    class="flex items-center gap-2 pointer-events-auto bg-black/30 px-3 py-1 rounded-full"
+                  >
+                    <div class="flex gap-2 items-center">
+                      <button
+                        v-for="(src, i) in images"
+                        :key="i"
+                        class="w-2 h-2 rounded-full transition-all"
+                        :class="i === activeIndex ? 'bg-white scale-150' : 'bg-white/60'"
+                        aria-label="'Go to slide ' + (i+1)"
+                        @click="goTo(i)"
+                      />
+                    </div>
+                    <div class="text-xs text-white/90 ml-2 select-none">
+                      {{ activeIndex + 1 }} / {{ images.length }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                v-else-if="item.imageCover?.url"
+                class="w-full h-64 md:h-72 rounded-lg overflow-hidden mb-5"
+              >
+                <img
+                  :src="item.imageCover?.url"
+                  :alt="item.title"
+                  class="w-full h-full object-cover"
+                >
+              </div>
               <h1 class="text-2xl md:text-3xl font-display font-semibold mb-2">{{ item.title }}</h1>
+              <div v-if="item.secondaryTitle" class="text-lg text-gray-700 font-display mb-2">
+                {{ item.secondaryTitle }}
+              </div>
               <div class="text-sm text-gray-600 flex flex-wrap items-center gap-2 mb-2">
                 <span>{{ (item.authors || []).map((a) => a.name).join(' • ') }}</span>
               </div>
@@ -70,7 +184,6 @@ function formatMonthYear(iso) {
                 <span>{{ formatMonthYear(item.date) }}</span>
               </div>
               <div v-if="item.publication_type?.type" class="text-sm mb-1">
-                Publisher:
                 <span class="text-green-700 font-medium">{{ item.publication_type.type }}</span>
               </div>
               <div v-if="item.url" class="mb-6">
@@ -79,7 +192,13 @@ function formatMonthYear(iso) {
                 }}</NuxtLink>
               </div>
 
-              <h2 class="text-xl font-semibold mb-2">Abstract</h2>
+              <h2 class="text-xl font-semibold mb-2">
+                {{
+                  (item.publication_type?.type || '').toLowerCase() === 'policy brief'
+                    ? 'Executive Summary'
+                    : 'Abstract'
+                }}
+              </h2>
               <MDC :value="item.abstract" class="prose max-w-none text-gray-800 space-y-6" />
 
               <div v-if="item.file" class="mt-6">
@@ -95,10 +214,66 @@ function formatMonthYear(iso) {
 
             <!-- Education layout -->
             <template v-else-if="kind === 'education'">
-              <div class="w-full h-64 md:h-72 rounded-lg overflow-hidden mb-5">
-                <img :src="item.cover?.url" :alt="item.title" class="w-full h-full object-cover" >
+              <div
+                v-if="images.length > 1"
+                class="w-full h-64 md:h-72 rounded-lg overflow-hidden mb-5 relative"
+              >
+                <!-- track -->
+                <div
+                  class="h-full flex transition-transform duration-300 ease-out"
+                  :style="{
+                    width: `${images.length * 100}%`,
+                    transform: `translateX(-${activeIndex * (100 / images.length)}%)`,
+                  }"
+                  @touchstart.passive="onTouchStart"
+                  @touchmove.passive="onTouchMove"
+                  @touchend.passive="onTouchEnd"
+                  @mousedown.prevent="onTouchStart"
+                  @mousemove.prevent="onTouchMove"
+                  @mouseup.prevent="onTouchEnd"
+                >
+                  <div v-for="(src, i) in images" :key="i" class="flex-none w-full h-full">
+                    <img :src="src" :alt="item.title" class="w-full h-full object-cover" >
+                  </div>
+                </div>
+
+                <!-- indicators: dots + index -->
+                <div
+                  class="absolute left-0 right-0 bottom-2 flex items-center justify-center gap-3 pointer-events-none"
+                >
+                  <div
+                    class="flex items-center gap-2 pointer-events-auto bg-black/30 px-3 py-1 rounded-full"
+                  >
+                    <div class="flex gap-2 items-center">
+                      <button
+                        v-for="(src, i) in images"
+                        :key="i"
+                        class="w-2 h-2 rounded-full transition-all"
+                        :class="i === activeIndex ? 'bg-white scale-150' : 'bg-white/60'"
+                        aria-label="'Go to slide ' + (i+1)"
+                        @click="goTo(i)"
+                      />
+                    </div>
+                    <div class="text-xs text-white/90 ml-2 select-none">
+                      {{ activeIndex + 1 }} / {{ images.length }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                v-else-if="item.imageCover?.url"
+                class="w-full h-64 md:h-72 rounded-lg overflow-hidden mb-5"
+              >
+                <img
+                  :src="item.imageCover?.url"
+                  :alt="item.title"
+                  class="w-full h-full object-cover"
+                >
               </div>
               <h1 class="text-2xl md:text-3xl font-display font-semibold mb-2">{{ item.title }}</h1>
+              <div v-if="item.secondaryTitle" class="text-lg text-gray-700 font-medium mb-2">
+                {{ item.secondaryTitle }}
+              </div>
               <div class="text-sm text-gray-600 flex items-center gap-2 mb-4">
                 <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                   <path

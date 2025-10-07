@@ -50,7 +50,7 @@ function goTo(page: number) {
       /> -->
 
       <!-- Secondary navbar (links to sibling pages) -->
-      <ProjectNavbar :project="project" :slug="String(slug)" />
+      <!-- <ProjectNavbar :project="project" :slug="String(slug)" /> -->
 
       <section class="w-full max-w-6xl mx-auto py-10 px-4 md:px-0">
         <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

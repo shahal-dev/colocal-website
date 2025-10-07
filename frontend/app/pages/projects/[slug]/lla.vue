@@ -52,7 +52,7 @@ const llaNewsEvents = computed(() => (newsData.value || []).filter((n) => n.lla)
     /> -->
 
     <!-- Secondary navbar (links to sibling pages) -->
-    <ProjectNavbar :project="project" :slug="String(slug)" />
+    <!-- <ProjectNavbar :project="project" :slug="String(slug)" /> -->
 
     <!-- Intro/description -->
     <section class="w-full max-w-6xl mx-auto py-10 px-4 md:px-0">

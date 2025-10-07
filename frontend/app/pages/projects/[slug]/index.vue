@@ -277,7 +277,7 @@ const _fellows = ref([
         :page-title="project?.shortTitle || 'Project'"
       /> -->
       <!-- Secondary navbar (links to sibling pages) -->
-      <ProjectNavbar :project="project" :slug="String(slug)" />
+      <!-- <ProjectNavbar :project="project" :slug="String(slug)" /> -->
 
       <section v-if="carouselItems.length" class="w-full mx-auto px-0 md:px-0">
         <ResearchOutreachCarousel :items="carouselItems" />

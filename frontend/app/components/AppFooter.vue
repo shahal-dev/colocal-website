@@ -9,7 +9,7 @@
             src="~/assets/logos/luccc-logo.png"
             alt="LUCCC Logo"
             class="h-10 w-auto"
-          />
+          >
 
           <!-- <div class="text-gray-300 flex flex-col justify-start space-y-2 text-sm">
             <a href="tel:+8801813444112" class="hover:underline">+(880) 1813444112</a>

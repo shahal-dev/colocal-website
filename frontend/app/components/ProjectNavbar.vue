@@ -37,30 +37,32 @@ const isActive = (to: string) => {
 </script>
 
 <template>
-  <div class="w-full sticky top-0 z-20 bg-white/95 backdrop-blur">
+  <div class="w-full sticky top-0 z-20 bg-white backdrop-blur shadow-sm border-b border-gray-200">
     <nav
-      class="max-w-6xl mx-auto flex items-center gap-2 px-4 md:px-6 lg:px-8 overflow-x-auto hide-scrollbar"
+      class="mx-auto flex items-center gap-2 px-4 md:px-6 lg:px-8 overflow-x-auto hide-scrollbar"
     >
       <NuxtLink
         v-if="projectName === 'COLOCAL'"
         :to="basePath"
-        class="flex items-center shrink-0 mr-2 px-1 py-0.5 h-6"
+        class="flex items-center shrink-0 mr-2 md:mr-16 px-1 py-0.5 h-6"
       >
         <img src="~/assets/logos/colocal.png" alt="CoLocal logo" class="h-4 w-auto" />
       </NuxtLink>
-      <NuxtLink
-        v-for="t in tabs"
-        :key="t.key"
-        :to="t.to"
-        class="px-4 py-3 text-sm md:text-base font-semibold whitespace-nowrap transition-colors duration-200"
-        :class="
-          isActive(t.to)
-            ? 'bg-green-100 text-green-900 border-b-2 border-green-700'
-            : 'bg-white text-gray-700 border-gray-300 hover:border-green-300 hover:text-green-700'
-        "
-      >
-        {{ t.label }}
-      </NuxtLink>
+      <div class="md:mx-auto">
+        <NuxtLink
+          v-for="t in tabs"
+          :key="t.key"
+          :to="t.to"
+          class="px-4 py-3 text-sm md:text-base font-semibold whitespace-nowrap transition-colors duration-200"
+          :class="
+            isActive(t.to)
+              ? 'bg-green-100 text-green-900 border-b-2 border-green-700'
+              : 'bg-white text-gray-700 border-gray-300 hover:border-green-300 hover:text-green-700'
+          "
+        >
+          {{ t.label }}
+        </NuxtLink>
+      </div>
       <NuxtLink
         to="/"
         class="ml-auto px-4 py-3 text-sm md:text-base font-semibold whitespace-nowrap transition-colors duration-200 bg-white text-gray-700 hover:text-green-700"

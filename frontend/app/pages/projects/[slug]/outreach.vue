@@ -58,7 +58,7 @@ function goTo(page: number) {
       /> -->
 
       <!-- Secondary navbar (links to sibling pages) -->
-      <ProjectNavbar :project="project" :slug="String(slug)" />
+      <!-- <ProjectNavbar :project="project" :slug="String(slug)" /> -->
 
       <!-- HERO/CAROUSEL -->
       <!-- <section class="w-full">

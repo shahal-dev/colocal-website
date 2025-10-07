@@ -132,7 +132,7 @@ function onTouchEnd() {
         </NuxtLink>
       </nav>
     </div> -->
-    <ProjectNavbar :project="project" :slug="String(slug)" />
+    <!-- <ProjectNavbar :project="project" :slug="String(slug)" /> -->
 
     <section class="w-full max-w-6xl mx-auto px-4 md:px-0 py-8">
       <div class="grid grid-cols-1 md:grid-cols-12 gap-8">

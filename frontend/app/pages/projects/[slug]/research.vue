@@ -7,7 +7,13 @@ import type { Project, ResearchPublication } from '~~/types/content';
 const route = useRoute();
 const slug = route.params.slug;
 const project = useState<Project | null>(`project:${slug}`, () => null);
-const projectName = computed(() => project.value?.shortTitle || 'Project');
+// const projectName = computed(() => project.value?.shortTitle || 'Project');
+
+function excerpt(text?: string | null, n = 180) {
+  if (!text) return '';
+  const t = String(text);
+  return t.length > n ? t.slice(0, n) + '…' : t;
+}
 
 // Use shared project navbar
 const basePath = computed(() => `/projects/${slug}`);
@@ -31,6 +37,7 @@ const theme = ref('');
 const country = ref('');
 
 const types = ['Journal Publications', 'Conference Proceedings', 'Policy Brief', 'Thesis'];
+const typeTabs = computed(() => ['All', ...types]);
 // const years = [2024, 2023, 2022, 2021];
 // const themes = ['Finance', 'Resilience', 'Health', 'LLA', 'Ecosystems'];
 // const countries = ['Bangladesh', 'Nepal', 'Mozambique', 'Regional'];
@@ -67,13 +74,22 @@ const visible = computed(() => {
   return filtered.value.slice(start, start + pageSize);
 });
 
-function resetFilters() {
-  q.value = '';
-  type.value = '';
-  year.value = '';
-  theme.value = '';
-  country.value = '';
+// function resetFilters() {
+//   q.value = '';
+//   type.value = '';
+//   year.value = '';
+//   theme.value = '';
+//   country.value = '';
+//   page.value = 1;
+// }
+
+function selectType(tab: string) {
+  type.value = tab === 'All' ? '' : tab;
   page.value = 1;
+}
+
+function isActiveType(tab: string) {
+  return tab === 'All' ? type.value === '' : type.value === tab;
 }
 </script>
 
@@ -93,7 +109,7 @@ function resetFilters() {
       /> -->
 
       <!-- Secondary navbar (links to sibling pages) -->
-      <ProjectNavbar :project="project" :slug="String(slug)" />
+      <!-- <ProjectNavbar :project="project" :slug="String(slug)" /> -->
 
       <!-- Heading + controls -->
       <section class="w-full max-w-6xl mx-auto py-10 px-4 md:px-0">
@@ -102,6 +118,27 @@ function resetFilters() {
             Research & Publications
           </h1>
         </div>
+
+        <!-- Type tabs -->
+        <nav
+          class="mt-5 flex flex-wrap items-center justify-center gap-2"
+          aria-label="Filter publications by type"
+        >
+          <button
+            v-for="tab in typeTabs"
+            :key="tab"
+            type="button"
+            class="px-4 py-2 rounded-sm border text-sm transition-colors"
+            :class="
+              isActiveType(tab)
+                ? 'bg-green-600 border-green-600 text-white shadow-sm'
+                : 'bg-white border-gray-300 text-gray-700 hover:border-green-400'
+            "
+            @click="selectType(tab)"
+          >
+            {{ tab }}
+          </button>
+        </nav>
 
         <!-- Search -->
         <div class="mt-6 relative">
@@ -119,21 +156,11 @@ function resetFilters() {
           </span>
         </div>
 
-        <!-- Dropdown filters -->
-        <div class="mt-5 grid grid-cols-1 md:grid-cols-1 gap-3">
-          <div>
-            <select v-model="type" class="w-full border rounded-md px-3 py-2">
-              <option value="">Publication Type</option>
-              <option v-for="t in types" :key="t" :value="t">{{ t }}</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="mt-3 text-right">
+        <!-- <div class="mt-3 text-right">
           <button class="text-sm text-green-700 hover:underline" @click="resetFilters">
             Reset filters
           </button>
-        </div>
+        </div> -->
 
         <!-- Publications list (reuse card layout) -->
         <div class="mt-6 space-y-4">
@@ -163,7 +190,7 @@ function resetFilters() {
                 </svg>
                 <span>{{ p.authors.map((a) => a.name).join(' • ') }}</span>
               </div>
-              <p class="text-sm text-gray-700 mb-3">{{ p.abstract }}</p>
+              <p class="text-sm text-gray-700 mb-3">{{ excerpt(p.abstract, 300) }}</p>
               <div class="flex flex-wrap gap-2">
                 <span
                   v-for="(tag, idx) in p.tags"

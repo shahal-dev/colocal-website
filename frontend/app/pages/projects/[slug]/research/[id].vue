@@ -1,37 +1,40 @@
-<script setup>
+<script setup lang="ts">
 import { computed, ref, watch } from 'vue';
 import { useRoute } from '#app';
+import type { Project } from '~~/types/content';
 
 const route = useRoute();
 const slug = route.params.slug;
 const id = Number(route.params.id);
+const project = useState<Project | null>(`project:${slug}`, () => null);
 
-const projectName = (() => {
-  const map = { colocal: 'COLOCAL', 'mangrove-restoration': 'Mangrove Restoration' };
-  return map[String(slug).toLowerCase()] || 'Project';
-})();
+// const projectName = (() => {
+//   const map = { colocal: 'COLOCAL', 'mangrove-restoration': 'Mangrove Restoration' };
+//   return map[String(slug).toLowerCase()] || 'Project';
+// })();
 
 const basePath = computed(() => `/projects/${slug}`);
-const tabs = computed(() => [
-  { key: 'home', label: 'Home', to: basePath.value },
-  { key: 'about', label: 'About ' + projectName, to: `${basePath.value}/about` },
-  { key: 'education', label: 'Education & Training', to: `${basePath.value}/education` },
-  { key: 'research', label: 'Research & Publications', to: `${basePath.value}/research` },
-  { key: 'outreach', label: 'Outreach', to: `${basePath.value}/outreach` },
-  { key: 'lla', label: 'LLA Hub', to: `${basePath.value}/lla` },
-]);
-const isActive = (to) => route.path.startsWith(to);
+// const tabs = computed(() => [
+//   { key: 'home', label: 'Home', to: basePath.value },
+//   { key: 'about', label: 'About ' + projectName, to: `${basePath.value}/about` },
+//   { key: 'education', label: 'Education & Training', to: `${basePath.value}/education` },
+//   { key: 'research', label: 'Research & Publications', to: `${basePath.value}/research` },
+//   { key: 'outreach', label: 'Outreach', to: `${basePath.value}/outreach` },
+//   { key: 'lla', label: 'LLA Hub', to: `${basePath.value}/lla` },
+// ]);
+// const isActive = (to) => route.path.startsWith(to);
 
 // Fetch current publication and more publications for sidebar
-const { data: current } = await useAsyncData(
+const { data: current, status } = await useAsyncData(
   () => `publication:${slug}:${id}`,
   () => $fetch('/api/publications', { params: { projectSlug: String(slug), id: String(id) } })
 );
 const item = computed(() => (current.value && current.value[0]) || null);
 
+console.log('status', status);
 const images = computed(() => {
   const arr = [];
-  if (item.value?.cover?.url) arr.push(item.value.cover.url);
+  if (item.value?.imageCover?.url) arr.push(item.value.imageCover.url);
   if (item.value?.images && Array.isArray(item.value.images)) {
     // allow item.images to be array of strings or objects with url
     item.value.images.forEach((it) => {
@@ -57,7 +60,7 @@ watch(images, () => {
 });
 
 // click indicator
-function goTo(i) {
+function goTo(i: number) {
   activeIndex.value = i;
 }
 
@@ -65,13 +68,25 @@ function goTo(i) {
 let touchStartX = 0;
 let touchDeltaX = 0;
 
-function onTouchStart(e) {
-  touchDeltaX = 0;
-  touchStartX = (e.touches && e.touches[0] && e.touches[0].clientX) || e.clientX || 0;
+function getClientX(e: TouchEvent | MouseEvent | PointerEvent): number {
+  // Safely handle touch events by casting and checking the first touch exists
+  const touches = (e as TouchEvent).touches;
+  if (touches && touches.length > 0 && touches[0] && typeof touches[0].clientX === 'number') {
+    return touches[0].clientX;
+  }
+  if ('clientX' in e && typeof (e as MouseEvent | PointerEvent).clientX === 'number') {
+    return (e as MouseEvent | PointerEvent).clientX;
+  }
+  return 0;
 }
 
-function onTouchMove(e) {
-  const x = (e.touches && e.touches[0] && e.touches[0].clientX) || e.clientX || 0;
+function onTouchStart(e: TouchEvent | MouseEvent | PointerEvent): void {
+  touchDeltaX = 0;
+  touchStartX = getClientX(e);
+}
+
+function onTouchMove(e: TouchEvent | MouseEvent | PointerEvent): void {
+  const x = getClientX(e);
   touchDeltaX = x - touchStartX;
 }
 
@@ -119,11 +134,63 @@ function onTouchEnd() {
         </NuxtLink>
       </nav>
     </div> -->
-    <ProjectNavbar :project="project" :slug="String(slug)" />
+    <!-- <ProjectNavbar :project="project" :slug="String(slug)" /> -->
 
     <section class="w-full max-w-6xl mx-auto px-4 md:px-0 py-8">
       <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
         <div class="md:col-span-8 mr-4 md:mr-12">
+          <div
+            v-if="status === 'pending'"
+            class="space-y-4 h-120 max-w-full"
+            aria-busy="true"
+            aria-live="polite"
+          >
+            <div class="flex items-center justify-center py-6">
+              <svg
+                class="animate-spin h-6 w-6 text-green-600"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                />
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                />
+              </svg>
+              <span class="sr-only">Loading</span>
+            </div>
+
+            <div class="animate-pulse space-y-4">
+              <div class="h-8 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mx-0" />
+              <div class="w-full h-64 md:h-72 bg-gray-200 dark:bg-gray-700 rounded-lg" />
+
+              <div class="flex items-center gap-2">
+                <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/3" />
+                <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/4 ml-auto" />
+              </div>
+
+              <div class="h-5 bg-gray-200 dark:bg-gray-700 rounded w-1/2" />
+
+              <div class="space-y-2">
+                <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded" />
+                <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-5/6" />
+                <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-2/3" />
+                <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-4/5" />
+              </div>
+
+              <div class="mt-4 w-36 h-10 bg-gray-200 dark:bg-gray-700 rounded" />
+            </div>
+          </div>
           <div v-if="item">
             <h1 class="text-2xl md:text-3xl font-display font-semibold mb-2">{{ item.title }}</h1>
             <div
@@ -174,10 +241,18 @@ function onTouchEnd() {
             </div>
 
             <div
-              v-else-if="item.cover?.url"
+              v-else-if="item.imageCover?.url"
               class="w-full h-64 md:h-72 rounded-lg overflow-hidden mb-5"
             >
-              <img :src="item.cover?.url" :alt="item.title" class="w-full h-full object-cover" />
+              <img
+                :src="item.imageCover?.url"
+                :alt="item.title"
+                class="w-full h-full object-cover"
+              />
+            </div>
+
+            <div v-if="item.secondaryTitle" class="text-lg text-gray-700 font-display mb-2">
+              {{ item.secondaryTitle }}
             </div>
 
             <div class="text-sm text-gray-600 flex flex-wrap items-center gap-2 mb-2">
