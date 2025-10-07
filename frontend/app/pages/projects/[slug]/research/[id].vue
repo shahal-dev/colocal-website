@@ -240,10 +240,7 @@ function onTouchEnd() {
               </div>
             </div>
 
-            <div
-              v-else-if="item.imageCover?.url"
-              class="w-full h-64 md:h-72 rounded-lg overflow-hidden mb-5"
-            >
+            <div v-else-if="item.imageCover?.url" class="w-full rounded-lg overflow-hidden mb-5">
               <img
                 :src="item.imageCover?.url"
                 :alt="item.title"

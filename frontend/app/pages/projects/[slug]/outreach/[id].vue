@@ -188,7 +188,7 @@ function onTouchEnd() {
               </div>
             </div>
 
-            <div v-else class="w-full h-64 md:h-72 rounded-lg overflow-hidden mb-5">
+            <div v-else class="w-full rounded-lg overflow-hidden mb-5">
               <img :src="item.cover?.url" :alt="item.title" class="w-full h-full object-cover" />
             </div>
 

@@ -3,27 +3,42 @@ import { computed } from 'vue';
 import { useRoute } from '#app';
 import type { Project } from '~~/types/content';
 
-interface Props {
-  project?: Partial<Project> | null;
-  slug: string;
-}
-
-const props = defineProps<Props>();
+const props = defineProps<{
+  slug?: string;
+}>();
 const route = useRoute();
 
-// Compute project name from props or fallback
-const projectName = computed(() => props.project?.shortTitle || 'Project');
+const slug = computed(() => {
+  if (props.slug) return props.slug;
+  const param = route.params.slug;
+  if (typeof param === 'string') return param;
+  if (Array.isArray(param)) return param[0] ?? '';
+  return '';
+});
+
+const hasSlug = computed(() => Boolean(slug.value));
+
+const projectState = computed<Project | null>(() => {
+  if (!hasSlug.value) return null;
+  return useState<Project | null>(`project:${slug.value}`, () => null).value;
+});
+
+// Compute project name from shared state or fallback
+const projectName = computed(() => projectState.value?.shortTitle || 'Project');
 
 // Secondary navbar (links to sibling pages under the slug)
-const basePath = computed(() => `/projects/${props.slug}`);
-const tabs = computed(() => [
-  { key: 'home', label: 'Home', to: basePath.value },
-  { key: 'about', label: 'About ' + projectName.value, to: `${basePath.value}/about` },
-  { key: 'education', label: 'Education & Training', to: `${basePath.value}/education` },
-  { key: 'research', label: 'Research & Publications', to: `${basePath.value}/research` },
-  { key: 'outreach', label: 'Outreach', to: `${basePath.value}/outreach` },
-  { key: 'lla', label: 'LLA Hub', to: `${basePath.value}/lla` },
-]);
+const basePath = computed(() => (hasSlug.value ? `/projects/${slug.value}` : '/projects'));
+const tabs = computed(() => {
+  if (!hasSlug.value) return [];
+  return [
+    { key: 'home', label: 'Home', to: basePath.value },
+    { key: 'about', label: 'About ' + projectName.value, to: `${basePath.value}/about` },
+    { key: 'education', label: 'Education & Training', to: `${basePath.value}/education` },
+    { key: 'research', label: 'Research & Publications', to: `${basePath.value}/research` },
+    { key: 'outreach', label: 'Outreach', to: `${basePath.value}/outreach` },
+    { key: 'lla', label: 'LLA Hub', to: `${basePath.value}/lla` },
+  ];
+});
 
 // Check if current route matches the tab
 const isActive = (to: string) => {
@@ -37,7 +52,10 @@ const isActive = (to: string) => {
 </script>
 
 <template>
-  <div class="w-full sticky top-0 z-20 bg-white backdrop-blur shadow-sm border-b border-gray-200">
+  <div
+    v-if="hasSlug"
+    class="w-full sticky top-0 z-20 bg-white backdrop-blur shadow-sm border-b border-gray-200"
+  >
     <nav
       class="mx-auto flex items-center gap-2 px-4 md:px-6 lg:px-8 overflow-x-auto hide-scrollbar"
     >
