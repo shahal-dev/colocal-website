@@ -66,6 +66,7 @@ export type Theme = {
 export interface Author {
   id: number;
   name: string; // required
+  title: string | null; // optional title/position
   avatar: StrapiMedia | null; // optional in Strapi → can be null
   email: string | null; // optional in Strapi → can be null
   research_publications: ResearchPublication[] | null; // optional in Strapi → can be null

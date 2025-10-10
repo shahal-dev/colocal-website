@@ -159,6 +159,7 @@ function mapRawAuthor(baseUrl: string, ent?: RawEntity<RawAuthorAttributes> | nu
   return {
     id: ent.id,
     name: a.name,
+    title: a.title ?? null,
     avatar: mapStrapiMedia(baseUrl, a.avatar),
     email: a.email ?? null,
     research_publications: null,
@@ -171,6 +172,7 @@ function mapFlatAuthor(baseUrl: string, a?: FlatAuthor | null): Author | null {
   return {
     id: a.id,
     name: a.name,
+    title: a.title ?? null,
     avatar: mapFlatMedia(baseUrl, a.avatar ?? null),
     email: a.email ?? null,
     research_publications: null,

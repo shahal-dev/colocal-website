@@ -215,6 +215,7 @@ function mapFlatAuthors(baseUrl: string, list?: FlatAuthor[] | null): Author[] |
     (a): Author => ({
       id: a.id,
       name: a.name,
+      title: a.title ?? null,
       avatar: mapFlatMedia(baseUrl, a.avatar ?? null),
       email: a.email ?? null,
       research_publications: null,

@@ -32,6 +32,7 @@ export type RawMediaAttributes = {
 
 export type RawAuthorAttributes = {
   name: string;
+  title?: string | null;
   avatar?: RawRelationOne<RawMediaAttributes>;
   email?: string | null;
   colocal: boolean;
@@ -106,6 +107,7 @@ export type FlatMedia = {
 export type FlatAuthor = {
   id: number;
   name: string;
+  title?: string | null;
   avatar?: FlatMedia | null;
   email?: string | null;
   colocal: boolean;
