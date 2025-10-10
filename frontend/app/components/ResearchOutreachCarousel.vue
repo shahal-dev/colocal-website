@@ -16,21 +16,40 @@
         <div
           class="absolute inset-0 md:static md:w-[720px] md:h-full flex items-center justify-center md:order-2 order-1 z-0"
         >
-          <picture v-if="currentSlide && currentSlide.image" class="w-full h-full">
-            <!-- use available formats in srcset; fall back to single src -->
-            <source
-              v-if="currentSlide.srcset"
-              :srcset="currentSlide.srcset"
-              sizes="(min-width: 768px) 720px, 100vw"
-            >
-            <img
-              :src="currentSlide.image"
-              :alt="currentSlide.alt || 'Feature image'"
-              class="w-full h-full object-cover"
-              loading="lazy"
-              decoding="async"
-            >
-          </picture>
+          <div v-if="currentSlide && currentSlide.image" class="relative w-full h-full">
+            <!-- Blurred background image to fill blank spaces -->
+            <picture class="absolute inset-0 w-full h-full">
+              <source
+                v-if="currentSlide.srcset"
+                :srcset="currentSlide.srcset"
+                sizes="(min-width: 768px) 720px, 100vw"
+              />
+              <img
+                :src="currentSlide.image"
+                :alt="currentSlide.alt || 'Feature image'"
+                class="w-full h-full object-cover blur-md scale-110 opacity-80"
+                loading="lazy"
+                decoding="async"
+                aria-hidden="true"
+              />
+            </picture>
+
+            <!-- Main image with object-contain -->
+            <picture class="relative z-10 w-full h-full">
+              <source
+                v-if="currentSlide.srcset"
+                :srcset="currentSlide.srcset"
+                sizes="(min-width: 768px) 720px, 100vw"
+              />
+              <img
+                :src="currentSlide.image"
+                :alt="currentSlide.alt || 'Feature image'"
+                class="w-full h-full object-contain"
+                loading="lazy"
+                decoding="async"
+              />
+            </picture>
+          </div>
         </div>
 
         <!-- Mobile overlay (only shown on small screens) -->
