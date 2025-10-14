@@ -46,6 +46,20 @@
     },
     "title": {
       "type": "string"
+    },
+    "admin": {
+      "type": "boolean",
+      "default": false
+    },
+    "country": {
+      "type": "enumeration",
+      "enum": [
+        "norway",
+        "bangladesh",
+        "mozambique",
+        "nepal",
+        "uganda"
+      ]
     }
   }
 }

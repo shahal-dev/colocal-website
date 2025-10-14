@@ -170,6 +170,7 @@ function mapNewsEvent(
     cover: mapStrapiMedia(baseUrl, a.cover)!,
     images: mapStrapiMediaMany(baseUrl, a.images),
     body: a.body,
+    section: a.section ?? null,
     lla: !!a.lla,
     projects: null,
   };
@@ -186,6 +187,7 @@ function mapFlatNewsEvents(baseUrl: string, list?: _FlatNewsEvent[] | null): New
       cover: mapFlatMedia(baseUrl, e.cover)!,
       images: mapFlatMediaList(baseUrl, e.images ?? null),
       body: e.body,
+      section: e.section ?? null,
       lla: !!e.lla,
       projects: null,
     })

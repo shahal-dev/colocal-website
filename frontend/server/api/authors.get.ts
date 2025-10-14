@@ -112,6 +112,8 @@ function mapRawAuthor(baseUrl: string, ent: RawEntity<RawAuthorAttributes>): Aut
     email: a.email ?? null,
     research_publications: null,
     colocal: !!a.colocal,
+    admin: !!a.admin,
+    country: a.country ?? null,
   };
 }
 
@@ -124,6 +126,8 @@ function mapFlatAuthor(baseUrl: string, a: FlatAuthor): Author {
     email: a.email ?? null,
     research_publications: null,
     colocal: !!a.colocal,
+    admin: !!a.admin,
+    country: a.country ?? null,
   };
 }
 

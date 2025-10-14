@@ -177,6 +177,7 @@ function mapEducationTraining(
     cover: mapStrapiMedia(baseUrl, a.cover)!,
     body: a.body,
     type: a.type ? { type: a.type.type } : null,
+    section: a.section ?? null,
     lla: !!a.lla,
     project: null,
   };
@@ -215,6 +216,7 @@ function mapNewsEvent(
     date: a.date,
     cover: mapStrapiMedia(baseUrl, a.cover)!,
     body: a.body,
+    section: a.section ?? null,
     lla: !!a.lla,
     projects: null,
   };
@@ -277,6 +279,8 @@ function mapFlatAuthors(baseUrl: string, list?: FlatAuthor[] | null): Author[] |
       email: a.email ?? null,
       research_publications: null,
       colocal: !!a.colocal,
+      admin: !!a.admin,
+      country: a.country ?? null,
     })
   );
 }

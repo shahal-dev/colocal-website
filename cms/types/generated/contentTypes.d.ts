@@ -458,10 +458,14 @@ export interface ApiAuthorAuthor extends Struct.CollectionTypeSchema {
     draftAndPublish: false;
   };
   attributes: {
+    admin: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     avatar: Schema.Attribute.Media<'images' | 'files' | 'videos'>;
     colocal: Schema.Attribute.Boolean &
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<false>;
+    country: Schema.Attribute.Enumeration<
+      ['norway', 'bangladesh', 'mozambique', 'nepal', 'uganda']
+    >;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -553,6 +557,9 @@ export interface ApiEducationTrainingEducationTraining
     project: Schema.Attribute.Relation<'manyToOne', 'api::project.project'>;
     publishedAt: Schema.Attribute.DateTime;
     secondary_title: Schema.Attribute.String;
+    section: Schema.Attribute.Enumeration<
+      ['module development', 'short course', 'training workshop']
+    >;
     title: Schema.Attribute.String & Schema.Attribute.Required;
     type: Schema.Attribute.Component<'shared.education', false>;
     updatedAt: Schema.Attribute.DateTime;
@@ -664,6 +671,9 @@ export interface ApiNewsEventNewsEvent extends Struct.CollectionTypeSchema {
     projects: Schema.Attribute.Relation<'manyToMany', 'api::project.project'>;
     publishedAt: Schema.Attribute.DateTime;
     secondary_title: Schema.Attribute.String;
+    section: Schema.Attribute.Enumeration<
+      ['policy dialogue', 'seminar and conference']
+    >;
     title: Schema.Attribute.String & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &

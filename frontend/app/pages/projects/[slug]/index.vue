@@ -49,6 +49,14 @@ const { data: publications } = await useAsyncData<ResearchPublication[]>(
   }
 );
 
+const recent3Publications = computed(() => {
+  if (!publications.value || !publications.value.length) return [];
+  return publications.value
+    .slice()
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .slice(0, 3);
+});
+
 // // Featured publications (sample data + pagination)
 // const publications = ref([
 //   {
@@ -143,7 +151,7 @@ const { data: newsEvents } = await useAsyncData<NewsEvent[] | null>(
 const { data: educationTraining } = await useAsyncData<EducationTraining[] | null>(
   () => `education-training-${slug}`,
   async () => {
-    const res = await $fetch('/api/education-training', { query: { projectSlug: String(slug) } });
+    const res = await $fetch('/api/education-trainings', { query: { projectSlug: String(slug) } });
     return (res as EducationTraining[]) || [];
   }
 );
@@ -163,21 +171,40 @@ const { data: educationTraining } = await useAsyncData<EducationTraining[] | nul
 // });
 
 const newsItems = computed<NewsCard[]>(() => {
-  const items = newsEvents.value;
-  if (Array.isArray(items) && items.length) {
-    return items.map((item) => {
-      const formats = item.cover?.formats || {};
-      const image = formats.medium?.url || formats.small?.url || item.cover?.url || '';
-      return {
-        id: item.id,
-        title: item.title,
-        excerpt: excerpt(item.body, 160),
-        image,
-        to: `${basePath.value}/outreach/${item.id}`,
-      } satisfies NewsCard;
-    });
-  }
-  return fallbackNews;
+  const newsEventItems = Array.isArray(newsEvents.value) ? newsEvents.value : [];
+  const educationItems = Array.isArray(educationTraining.value) ? educationTraining.value : [];
+
+  console.log('educationItems', educationItems);
+
+  const newsCards: NewsCard[] = [];
+
+  // Add news events
+  newsEventItems.forEach((item) => {
+    const formats = item.cover?.formats || {};
+    const image = formats.medium?.url || formats.small?.url || item.cover?.url || '';
+    newsCards.push({
+      id: item.id,
+      title: item.title,
+      excerpt: excerpt(item.body, 160),
+      image,
+      to: `${basePath.value}/outreach/${item.id}`,
+    } satisfies NewsCard);
+  });
+
+  // Add education training items
+  educationItems.forEach((item) => {
+    const formats = item.cover?.formats || {};
+    const image = formats.medium?.url || formats.small?.url || item.cover?.url || '';
+    newsCards.push({
+      id: item.id,
+      title: item.title,
+      excerpt: excerpt(item.body, 160),
+      image,
+      to: `${basePath.value}/education/${item.id}`,
+    } satisfies NewsCard);
+  });
+
+  return newsCards.length > 0 ? newsCards : fallbackNews;
 });
 const newsPage = ref(1);
 const newsSize = 4;
@@ -301,6 +328,87 @@ const _fellows = ref([
         </div>
       </section>
 
+      <!-- North Partners -->
+      <section class="w-full max-w-6xl mx-auto px-4 md:px-0 pb-8">
+        <h2 class="text-center text-[22px] md:text-[26px] font-display font-semibold mb-8">
+          North Partners
+        </h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 justify-items-center">
+          <!-- Norway -->
+          <div class="flex flex-col items-center text-center bg-gray-50 rounded-lg p-6">
+            <div class="w-32 h-24 mb-4 flex items-center justify-center">
+              <img
+                src="https://flagcdn.com/w320/no.png"
+                alt="Norway Flag"
+                class="max-w-full max-h-full object-contain"
+              />
+            </div>
+            <h3 class="text-lg font-semibold text-gray-900 mb-2">Norway</h3>
+            <p class="text-sm text-gray-600">Norwegian University of Life Science</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- South Partners -->
+      <section class="w-full max-w-6xl mx-auto px-4 md:px-0 pb-16">
+        <h2 class="text-center text-[22px] md:text-[26px] font-display font-semibold mb-8">
+          South Partners
+        </h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          <!-- Bangladesh -->
+          <div class="flex flex-col items-center text-center bg-gray-50 rounded-lg p-6">
+            <div class="w-32 h-24 mb-4 flex items-center justify-center">
+              <img
+                src="https://flagcdn.com/w320/bd.png"
+                alt="Bangladesh Flag"
+                class="max-w-full max-h-full object-contain"
+              />
+            </div>
+            <h3 class="text-lg font-semibold text-gray-900 mb-2">Bangladesh</h3>
+            <p class="text-sm text-gray-600">Independent University, Bangladesh</p>
+          </div>
+
+          <!-- Mozambique -->
+          <div class="flex flex-col items-center text-center bg-gray-50 rounded-lg p-6">
+            <div class="w-32 h-24 mb-4 flex items-center justify-center">
+              <img
+                src="https://flagcdn.com/w320/mz.png"
+                alt="Mozambique Flag"
+                class="max-w-full max-h-full object-contain"
+              />
+            </div>
+            <h3 class="text-lg font-semibold text-gray-900 mb-2">Mozambique</h3>
+            <p class="text-sm text-gray-600">Eduardo Mondlane University</p>
+          </div>
+
+          <!-- Nepal -->
+          <div class="flex flex-col items-center text-center bg-gray-50 rounded-lg p-6">
+            <div class="w-32 h-24 mb-4 flex items-center justify-center">
+              <img
+                src="https://flagcdn.com/w320/np.png"
+                alt="Nepal Flag"
+                class="max-w-full max-h-full object-contain"
+              />
+            </div>
+            <h3 class="text-lg font-semibold text-gray-900 mb-2">Nepal</h3>
+            <p class="text-sm text-gray-600">Pokhara University</p>
+          </div>
+
+          <!-- Uganda -->
+          <div class="flex flex-col items-center text-center bg-gray-50 rounded-lg p-6">
+            <div class="w-32 h-24 mb-4 flex items-center justify-center">
+              <img
+                src="https://flagcdn.com/w320/ug.png"
+                alt="Uganda Flag"
+                class="max-w-full max-h-full object-contain"
+              />
+            </div>
+            <h3 class="text-lg font-semibold text-gray-900 mb-2">Uganda</h3>
+            <p class="text-sm text-gray-600">University of Makerere</p>
+          </div>
+        </div>
+      </section>
+
       <!-- Featured Publications -->
       <section class="w-full max-w-6xl mx-auto px-4 md:px-0 py-12">
         <h2 class="text-center text-[24px] md:text-[28px] font-display font-medium mb-6">
@@ -308,7 +416,7 @@ const _fellows = ref([
         </h2>
         <div class="space-y-4">
           <article
-            v-for="p in publications"
+            v-for="p in recent3Publications"
             :key="p.id"
             class="border border-gray-200 rounded-md bg-white p-4 md:p-5"
           >

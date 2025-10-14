@@ -60,6 +60,14 @@
         "videos",
         "audios"
       ]
+    },
+    "section": {
+      "type": "enumeration",
+      "enum": [
+        "module development",
+        "short course",
+        "training workshop"
+      ]
     }
   }
 }

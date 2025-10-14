@@ -71,6 +71,8 @@ export interface Author {
   email: string | null; // optional in Strapi → can be null
   research_publications: ResearchPublication[] | null; // optional in Strapi → can be null
   colocal: boolean; // required
+  admin: boolean; // optional admin flag
+  country: 'norway' | 'bangladesh' | 'mozambique' | 'nepal' | 'uganda' | null; // optional country
 }
 
 export interface ResearchPublication {
@@ -120,6 +122,7 @@ export interface EducationTraining {
   images?: StrapiMedia[] | null; // optional gallery
   body: string; // required (RichText Markdown stored as string)
   type?: Education | null; // optional component
+  section: 'module development' | 'short course' | 'training workshop' | null; // optional section
   lla: boolean; // required
   project?: Project | null; // optional relation (many-to-one to Project)
 }
@@ -132,6 +135,7 @@ export interface NewsEvent {
   cover: StrapiMedia; // required media
   images?: StrapiMedia[] | null; // optional gallery
   body: string; // required (RichText Markdown stored as string)
+  section: 'policy dialogue' | 'seminar and conference' | null; // optional section
   lla: boolean; // required
   projects?: Project[] | null; // optional relation (many-to-many to Project)
 }

@@ -220,6 +220,8 @@ function mapFlatAuthors(baseUrl: string, list?: FlatAuthor[] | null): Author[] |
       email: a.email ?? null,
       research_publications: null,
       colocal: !!a.colocal,
+      admin: !!a.admin,
+      country: a.country ?? null,
     })
   );
 }

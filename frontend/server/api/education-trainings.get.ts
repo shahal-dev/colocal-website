@@ -182,6 +182,7 @@ function mapEducationTraining(
     images: mapStrapiMediaMany(baseUrl, a.images),
     body: a.body,
     type: mapEducation(a.type ?? null) ?? undefined,
+    section: a.section ?? null,
     lla: !!a.lla,
     project: null,
   };
@@ -202,6 +203,7 @@ function mapFlatEducationTrainings(
       images: mapFlatMediaList(baseUrl, e.images ?? null),
       body: e.body,
       type: mapEducation(e.type ?? null) ?? undefined,
+      section: e.section ?? null,
       lla: !!e.lla,
       project: null,
     })

@@ -36,6 +36,8 @@ export type RawAuthorAttributes = {
   avatar?: RawRelationOne<RawMediaAttributes>;
   email?: string | null;
   colocal: boolean;
+  admin?: boolean;
+  country?: 'norway' | 'bangladesh' | 'mozambique' | 'nepal' | 'uganda' | null;
 };
 
 export type RawTagComponent = { tag: string };
@@ -111,6 +113,8 @@ export type FlatAuthor = {
   avatar?: FlatMedia | null;
   email?: string | null;
   colocal: boolean;
+  admin?: boolean;
+  country?: 'norway' | 'bangladesh' | 'mozambique' | 'nepal' | 'uganda' | null;
 };
 
 export type FlatPublication = {
@@ -164,6 +168,7 @@ export type _RawEducationTrainingAttributes = {
   images?: RawRelationMany<RawMediaAttributes> | null;
   body: string;
   type?: RawEducationComponent | null;
+  section?: 'module development' | 'short course' | 'training workshop' | null;
   lla: boolean;
 };
 
@@ -176,6 +181,7 @@ export type _FlatEducationTraining = {
   images?: FlatMedia[] | null;
   body: string;
   type?: RawEducationComponent | null;
+  section?: 'module development' | 'short course' | 'training workshop' | null;
   lla: boolean;
 };
 
@@ -186,6 +192,7 @@ export type _RawNewsEventAttributes = {
   cover: RawRelationOne<RawMediaAttributes>;
   images?: RawRelationMany<RawMediaAttributes> | null;
   body: string;
+  section?: 'policy dialogue' | 'seminar and conference' | null;
   lla: boolean;
 };
 
@@ -197,5 +204,6 @@ export type _FlatNewsEvent = {
   cover: FlatMedia;
   images?: FlatMedia[] | null;
   body: string;
+  section?: 'policy dialogue' | 'seminar and conference' | null;
   lla: boolean;
 };

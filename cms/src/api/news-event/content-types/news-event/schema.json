@@ -52,6 +52,13 @@
       "allowedTypes": [
         "images"
       ]
+    },
+    "section": {
+      "type": "enumeration",
+      "enum": [
+        "policy dialogue",
+        "seminar and conference"
+      ]
     }
   }
 }
