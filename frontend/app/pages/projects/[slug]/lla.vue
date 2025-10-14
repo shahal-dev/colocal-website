@@ -111,7 +111,7 @@ const llaNewsEvents = computed(() => (newsData.value || []).filter((n) => n.lla)
     </section>
 
     <!-- News and Events (LLA only) -->
-    <section class="w-full max-w-6xl mx-auto px-4 md:px-0 pb-12">
+    <section v-if="llaNewsEvents.length" class="w-full max-w-6xl mx-auto px-4 md:px-0 pb-12">
       <h2 class="text-[22px] md:text-[26px] font-display font-semibold mb-4">News and Events</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <article
