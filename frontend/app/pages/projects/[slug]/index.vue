@@ -29,6 +29,12 @@ const { data: project, error: _projectError } = await useAsyncData<Project | nul
   }
 );
 
+useHead({
+  title: project.value?.shortTitle
+    ? `${project.value.shortTitle}`
+    : 'Projects & Programmes — LUCCC',
+});
+
 // Share project in state so sibling pages under this slug can access it easily
 const projectKey = `project:${slug}`;
 const sharedProject = useState<Project | null>(projectKey, () => null);

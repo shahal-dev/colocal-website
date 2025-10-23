@@ -7,7 +7,13 @@ import type { Project, ResearchPublication } from '~~/types/content';
 const route = useRoute();
 const slug = route.params.slug;
 const project = useState<Project | null>(`project:${slug}`, () => null);
-// const projectName = computed(() => project.value?.shortTitle || 'Project');
+const projectName = computed(() => project.value?.shortTitle || 'Project');
+
+useHead({
+  title: projectName.value
+    ? `${projectName.value} — Research & Publications`
+    : 'Research & Publications — LUCCC',
+});
 
 function excerpt(text?: string | null, n = 180) {
   if (!text) return '';

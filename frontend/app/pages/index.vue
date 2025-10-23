@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import type { NewsEvent, Project } from '../../types/content';
+useHead({
+  title: 'LUCCC - Least Developed Countries Universities Consortium on Climate Change',
+});
 const config = useRuntimeConfig();
 
 type HomeType = {

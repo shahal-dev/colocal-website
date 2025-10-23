@@ -9,6 +9,10 @@ const slug = route.params.slug;
 const project = useState<Project | null>(`project:${slug}`, () => null);
 const projectName = computed(() => project.value?.shortTitle || 'Project');
 
+useHead({
+  title: projectName.value ? `${projectName.value} — About` : 'About — LUCCC',
+});
+
 // Use shared project navbar
 const basePath = computed(() => `/projects/${slug}`);
 </script>

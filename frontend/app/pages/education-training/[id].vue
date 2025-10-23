@@ -12,6 +12,12 @@ const { data: current } = await useAsyncData(
 );
 const item = computed(() => (current.value && current.value[0]) || null);
 
+useHead({
+  title: item.value?.title
+    ? `${item.value.title} — Education & Training`
+    : 'Education & Training — LUCCC',
+});
+
 const images = computed(() => {
   const arr = [];
   if (item.value?.imageCover?.url) arr.push(item.value.imageCover.url);

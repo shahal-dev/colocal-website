@@ -1,27 +1,24 @@
-<script setup>
+<script setup lang="ts">
 import { ref, computed, watch } from 'vue';
 import { useRoute } from '#app';
+import type { Project } from '~~/types/content';
 
 const route = useRoute();
 const slug = route.params.slug;
 const id = Number(route.params.id);
-
-// Map slug to display name (fallback to 'Project')
-const projectName = (() => {
-  const map = { colocal: 'COLOCAL', 'mangrove-restoration': 'Mangrove Restoration' };
-  return map[String(slug).toLowerCase()] || 'Project';
-})();
+const project = useState<Project | null>(`project:${slug}`, () => null);
+const projectName = computed(() => project.value?.shortTitle || 'Project');
 
 const basePath = computed(() => `/projects/${slug}`);
-const tabs = computed(() => [
-  { key: 'home', label: 'Home', to: basePath.value },
-  { key: 'about', label: 'About ' + projectName, to: `${basePath.value}/about` },
-  { key: 'education', label: 'Education & Training', to: `${basePath.value}/education` },
-  { key: 'research', label: 'Research & Publications', to: `${basePath.value}/research` },
-  { key: 'outreach', label: 'Outreach', to: `${basePath.value}/outreach` },
-  { key: 'lla', label: 'LLA Hub', to: `${basePath.value}/lla` },
-]);
-const isActive = (to) => route.path.startsWith(to);
+// const tabs = computed(() => [
+//   { key: 'home', label: 'Home', to: basePath.value },
+//   { key: 'about', label: 'About ' + projectName, to: `${basePath.value}/about` },
+//   { key: 'education', label: 'Education & Training', to: `${basePath.value}/education` },
+//   { key: 'research', label: 'Research & Publications', to: `${basePath.value}/research` },
+//   { key: 'outreach', label: 'Outreach', to: `${basePath.value}/outreach` },
+//   { key: 'lla', label: 'LLA Hub', to: `${basePath.value}/lla` },
+// ]);
+// const isActive = (to) => route.path.startsWith(to);
 
 // Fetch current news/event and more activities for sidebar
 const { data: current } = await useAsyncData(
@@ -29,6 +26,12 @@ const { data: current } = await useAsyncData(
   () => $fetch('/api/news-events', { params: { projectSlug: String(slug), id: String(id) } })
 );
 const item = computed(() => (current.value && current.value[0]) || null);
+
+useHead({
+  title: item.value?.title
+    ? `${item.value.title} — ${projectName.value} Outreach`
+    : `${projectName.value} — Outreach`,
+});
 
 const images = computed(() => {
   const arr = [];
@@ -49,7 +52,7 @@ const { data: moreList } = await useAsyncData(
 );
 const more = computed(() => (moreList.value || []).filter((n) => n.id !== id).slice(0, 6));
 
-function formatDate(iso) {
+function formatDate(iso: string) {
   try {
     return new Date(iso).toLocaleDateString(undefined, {
       day: '2-digit',
@@ -70,7 +73,7 @@ watch(images, () => {
 });
 
 // click indicator
-function goTo(i) {
+function goTo(i: number) {
   activeIndex.value = i;
 }
 
@@ -78,13 +81,25 @@ function goTo(i) {
 let touchStartX = 0;
 let touchDeltaX = 0;
 
-function onTouchStart(e) {
-  touchDeltaX = 0;
-  touchStartX = (e.touches && e.touches[0] && e.touches[0].clientX) || e.clientX || 0;
+function getClientX(e: TouchEvent | MouseEvent | PointerEvent): number {
+  // Safely handle touch events by casting and checking the first touch exists
+  const touches = (e as TouchEvent).touches;
+  if (touches && touches.length > 0 && touches[0] && typeof touches[0].clientX === 'number') {
+    return touches[0].clientX;
+  }
+  if ('clientX' in e && typeof (e as MouseEvent | PointerEvent).clientX === 'number') {
+    return (e as MouseEvent | PointerEvent).clientX;
+  }
+  return 0;
 }
 
-function onTouchMove(e) {
-  const x = (e.touches && e.touches[0] && e.touches[0].clientX) || e.clientX || 0;
+function onTouchStart(e: TouchEvent | MouseEvent | PointerEvent): void {
+  touchDeltaX = 0;
+  touchStartX = getClientX(e);
+}
+
+function onTouchMove(e: TouchEvent | MouseEvent | PointerEvent): void {
+  const x = getClientX(e);
   touchDeltaX = x - touchStartX;
 }
 

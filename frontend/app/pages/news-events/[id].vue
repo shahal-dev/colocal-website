@@ -12,6 +12,10 @@ const { data: current } = await useAsyncData(
 );
 const item = computed(() => (current.value && current.value[0]) || null);
 
+useHead({
+  title: item.value?.title ? `${item.value.title} — News & Events` : 'News & Events — LUCCC',
+});
+
 const { data: moreList } = await useAsyncData('news-events:all', () => $fetch('/api/news-events'));
 const more = computed(() => (moreList.value || []).filter((n) => n.id !== id).slice(0, 6));
 

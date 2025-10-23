@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import type { Author } from '~~/types/content';
 
+useHead({
+  title: 'About Us — LUCCC',
+});
+
 // Normalized About payload from our server API
 type AboutSingle = {
   title?: string;

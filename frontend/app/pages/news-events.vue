@@ -3,6 +3,10 @@ import { ref, computed } from 'vue';
 import { useRoute } from '#app';
 import type { NewsEvent } from '~~/types/content';
 
+useHead({
+  title: 'News & Events — LUCCC',
+});
+
 // Route + nested check
 const route = useRoute();
 const hasChild = computed(() => Boolean(route.params.id));
@@ -61,7 +65,7 @@ function excerpt(text?: string | null, n = 180) {
             class="border border-gray-200 rounded-md bg-white overflow-hidden hover:shadow transition-shadow"
           >
             <div class="w-full h-40 overflow-hidden">
-              <img :src="e.cover?.url" :alt="e.title" class="w-full h-full object-cover" >
+              <img :src="e.cover?.url" :alt="e.title" class="w-full h-full object-cover" />
             </div>
             <div class="p-4">
               <h3 class="text-[16px] font-semibold text-green-800 mb-1">{{ e.title }}</h3>

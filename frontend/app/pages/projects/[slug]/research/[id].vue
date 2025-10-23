@@ -7,6 +7,7 @@ const route = useRoute();
 const slug = route.params.slug;
 const id = Number(route.params.id);
 const project = useState<Project | null>(`project:${slug}`, () => null);
+const projectName = computed(() => project.value?.shortTitle || 'Project');
 
 // const projectName = (() => {
 //   const map = { colocal: 'COLOCAL', 'mangrove-restoration': 'Mangrove Restoration' };
@@ -30,6 +31,12 @@ const { data: current, status } = await useAsyncData(
   () => $fetch('/api/publications', { params: { projectSlug: String(slug), id: String(id) } })
 );
 const item = computed(() => (current.value && current.value[0]) || null);
+
+useHead({
+  title: item.value?.title
+    ? `${item.value.title} — ${projectName.value} Research & Publications`
+    : `${projectName.value} — Research & Publications`,
+});
 
 console.log('status', status);
 const images = computed(() => {

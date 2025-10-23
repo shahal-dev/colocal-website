@@ -18,6 +18,10 @@ const projectState = computed<Project | null>(() => {
 const projectName = computed(() => projectState.value?.shortTitle || 'Project');
 const basePath = computed(() => `/projects/${slug.value}`);
 
+useHead({
+  title: projectName.value ? `${projectName.value} — Our Team` : 'Our Team',
+});
+
 const config = useRuntimeConfig();
 const headers: Record<string, string> = {};
 

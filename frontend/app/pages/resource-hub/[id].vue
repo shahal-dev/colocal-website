@@ -21,6 +21,12 @@ const education = computed(() => (eduData.value && eduData.value[0]) || null);
 // Fallback resolution: if neither returned, item is null
 const item = computed(() => publication.value || education.value || null);
 
+useHead(
+  computed(() => ({
+    title: item.value?.title ? `${item.value.title} — Resource Hub` : 'Resource Hub',
+  }))
+);
+
 const images = computed(() => {
   const arr = [];
   if (item.value?.imageCover?.url) arr.push(item.value.imageCover.url);
