@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useRoute } from '#app';
-import type { Project, EducationTraining } from '~~/types/content';
+import type { Project, EducationTraining, StrapiMedia } from '~~/types/content';
 
 // Route + derived project name
 const route = useRoute();
@@ -25,6 +25,38 @@ const { data: eduData } = await useAsyncData(
   () => $fetch('/api/education-trainings', { params: { projectSlug: String(slug) } })
 );
 const items = computed(() => eduData.value ?? []);
+
+// Carousel items for education
+type CarouselItem = {
+  id: string;
+  title: string;
+  description: string;
+  cover: string | StrapiMedia | null | undefined;
+  type: 'research' | 'outreach' | 'education';
+  slug: string;
+};
+
+function excerpt(text?: string | null, n = 140) {
+  if (!text) return '';
+  const t = String(text);
+  return t.length > n ? t.slice(0, n) + '…' : t;
+}
+
+const carouselItems = computed<CarouselItem[]>(() => {
+  const list = Array.isArray(items.value) ? items.value : [];
+  return list
+    .filter((e) => Boolean(e.cover && e.cover.url))
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .slice(0, 5)
+    .map((e) => ({
+      id: String(e.id),
+      title: e.title,
+      description: excerpt(e.body, 140),
+      cover: e.cover,
+      slug: basePath.value,
+      type: 'education' as const,
+    }));
+});
 
 // Group items by section
 const moduleDevelopment = computed(() =>
@@ -120,6 +152,11 @@ function goToPage(
 
       <!-- Secondary navbar (links to sibling pages) -->
       <!-- <ProjectNavbar :project="project" :slug="String(slug)" /> -->
+
+      <!-- Carousel -->
+      <section v-if="carouselItems.length" class="w-full mx-auto px-0 md:px-0">
+        <ResearchOutreachCarousel :items="carouselItems" />
+      </section>
 
       <section class="w-full max-w-6xl mx-auto py-10 px-4 md:px-0">
         <!-- Education & Training Section (items with no section or null) -->

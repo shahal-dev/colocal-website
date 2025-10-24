@@ -81,8 +81,61 @@
     </transition>
 
     <div v-if="slides.length > 1">
+      <!-- Navigation buttons -->
+      <!-- Left button -->
+      <button
+        aria-label="Previous slide"
+        class="absolute left-0 top-0 h-full w-1/3 md:w-1/4 z-30 group"
+        @click="prev"
+      >
+        <div
+          class="absolute left-4 top-1/2 -translate-y-1/2 w-8 h-8 md:w-10 md:h-10 rounded-full bg-white/10 md:bg-white/20 backdrop-blur-sm flex items-center justify-center opacity-0 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300"
+        >
+          <svg
+            class="w-5 h-5 md:w-6 md:h-6 text-white"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15 19l-7-7 7-7"
+            />
+          </svg>
+        </div>
+      </button>
+
+      <!-- Right button -->
+      <button
+        aria-label="Next slide"
+        class="absolute right-0 top-0 h-full w-1/3 md:w-1/4 z-30 group"
+        @click="next"
+      >
+        <div
+          class="absolute right-4 top-1/2 -translate-y-1/2 w-8 h-8 md:w-10 md:h-10 rounded-full bg-white/10 md:bg-white/20 backdrop-blur-sm flex items-center justify-center opacity-0 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300"
+        >
+          <svg
+            class="w-5 h-5 md:w-6 md:h-6 text-white"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 5l7 7-7 7"
+            />
+          </svg>
+        </div>
+      </button>
+
       <!-- Slide indicators -->
-      <div class="absolute left-1/2 -translate-x-1/2 bottom-4 sm:bottom-6 flex items-center gap-3">
+      <div
+        class="absolute left-1/2 -translate-x-1/2 bottom-4 sm:bottom-6 flex items-center gap-3 z-30"
+      >
         <button
           v-for="(item, idx) in slides"
           :key="idx"

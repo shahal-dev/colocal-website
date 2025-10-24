@@ -26,19 +26,33 @@ const basePath = computed(() => `/projects/${slug}`);
 // const isActive = (to) => route.path.startsWith(to);
 
 // Fetch current publication and more publications for sidebar
-const { data: current, status } = await useAsyncData(
+const {
+  data: current,
+  status,
+  refresh,
+} = await useAsyncData(
   () => `publication:${slug}:${id}`,
-  () => $fetch('/api/publications', { params: { projectSlug: String(slug), id: String(id) } })
+  () => $fetch('/api/publications', { params: { projectSlug: String(slug), id: String(id) } }),
+  {
+    watch: [() => route.params.id],
+  }
 );
 const item = computed(() => (current.value && current.value[0]) || null);
+const isLoading = computed(() => status.value === 'pending' || !item.value);
+
+// Scroll to top when navigating between publications
+watch(
+  () => route.params.id,
+  () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+);
 
 useHead({
   title: item.value?.title
     ? `${item.value.title} — ${projectName.value} Research & Publications`
     : `${projectName.value} — Research & Publications`,
 });
-
-console.log('status', status);
 const images = computed(() => {
   const arr = [];
   if (item.value?.imageCover?.url) arr.push(item.value.imageCover.url);
@@ -52,7 +66,7 @@ const images = computed(() => {
   return arr;
 });
 
-const { data: moreList } = await useAsyncData(
+const { data: moreList, status: moreStatus } = await useAsyncData(
   () => `publications-more:${slug}`,
   () => $fetch('/api/publications', { params: { projectSlug: String(slug) } })
 );
@@ -147,7 +161,7 @@ function onTouchEnd() {
       <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
         <div class="md:col-span-8 mr-4 md:mr-12">
           <div
-            v-if="status === 'pending'"
+            v-if="isLoading"
             class="space-y-4 h-120 max-w-full"
             aria-busy="true"
             aria-live="polite"
@@ -303,7 +317,18 @@ function onTouchEnd() {
 
         <aside class="md:col-span-4">
           <h3 class="text-lg font-semibold mb-4">More Publications</h3>
-          <div class="space-y-5">
+
+          <!-- Loading state for sidebar -->
+          <div v-if="moreStatus === 'pending'" class="space-y-5 animate-pulse">
+            <div v-for="i in 6" :key="i" class="block">
+              <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-full mb-2" />
+              <div class="h-3 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-1" />
+              <div class="h-3 bg-gray-200 dark:bg-gray-700 rounded w-1/2" />
+            </div>
+          </div>
+
+          <!-- Actual publications list -->
+          <div v-else class="space-y-5">
             <NuxtLink
               v-for="m in more"
               :key="m.id"

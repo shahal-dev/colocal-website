@@ -56,11 +56,12 @@ const llaNewsEvents = computed(() => (newsData.value || []).filter((n) => n.lla)
 
     <!-- Intro/description -->
     <section class="w-full max-w-6xl mx-auto py-10 px-4 md:px-0">
-      <h1 class="text-[26px] md:text-[30px] font-display font-medium mb-3">LLA Hub</h1>
+      <h1 class="text-[26px] md:text-[30px] font-display font-medium mb-3">COLOCAL Blog</h1>
       <p class="text-gray-700 leading-relaxed max-w-3xl">
-        The LLA Hub curates practices, knowledge, and tools that support Locally Led Adaptation.
-        Explore guidance, case studies, and publications that help operationalize LLA across
-        universities and communities.
+        COLOCAL Blog is a platform for sharing insights, updates, and stories related to our
+        collaborative local development initiatives. Here, we explore topics such as community
+        engagement, sustainable practices, and innovative solutions that drive positive change at
+        the local level.
       </p>
     </section>
 

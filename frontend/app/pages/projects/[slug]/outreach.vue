@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import { useRoute } from '#app';
-import type { Project } from '~~/types/content';
+import type { Project, StrapiMedia } from '~~/types/content';
 
 // Route + derived project name
 const route = useRoute();
@@ -29,6 +29,32 @@ function excerpt(text?: string | null, n = 220) {
   const t = String(text);
   return t.length > n ? t.slice(0, n) + '…' : t;
 }
+
+// Carousel items for outreach
+type CarouselItem = {
+  id: string;
+  title: string;
+  description: string;
+  cover: string | StrapiMedia | null | undefined;
+  type: 'research' | 'outreach' | 'education';
+  slug: string;
+};
+
+const carouselItems = computed<CarouselItem[]>(() => {
+  const list = Array.isArray(newsEvents.value) ? newsEvents.value : [];
+  return list
+    .filter((n) => Boolean(n.cover && n.cover.url))
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .slice(0, 5)
+    .map((n) => ({
+      id: String(n.id),
+      title: n.secondaryTitle || n.title,
+      description: excerpt(n.body, 140),
+      cover: n.cover,
+      slug: basePath.value,
+      type: 'outreach' as const,
+    }));
+});
 
 // Pagination
 const pageSize = 6;
@@ -64,10 +90,10 @@ function goTo(page: number) {
       <!-- Secondary navbar (links to sibling pages) -->
       <!-- <ProjectNavbar :project="project" :slug="String(slug)" /> -->
 
-      <!-- HERO/CAROUSEL -->
-      <!-- <section class="w-full">
-        <HomeCarousel />
-      </section> -->
+      <!-- Carousel -->
+      <section v-if="carouselItems.length" class="w-full mx-auto px-0 md:px-0">
+        <ResearchOutreachCarousel :items="carouselItems" />
+      </section>
 
       <!-- News and Events -->
       <section class="w-full max-w-6xl mx-auto px-4 md:px-0 pb-14 mt-8">

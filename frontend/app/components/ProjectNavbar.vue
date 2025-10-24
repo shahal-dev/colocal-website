@@ -53,7 +53,7 @@ const tabs = computed(() => {
     { key: 'education', label: 'Education & Training', to: `${basePath.value}/education` },
     { key: 'research', label: 'Research & Publications', to: `${basePath.value}/research` },
     { key: 'outreach', label: 'Outreach', to: `${basePath.value}/outreach` },
-    { key: 'lla', label: 'LLA Hub', to: `${basePath.value}/lla` },
+    { key: 'lla', label: 'COLOCAL Blog', to: `${basePath.value}/lla` },
   ];
 });
 
@@ -88,7 +88,7 @@ const isActive = (to: string) => {
         <!-- Home link -->
         <NuxtLink
           :to="basePath"
-          class="px-4 py-3 text-sm md:text-base font-semibold whitespace-nowrap transition-colors duration-200"
+          class="px-4 py-5 text-sm md:text-base font-semibold whitespace-nowrap transition-colors duration-200"
           :class="
             route.path === basePath
               ? 'bg-green-100 text-green-900 border-b-2 border-green-700'
@@ -102,7 +102,7 @@ const isActive = (to: string) => {
         <div class="relative inline-block" @mouseenter="openDropdown" @mouseleave="closeDropdown">
           <a
             href="#"
-            class="px-4 py-3 text-sm md:text-base font-semibold whitespace-nowrap transition-colors duration-200 inline-flex items-center hover:text-green-700"
+            class="px-4 py-5 text-sm md:text-base font-semibold whitespace-nowrap transition-colors duration-200 inline-flex items-center hover:text-green-700"
             :class="
               route.path.startsWith(`${basePath}/about`) ||
               route.path.startsWith(`${basePath}/team`)
@@ -127,7 +127,7 @@ const isActive = (to: string) => {
           v-for="t in tabs"
           :key="t.key"
           :to="t.to"
-          class="px-4 py-3 text-sm md:text-base font-semibold whitespace-nowrap transition-colors duration-200"
+          class="px-4 py-5 text-sm md:text-base font-semibold whitespace-nowrap transition-colors duration-200"
           :class="
             isActive(t.to)
               ? 'bg-green-100 text-green-900 border-b-2 border-green-700'
@@ -139,7 +139,7 @@ const isActive = (to: string) => {
       </div>
       <NuxtLink
         to="/"
-        class="ml-auto px-4 py-3 text-sm md:text-base font-semibold whitespace-nowrap transition-colors duration-200 bg-white text-gray-700 hover:text-green-700"
+        class="ml-auto px-4 py-5 text-sm md:text-base font-semibold whitespace-nowrap transition-colors duration-200 bg-white text-gray-700 hover:text-green-700"
       >
         Back to LUCCC
       </NuxtLink>

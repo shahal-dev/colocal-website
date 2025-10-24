@@ -26,7 +26,7 @@ const basePath = computed(() => `/projects/${slug}`);
 const hasChild = computed(() => Boolean(route.params.id));
 
 // Publications data (fetch via server endpoint filtered by project slug)
-const { data: publications } = await useAsyncData<ResearchPublication[]>(
+const { data: publications, status } = await useAsyncData<ResearchPublication[]>(
   () => `publications-${slug}`,
   async () => {
     const res = await $fetch('/api/publications', { query: { projectSlug: String(slug) } });
@@ -168,8 +168,61 @@ function isActiveType(tab: string) {
           </button>
         </div> -->
 
+        <!-- Loading State -->
+        <div v-if="status === 'pending'" class="mt-6 space-y-4" aria-busy="true" aria-live="polite">
+          <div class="flex items-center justify-center py-6">
+            <svg
+              class="animate-spin h-6 w-6 text-green-600"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <circle
+                class="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                stroke-width="4"
+              />
+              <path
+                class="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+              />
+            </svg>
+            <span class="sr-only">Loading</span>
+          </div>
+
+          <div class="animate-pulse space-y-4">
+            <!-- Skeleton Publication Cards -->
+            <div
+              v-for="i in 5"
+              :key="i"
+              class="border border-gray-200 rounded-md bg-white p-4 md:p-5"
+            >
+              <div class="h-5 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-3" />
+              <div class="flex items-center gap-2 mb-3">
+                <div class="w-4 h-4 bg-gray-200 dark:bg-gray-700 rounded" />
+                <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/3" />
+              </div>
+              <div class="space-y-2 mb-3">
+                <div class="h-3 bg-gray-200 dark:bg-gray-700 rounded" />
+                <div class="h-3 bg-gray-200 dark:bg-gray-700 rounded w-5/6" />
+                <div class="h-3 bg-gray-200 dark:bg-gray-700 rounded w-4/5" />
+              </div>
+              <div class="flex gap-2">
+                <div class="h-6 w-16 bg-gray-200 dark:bg-gray-700 rounded" />
+                <div class="h-6 w-20 bg-gray-200 dark:bg-gray-700 rounded" />
+                <div class="h-6 w-14 bg-gray-200 dark:bg-gray-700 rounded" />
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Publications list (reuse card layout) -->
-        <div class="mt-6 space-y-4">
+        <div v-else class="mt-6 space-y-4">
           <article
             v-for="p in visible"
             :key="p.id"

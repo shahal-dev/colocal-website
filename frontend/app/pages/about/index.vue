@@ -39,17 +39,15 @@ if (error?.value) {
 
 <template>
   <!-- responsive container with comfortable padding and max width -->
-  <div class="w-full lg:py-8 mx-auto max-w-7xl">
+  <div class="flex flex-col items-center w-full justify-center">
     <!-- breadcrumb stretched full width on small screens -->
-    <div class="w-full mb-2">
-      <BreadCrumb
-        :breadcrumb-items="[
-          { text: 'Home', href: '/' },
-          { text: 'About Us', href: '/about' },
-        ]"
-        :page-title="aboutData?.title || 'About Us'"
-      />
-    </div>
+    <BreadCrumb
+      :breadcrumb-items="[
+        { text: 'Home', href: '/' },
+        { text: 'About Us', href: '/about' },
+      ]"
+      :page-title="aboutData?.title || 'About Us'"
+    />
 
     <!-- Intro section: full width, centered content, responsive max width -->
     <div class="w-full mb-10">

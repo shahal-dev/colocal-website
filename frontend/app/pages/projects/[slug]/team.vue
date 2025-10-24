@@ -137,16 +137,54 @@ const countriesWithMembers = computed(() => {
       const countryMembers = members.value.filter((m) => m.country === country);
       const admins = countryMembers.filter((m) => m.admin);
       const fellows = countryMembers.filter((m) => !m.admin);
+
+      // Separate project lead/coordinator from other admins
+      const projectLead = admins.find(
+        (a) =>
+          a.title?.toLowerCase().includes('project coordinator') ||
+          a.title?.toLowerCase().includes('project lead')
+      );
+      const otherAdmins = admins
+        .filter((a) => a.id !== projectLead?.id)
+        .sort((a, b) => a.name.localeCompare(b.name));
+
+      // Group fellows by year
+      const fellowsByYear = new Map<string, Author[]>();
+      fellows.forEach((fellow) => {
+        const yearMatch = fellow.title?.match(/\b(20\d{2})\b/);
+        const year: string = yearMatch && yearMatch[1] ? yearMatch[1] : 'Other';
+        if (!fellowsByYear.has(year)) {
+          fellowsByYear.set(year, []);
+        }
+        fellowsByYear.get(year)!.push(fellow);
+      });
+
+      // Sort fellows within each year alphabetically
+      fellowsByYear.forEach((yearFellows) => {
+        yearFellows.sort((a, b) => a.name.localeCompare(b.name));
+      });
+
+      // Convert to sorted array (oldest year first)
+      const fellowsGrouped = Array.from(fellowsByYear.entries())
+        .sort((a, b) => {
+          if (a[0] === 'Other') return 1;
+          if (b[0] === 'Other') return -1;
+          return a[0].localeCompare(b[0]); // Ascending order
+        })
+        .map(([year, fellows]) => ({ year, fellows }));
+
       return {
         country,
         displayName: country.toUpperCase(),
         flagUrl: `https://flagcdn.com/w320/${getCountryCode(country)}.png`,
         members: countryMembers,
-        admins,
-        fellows,
+        projectLead,
+        otherAdmins,
+        fellowsGrouped,
       };
     })
-    .filter((c) => c.members.length > 0);
+    .filter((c) => c.members.length > 0)
+    .sort((a, b) => a.displayName.localeCompare(b.displayName));
 });
 
 function getCountryCode(country: string): string {
@@ -171,16 +209,6 @@ function selectCountry(index: number) {
 
 <template>
   <div class="flex flex-col items-center w-full justify-center bg-white">
-    <BreadCrumb
-      :breadcrumb-items="[
-        { text: 'Home', href: '/' },
-        { text: 'Projects', href: '/projects' },
-        { text: projectName, href: basePath },
-        { text: 'Our Team', href: `${basePath}/team` },
-      ]"
-      page-title="Our Team"
-    />
-
     <!-- Hero / Intro Section: own background and padding -->
     <section class="w-full bg-blue-gray-50">
       <div
@@ -261,11 +289,54 @@ function selectCountry(index: number) {
           </h2>
 
           <!-- Administrators Section -->
-          <div v-if="activeCountry.admins.length > 0" class="mb-12">
+          <div
+            v-if="activeCountry.projectLead || activeCountry.otherAdmins.length > 0"
+            class="mb-12"
+          >
             <h3 class="text-lg font-semibold text-gray-800 mb-6 text-center">Administrators</h3>
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+
+            <!-- Project Lead/Coordinator - Centered at top -->
+            <div v-if="activeCountry.projectLead" class="flex justify-center mb-8">
               <div
-                v-for="admin in activeCountry.admins"
+                class="bg-blue-gray-50 border border-gray-200 rounded-md p-4 sm:p-6 flex flex-col items-center text-center w-full max-w-xs"
+              >
+                <template v-if="activeCountry.projectLead.avatar?.url">
+                  <img
+                    :src="activeCountry.projectLead.avatar?.url"
+                    :alt="activeCountry.projectLead.name"
+                    class="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full object-cover mb-3"
+                  />
+                </template>
+                <template v-else>
+                  <div
+                    class="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full bg-gray-200 flex items-center justify-center mb-3 text-gray-500"
+                  >
+                    <svg class="w-8 h-8" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                      <path
+                        d="M12 12c2.761 0 5-2.686 5-6s-2.239-6-5-6-5 2.686-5 6 2.239 6 5 6zm0 2c-3.866 0-7 3.134-7 7 0 .552.448 1 1 1h12c.552 0 1-.448 1-1 0-3.866-3.134-7-7-7z"
+                      />
+                    </svg>
+                  </div>
+                </template>
+                <p class="m-0 font-medium text-gray-900 text-sm sm:text-base">
+                  {{ activeCountry.projectLead.name }}
+                </p>
+                <p
+                  v-if="activeCountry.projectLead.title"
+                  class="m-0 text-xs sm:text-sm text-gray-600"
+                >
+                  {{ activeCountry.projectLead.title }}
+                </p>
+              </div>
+            </div>
+
+            <!-- Other Admins - Grid layout, alphabetically sorted -->
+            <div
+              v-if="activeCountry.otherAdmins.length > 0"
+              class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+            >
+              <div
+                v-for="admin in activeCountry.otherAdmins"
                 :key="admin.id"
                 class="bg-blue-gray-50 border border-gray-200 rounded-md p-4 sm:p-6 flex flex-col items-center text-center"
               >
@@ -295,37 +366,54 @@ function selectCountry(index: number) {
             </div>
           </div>
 
-          <!-- Research Fellows Section -->
-          <div v-if="activeCountry.fellows.length > 0">
+          <!-- Research Fellows Section - Grouped by year -->
+          <div v-if="activeCountry.fellowsGrouped.length > 0">
             <h3 class="text-lg font-semibold text-gray-800 mb-6 text-center">Research Fellows</h3>
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              <div
-                v-for="fellow in activeCountry.fellows"
-                :key="fellow.id"
-                class="bg-blue-gray-50 border border-gray-200 rounded-md p-4 sm:p-6 flex flex-col items-center text-center"
-              >
-                <template v-if="fellow.avatar?.url">
-                  <img
-                    :src="fellow.avatar?.url"
-                    :alt="fellow.name"
-                    class="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full object-cover mb-3"
-                  />
-                </template>
-                <template v-else>
-                  <div
-                    class="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full bg-gray-200 flex items-center justify-center mb-3 text-gray-500"
-                  >
-                    <svg class="w-8 h-8" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                      <path
-                        d="M12 12c2.761 0 5-2.686 5-6s-2.239-6-5-6-5 2.686-5 6 2.239 6 5 6zm0 2c-3.866 0-7 3.134-7 7 0 .552.448 1 1 1h12c.552 0 1-.448 1-1 0-3.866-3.134-7-7-7z"
-                      />
-                    </svg>
-                  </div>
-                </template>
-                <p class="m-0 font-medium text-gray-900 text-sm sm:text-base">{{ fellow.name }}</p>
-                <p v-if="fellow.title" class="m-0 text-xs sm:text-sm text-gray-600">
-                  {{ fellow.title }}
-                </p>
+
+            <div
+              v-for="yearGroup in activeCountry.fellowsGrouped"
+              :key="yearGroup.year"
+              class="mb-10 last:mb-0"
+            >
+              <h4 class="text-base font-semibold text-gray-700 mb-4 text-center">
+                {{ yearGroup.year !== 'Other' ? yearGroup.year : 'Other Fellows' }}
+              </h4>
+              <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <div
+                  v-for="fellow in yearGroup.fellows"
+                  :key="fellow.id"
+                  class="bg-blue-gray-50 border border-gray-200 rounded-md p-4 sm:p-6 flex flex-col items-center text-center"
+                >
+                  <template v-if="fellow.avatar?.url">
+                    <img
+                      :src="fellow.avatar?.url"
+                      :alt="fellow.name"
+                      class="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full object-cover mb-3"
+                    />
+                  </template>
+                  <template v-else>
+                    <div
+                      class="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full bg-gray-200 flex items-center justify-center mb-3 text-gray-500"
+                    >
+                      <svg
+                        class="w-8 h-8"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                        aria-hidden="true"
+                      >
+                        <path
+                          d="M12 12c2.761 0 5-2.686 5-6s-2.239-6-5-6-5 2.686-5 6 2.239 6 5 6zm0 2c-3.866 0-7 3.134-7 7 0 .552.448 1 1 1h12c.552 0 1-.448 1-1 0-3.866-3.134-7-7-7z"
+                        />
+                      </svg>
+                    </div>
+                  </template>
+                  <p class="m-0 font-medium text-gray-900 text-sm sm:text-base">
+                    {{ fellow.name }}
+                  </p>
+                  <p v-if="fellow.title" class="m-0 text-xs sm:text-sm text-gray-600">
+                    {{ fellow.title }}
+                  </p>
+                </div>
               </div>
             </div>
           </div>

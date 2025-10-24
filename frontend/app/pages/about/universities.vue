@@ -1,4 +1,8 @@
 <script setup>
+useHead({
+  title: 'List of Universities — LUCCC',
+});
+
 const universities = [
   { id: 1, country: 'Afghanistan', institution: 'Faculty of Environment, Kabul University' },
   { id: 2, country: 'Bangladesh', institution: 'Independent University, Bangladesh (IUB)' },
