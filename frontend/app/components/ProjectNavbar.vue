@@ -71,7 +71,7 @@ const isActive = (to: string) => {
 <template>
   <div
     v-if="hasSlug"
-    class="w-full sticky top-0 z-20 bg-white backdrop-blur shadow-sm border-b border-gray-200"
+    class="w-full sticky top-0 z-50 bg-white backdrop-blur shadow-sm border-b border-gray-200"
   >
     <nav
       class="mx-auto flex items-center gap-2 px-4 md:px-6 lg:px-8 overflow-x-auto hide-scrollbar"

@@ -3,13 +3,16 @@
     <div class="max-w-7xl mx-auto w-full">
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 items-start">
         <!-- Left Column - Logo and Contact Info -->
-        <div class="flex items-start space-x-4 md:space-x-6">
-          <img
-            v-if="showLogo"
-            src="~/assets/logos/luccc-logo.png"
-            alt="LUCCC Logo"
-            class="h-10 w-auto"
-          >
+        <div v-if="showLogo" class="flex items-start space-x-4 md:space-x-6">
+          <img src="~/assets/logos/luccc-logo.png" alt="LUCCC Logo" class="h-10 w-auto" />
+
+          <!-- <div class="text-gray-300 flex flex-col justify-start space-y-2 text-sm">
+            <a href="tel:+8801813444112" class="hover:underline">+(880) 1813444112</a>
+            <a href="mailto:hello@luccc.org" class="hover:underline">hello@luccc.org</a>
+          </div> -->
+        </div>
+        <div v-else class="flex items-start space-x-4 md:space-x-6">
+          <img src="~/assets/logos/colocal.png" alt="LUCCC Logo" class="h-10 w-auto" />
 
           <!-- <div class="text-gray-300 flex flex-col justify-start space-y-2 text-sm">
             <a href="tel:+8801813444112" class="hover:underline">+(880) 1813444112</a>
