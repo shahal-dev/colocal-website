@@ -57,7 +57,7 @@
 
         <!-- Content -->
         <div
-          class="relative z-20 flex flex-col justify-center items-start px-4 sm:px-6 md:pl-24 md:pr-20 flex-1 md:order-1 order-2"
+          class="relative z-50 flex flex-col justify-center items-start px-4 sm:px-6 md:pl-24 md:pr-20 flex-1 md:order-1 order-2 pointer-events-none"
         >
           <h1
             class="m-0 mb-2 text-white text-xl md:text-[32px] lg:text-4xl font-semibold font-display"
@@ -67,11 +67,11 @@
           <p class="m-0 mb-6 text-sm md:text-lg font-display font-medium text-white line-clamp-4">
             {{ currentSlide?.subtitle }}
           </p>
-          <div class="flex flex-wrap gap-4">
+          <div class="flex flex-wrap gap-4 pointer-events-auto">
             <NuxtLink
               v-if="currentSlide && currentSlide.to"
               :to="currentSlide.to"
-              class="px-5 py-3 rounded-sm hover:opacity-95 font-poppins font-semibold bg-green-600 text-white text-sm md:text-base"
+              class="relative z-50 px-5 py-3 rounded-sm hover:opacity-95 font-poppins font-semibold bg-green-600 text-white text-sm md:text-base"
             >
               {{ currentSlide?.cta }}
             </NuxtLink>
@@ -85,11 +85,11 @@
       <!-- Left button -->
       <button
         aria-label="Previous slide"
-        class="absolute left-0 top-0 h-full w-1/3 md:w-1/4 z-30 group"
+        class="absolute left-0 top-0 h-full w-1/3 md:w-1/4 z-30 group pointer-events-auto"
         @click="prev"
       >
         <div
-          class="absolute left-4 top-1/2 -translate-y-1/2 w-8 h-8 md:w-10 md:h-10 rounded-full bg-white/10 md:bg-white/20 backdrop-blur-sm flex items-center justify-center opacity-0 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300"
+          class="absolute left-4 top-1/2 -translate-y-1/2 w-8 h-8 md:w-10 md:h-10 rounded-full bg-white/10 md:bg-white/20 backdrop-blur-sm flex items-center justify-center opacity-0 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
         >
           <svg
             class="w-5 h-5 md:w-6 md:h-6 text-white"
@@ -110,11 +110,11 @@
       <!-- Right button -->
       <button
         aria-label="Next slide"
-        class="absolute right-0 top-0 h-full w-1/3 md:w-1/4 z-30 group"
+        class="absolute right-0 top-0 h-full w-1/3 md:w-1/4 z-30 group pointer-events-auto"
         @click="next"
       >
         <div
-          class="absolute right-4 top-1/2 -translate-y-1/2 w-8 h-8 md:w-10 md:h-10 rounded-full bg-white/10 md:bg-white/20 backdrop-blur-sm flex items-center justify-center opacity-0 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300"
+          class="absolute right-4 top-1/2 -translate-y-1/2 w-8 h-8 md:w-10 md:h-10 rounded-full bg-white/10 md:bg-white/20 backdrop-blur-sm flex items-center justify-center opacity-0 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
         >
           <svg
             class="w-5 h-5 md:w-6 md:h-6 text-white"

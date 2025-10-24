@@ -1,83 +1,50 @@
 {
   "version": 3,
   "overrides": {
+    "education-training/index.html": {
+      "path": "education-training"
+    },
+    "news-events/index.html": {
+      "path": "news-events"
+    },
+    "about/universities/index.html": {
+      "path": "about/universities"
+    },
     "resource-hub/index.html": {
       "path": "resource-hub"
     },
     "projects/index.html": {
       "path": "projects"
     },
-    "about/universities/index.html": {
-      "path": "about/universities"
-    },
-    "news-events/index.html": {
-      "path": "news-events"
-    },
     "index.html": {
       "path": ""
-    },
-    "projects/colocal/education/index.html": {
-      "path": "projects/colocal/education"
-    },
-    "education-training/index.html": {
-      "path": "education-training"
-    },
-    "projects/colocal/outreach/index.html": {
-      "path": "projects/colocal/outreach"
-    },
-    "projects/colocal/research/index.html": {
-      "path": "projects/colocal/research"
-    },
-    "projects/colocal/about/index.html": {
-      "path": "projects/colocal/about"
     },
     "about/index.html": {
       "path": "about"
     },
-    "projects/colocal/team/index.html": {
-      "path": "projects/colocal/team"
+    "projects/colocal/education/index.html": {
+      "path": "projects/colocal/education"
+    },
+    "projects/colocal/outreach/index.html": {
+      "path": "projects/colocal/outreach"
     },
     "about/team/index.html": {
       "path": "about/team"
     },
-    "projects/colocal/lla/index.html": {
-      "path": "projects/colocal/lla"
+    "projects/colocal/about/index.html": {
+      "path": "projects/colocal/about"
     },
-    "news-events/11/index.html": {
-      "path": "news-events/11"
-    },
-    "news-events/13/index.html": {
-      "path": "news-events/13"
-    },
-    "news-events/12/index.html": {
-      "path": "news-events/12"
-    },
-    "projects/colocal/education/8/index.html": {
-      "path": "projects/colocal/education/8"
-    },
-    "projects/colocal/education/2/index.html": {
-      "path": "projects/colocal/education/2"
-    },
-    "projects/colocal/education/12/index.html": {
-      "path": "projects/colocal/education/12"
-    },
-    "projects/colocal/education/6/index.html": {
-      "path": "projects/colocal/education/6"
-    },
-    "projects/colocal/education/10/index.html": {
-      "path": "projects/colocal/education/10"
-    },
-    "projects/colocal/education/13/index.html": {
-      "path": "projects/colocal/education/13"
-    },
-    "education-training/13/index.html": {
-      "path": "education-training/13"
-    },
-    "education-training/12/index.html": {
-      "path": "education-training/12"
+    "projects/colocal/research/index.html": {
+      "path": "projects/colocal/research"
     },
     "education-training/10/index.html": {
       "path": "education-training/10"
+    },
+    "education-training/2/index.html": {
+      "path": "education-training/2"
+    },
+    "education-training/12/index.html": {
+      "path": "education-training/12"
     },
     "education-training/6/index.html": {
       "path": "education-training/6"
@@ -85,23 +52,38 @@
     "education-training/8/index.html": {
       "path": "education-training/8"
     },
-    "education-training/2/index.html": {
-      "path": "education-training/2"
+    "education-training/13/index.html": {
+      "path": "education-training/13"
     },
-    "projects/colocal/research/13/index.html": {
-      "path": "projects/colocal/research/13"
+    "projects/colocal/team/index.html": {
+      "path": "projects/colocal/team"
     },
-    "projects/colocal/research/11/index.html": {
-      "path": "projects/colocal/research/11"
+    "news-events/11/index.html": {
+      "path": "news-events/11"
     },
-    "projects/colocal/research/15/index.html": {
-      "path": "projects/colocal/research/15"
+    "news-events/12/index.html": {
+      "path": "news-events/12"
     },
-    "projects/colocal/research/9/index.html": {
-      "path": "projects/colocal/research/9"
+    "news-events/13/index.html": {
+      "path": "news-events/13"
     },
-    "projects/colocal/research/10/index.html": {
-      "path": "projects/colocal/research/10"
+    "projects/colocal/education/13/index.html": {
+      "path": "projects/colocal/education/13"
+    },
+    "projects/colocal/education/8/index.html": {
+      "path": "projects/colocal/education/8"
+    },
+    "projects/colocal/education/10/index.html": {
+      "path": "projects/colocal/education/10"
+    },
+    "projects/colocal/education/12/index.html": {
+      "path": "projects/colocal/education/12"
+    },
+    "projects/colocal/education/6/index.html": {
+      "path": "projects/colocal/education/6"
+    },
+    "projects/colocal/education/2/index.html": {
+      "path": "projects/colocal/education/2"
     },
     "projects/colocal/outreach/13/index.html": {
       "path": "projects/colocal/outreach/13"
@@ -115,17 +97,35 @@
     "projects/colocal/index.html": {
       "path": "projects/colocal"
     },
+    "projects/colocal/lla/index.html": {
+      "path": "projects/colocal/lla"
+    },
+    "projects/colocal/research/11/index.html": {
+      "path": "projects/colocal/research/11"
+    },
+    "projects/colocal/research/15/index.html": {
+      "path": "projects/colocal/research/15"
+    },
+    "projects/colocal/research/9/index.html": {
+      "path": "projects/colocal/research/9"
+    },
+    "projects/colocal/research/13/index.html": {
+      "path": "projects/colocal/research/13"
+    },
+    "projects/colocal/research/10/index.html": {
+      "path": "projects/colocal/research/10"
+    },
+    "resource-hub/13/index.html": {
+      "path": "resource-hub/13"
+    },
     "resource-hub/15/index.html": {
       "path": "resource-hub/15"
-    },
-    "resource-hub/10/index.html": {
-      "path": "resource-hub/10"
     },
     "resource-hub/9/index.html": {
       "path": "resource-hub/9"
     },
-    "resource-hub/13/index.html": {
-      "path": "resource-hub/13"
+    "resource-hub/10/index.html": {
+      "path": "resource-hub/10"
     },
     "resource-hub/17/index.html": {
       "path": "resource-hub/17"
