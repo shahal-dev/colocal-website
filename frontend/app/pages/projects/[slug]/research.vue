@@ -234,19 +234,7 @@ function isActiveType(tab: string) {
             >
               <h3 class="text-base md:text-lg font-semibold text-gray-900 mb-2">{{ p.title }}</h3>
               <div class="flex items-center text-sm text-gray-600 mb-3">
-                <svg
-                  class="w-4 h-4 mr-2"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                  <path d="M12 11v4" />
-                  <circle cx="12" cy="7" r="4" />
-                </svg>
+                <img src="~/assets/user.png" alt="Authors" class="w-4 h-4 mr-1" />
                 <span>{{ p.authors.map((a) => a.name).join(' • ') }}</span>
               </div>
               <p class="text-sm text-gray-700 mb-3">{{ excerpt(p.abstract, 300) }}</p>

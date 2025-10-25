@@ -61,27 +61,6 @@ const basePath = computed(() => `/projects/${slug}`);
       </div>
     </section>
 
-    <!-- North Partners -->
-    <section class="w-full max-w-6xl mx-auto px-4 md:px-0 pb-8">
-      <h2 class="text-center text-[22px] md:text-[26px] font-display font-semibold mb-8">
-        North Partners
-      </h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 justify-items-center">
-        <!-- Norway -->
-        <div class="flex flex-col items-center text-center bg-gray-50 rounded-lg p-6">
-          <div class="w-32 h-24 mb-4 flex items-center justify-center">
-            <img
-              src="https://flagcdn.com/w320/no.png"
-              alt="Norway Flag"
-              class="max-w-full max-h-full object-contain"
-            />
-          </div>
-          <h3 class="text-lg font-semibold text-gray-900 mb-2">Norway</h3>
-          <p class="text-sm text-gray-600">Norwegian University of Life Science</p>
-        </div>
-      </div>
-    </section>
-
     <!-- South Partners -->
     <section class="w-full max-w-6xl mx-auto px-4 md:px-0 pb-16">
       <h2 class="text-center text-[22px] md:text-[26px] font-display font-semibold mb-8">
@@ -137,7 +116,28 @@ const basePath = computed(() => `/projects/${slug}`);
             />
           </div>
           <h3 class="text-lg font-semibold text-gray-900 mb-2">Uganda</h3>
-          <p class="text-sm text-gray-600">University of Makerere</p>
+          <p class="text-sm text-gray-600">Makerere University</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- North Partners -->
+    <section class="w-full max-w-6xl mx-auto px-4 md:px-0 pb-8">
+      <h2 class="text-center text-[22px] md:text-[26px] font-display font-semibold mb-8">
+        North Partners
+      </h2>
+      <div class="flex flex-wrap gap-8 items-center justify-center">
+        <!-- Norway -->
+        <div class="flex flex-col items-center text-center bg-gray-50 rounded-lg p-6">
+          <div class="w-32 h-24 mb-4 flex items-center justify-center">
+            <img
+              src="https://flagcdn.com/w320/no.png"
+              alt="Norway Flag"
+              class="max-w-full max-h-full object-contain"
+            />
+          </div>
+          <h3 class="text-lg font-semibold text-gray-900 mb-2">Norway</h3>
+          <p class="text-sm text-gray-600">Norwegian University of Life Sciences</p>
         </div>
       </div>
     </section>

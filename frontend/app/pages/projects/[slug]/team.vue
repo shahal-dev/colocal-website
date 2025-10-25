@@ -311,11 +311,7 @@ function selectCountry(index: number) {
                   <div
                     class="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full bg-gray-200 flex items-center justify-center mb-3 text-gray-500"
                   >
-                    <svg class="w-8 h-8" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                      <path
-                        d="M12 12c2.761 0 5-2.686 5-6s-2.239-6-5-6-5 2.686-5 6 2.239 6 5 6zm0 2c-3.866 0-7 3.134-7 7 0 .552.448 1 1 1h12c.552 0 1-.448 1-1 0-3.866-3.134-7-7-7z"
-                      />
-                    </svg>
+                    <img src="~/assets/user.png" alt="Authors" class="w-8 h-8 mr-1" />
                   </div>
                 </template>
                 <p class="m-0 font-medium text-gray-900 text-sm sm:text-base">
@@ -351,11 +347,7 @@ function selectCountry(index: number) {
                   <div
                     class="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full bg-gray-200 flex items-center justify-center mb-3 text-gray-500"
                   >
-                    <svg class="w-8 h-8" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                      <path
-                        d="M12 12c2.761 0 5-2.686 5-6s-2.239-6-5-6-5 2.686-5 6 2.239 6 5 6zm0 2c-3.866 0-7 3.134-7 7 0 .552.448 1 1 1h12c.552 0 1-.448 1-1 0-3.866-3.134-7-7-7z"
-                      />
-                    </svg>
+                    <img src="~/assets/user.png" alt="Authors" class="w-8 h-8 mr-1" />
                   </div>
                 </template>
                 <p class="m-0 font-medium text-gray-900 text-sm sm:text-base">{{ admin.name }}</p>
@@ -395,16 +387,7 @@ function selectCountry(index: number) {
                     <div
                       class="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full bg-gray-200 flex items-center justify-center mb-3 text-gray-500"
                     >
-                      <svg
-                        class="w-8 h-8"
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                        aria-hidden="true"
-                      >
-                        <path
-                          d="M12 12c2.761 0 5-2.686 5-6s-2.239-6-5-6-5 2.686-5 6 2.239 6 5 6zm0 2c-3.866 0-7 3.134-7 7 0 .552.448 1 1 1h12c.552 0 1-.448 1-1 0-3.866-3.134-7-7-7z"
-                        />
-                      </svg>
+                      <img src="~/assets/user.png" alt="Authors" class="w-8 h-8 mr-1" />
                     </div>
                   </template>
                   <p class="m-0 font-medium text-gray-900 text-sm sm:text-base">

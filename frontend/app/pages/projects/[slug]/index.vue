@@ -389,7 +389,7 @@ const _fellows = ref([
               />
             </div>
             <h3 class="text-lg font-semibold text-gray-900 mb-2">Uganda</h3>
-            <p class="text-sm text-gray-600">University of Makerere</p>
+            <p class="text-sm text-gray-600">Makerere University</p>
           </div>
         </div>
       </section>
@@ -410,7 +410,7 @@ const _fellows = ref([
               />
             </div>
             <h3 class="text-lg font-semibold text-gray-900 mb-2">Norway</h3>
-            <p class="text-sm text-gray-600">Norwegian University of Life Science</p>
+            <p class="text-sm text-gray-600">Norwegian University of Life Sciences</p>
           </div>
         </div>
       </section>
@@ -429,10 +429,7 @@ const _fellows = ref([
             <NuxtLink :to="`${basePath}/research/${p.id}`">
               <h3 class="text-base md:text-lg font-semibold text-gray-900 mb-2">{{ p.title }}</h3>
               <div class="flex items-center text-sm text-gray-600 mb-3">
-                <svg class="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path d="M20 21v-2a4 4 0 0 0-3-3.87M4 21v-2a4 4 0 0 1 3-3.87" stroke-width="2" />
-                  <circle cx="12" cy="7" r="4" stroke-width="2" />
-                </svg>
+                <img src="~/assets/user.png" alt="Authors" class="w-4 h-4 mr-1" />
                 <span>{{ p.authors.map((a) => a.name).join(' • ') }}</span>
               </div>
               <p class="text-sm text-gray-700 mb-3">{{ excerpt(p.abstract) }}</p>
