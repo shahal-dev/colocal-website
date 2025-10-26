@@ -24,7 +24,7 @@ const { data: eduData } = await useAsyncData(
   () => `education-trainings:${slug}`,
   () => $fetch('/api/education-trainings', { params: { projectSlug: String(slug) } })
 );
-const items = computed(() => eduData.value ?? []);
+const items = computed(() => (eduData.value ?? []).filter((e) => !e.lla));
 
 // Carousel items for education
 type CarouselItem = {
