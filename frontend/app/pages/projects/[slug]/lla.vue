@@ -35,7 +35,12 @@ const { data: newsData } = await useAsyncData(
   () => `lla-news-events:${slug}`,
   () => $fetch('/api/news-events', { params: { projectSlug: String(slug) } })
 );
+const { data: eduData } = await useAsyncData(
+  () => `education-trainings:${slug}`,
+  () => $fetch('/api/education-trainings', { params: { projectSlug: String(slug) } })
+);
 const llaNewsEvents = computed(() => (newsData.value || []).filter((n) => n.lla));
+const llaEduTrainings = computed(() => (eduData.value || []).filter((e) => e.lla));
 </script>
 
 <template>
@@ -66,30 +71,37 @@ const llaNewsEvents = computed(() => (newsData.value || []).filter((n) => n.lla)
     </section>
 
     <!-- Publications list (LLA only) -->
-    <section class="w-full max-w-6xl mx-auto px-4 md:px-0 pb-12">
-      <div class="mt-6 space-y-4">
+    <section v-if="llaPublications.length > 0" class="w-full max-w-6xl mx-auto px-4 md:px-0 pb-12">
+      <h2 class="text-center text-[24px] md:text-[28px] font-display font-medium mb-6">
+        Featured Publications
+      </h2>
+      <div class="space-y-4">
         <article
           v-for="p in visible"
           :key="p.id"
           class="border border-gray-200 rounded-md bg-white p-4 md:p-5"
         >
-          <h3 class="text-base md:text-lg font-semibold text-gray-900 mb-2">{{ p.title }}</h3>
-          <div class="flex items-center text-sm text-gray-600 mb-3">
-            <svg class="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path d="M20 21v-2a4 4 0 0 0-3-3.87M4 21v-2a4 4 0 0 1 3-3.87" stroke-width="2" />
-              <circle cx="12" cy="7" r="4" stroke-width="2" />
-            </svg>
-            <span>{{ (p.authors || []).map((a) => a.name).join(' • ') }}</span>
-          </div>
-          <p class="text-sm text-gray-700 mb-3">{{ p.abstract }}</p>
-          <div class="flex flex-wrap gap-2">
-            <span
-              v-for="(tag, idx) in p.tags || []"
-              :key="idx"
-              class="inline-block text-xs px-2 py-1 rounded border border-green-200 text-green-700 bg-green-50"
-              >{{ tag.tag }}</span
-            >
-          </div>
+          <NuxtLink :to="`${basePath}/research/${p.id}`" class="block">
+            <h3 class="text-base md:text-lg font-semibold text-gray-900 mb-2 hover:text-green-700">
+              {{ p.title }}
+            </h3>
+            <div class="flex items-center text-sm text-gray-600 mb-3">
+              <svg class="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M20 21v-2a4 4 0 0 0-3-3.87M4 21v-2a4 4 0 0 1 3-3.87" stroke-width="2" />
+                <circle cx="12" cy="7" r="4" stroke-width="2" />
+              </svg>
+              <span>{{ (p.authors || []).map((a) => a.name).join(' • ') }}</span>
+            </div>
+            <p class="text-sm text-gray-700 mb-3">{{ p.abstract }}</p>
+            <div class="flex flex-wrap gap-2">
+              <span
+                v-for="(tag, idx) in p.tags || []"
+                :key="idx"
+                class="inline-block text-xs px-2 py-1 rounded border border-green-200 text-green-700 bg-green-50"
+                >{{ tag.tag }}</span
+              >
+            </div>
+          </NuxtLink>
         </article>
       </div>
 
@@ -112,21 +124,53 @@ const llaNewsEvents = computed(() => (newsData.value || []).filter((n) => n.lla)
     </section>
 
     <!-- News and Events (LLA only) -->
-    <section v-if="llaNewsEvents.length" class="w-full max-w-6xl mx-auto px-4 md:px-0 pb-12">
-      <h2 class="text-[22px] md:text-[26px] font-display font-semibold mb-4">News and Events</h2>
+    <section v-if="llaNewsEvents.length > 0" class="w-full max-w-6xl mx-auto px-4 md:px-0 pb-12">
+      <h2 class="text-center text-[24px] md:text-[28px] font-display font-medium mb-6">
+        Featured News
+      </h2>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <article
           v-for="e in llaNewsEvents"
           :key="e.id"
-          class="border border-gray-200 rounded-md bg-white p-3 md:p-4 flex gap-4 items-start"
+          class="border border-gray-200 rounded-md bg-white overflow-hidden flex"
         >
-          <div class="w-36 h-24 flex-shrink-0 rounded overflow-hidden">
-            <img :src="e.cover?.url" :alt="e.title" class="w-full h-full object-cover" />
-          </div>
-          <div>
-            <h3 class="text-[16px] font-semibold text-green-800 mb-1">{{ e.title }}</h3>
-            <p class="text-sm text-gray-700 line-clamp-3">{{ e.body }}</p>
-          </div>
+          <NuxtLink :to="`${basePath}/outreach/${e.id}`" class="flex gap-4 items-start p-3 md:p-4">
+            <div class="w-36 h-24 flex-shrink-0 rounded overflow-hidden">
+              <img :src="e.cover?.url" :alt="e.title" class="w-full h-full object-cover" />
+            </div>
+            <div>
+              <h3 class="text-[16px] font-semibold text-green-800 mb-1 hover:underline">
+                {{ e.title }}
+              </h3>
+              <p class="text-sm text-gray-700 line-clamp-3">{{ e.body }}</p>
+            </div>
+          </NuxtLink>
+        </article>
+      </div>
+    </section>
+
+    <!-- Education and Trainings (LLA only) -->
+    <section v-if="llaEduTrainings.length > 0" class="w-full max-w-7xl mx-auto px-4 md:px-0 pb-12">
+      <h2 class="text-center text-[24px] md:text-[28px] font-display font-medium mb-6">
+        Education and Training
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <article
+          v-for="e in llaEduTrainings"
+          :key="e.id"
+          class="border border-gray-200 rounded-md bg-white overflow-hidden flex"
+        >
+          <NuxtLink :to="`${basePath}/education/${e.id}`" class="flex gap-4 items-start p-3 md:p-4">
+            <div class="w-36 h-24 flex-shrink-0 rounded overflow-hidden">
+              <img :src="e.cover?.url" :alt="e.title" class="w-full h-full object-cover" />
+            </div>
+            <div>
+              <h3 class="text-[16px] font-semibold text-green-800 mb-1 hover:underline">
+                {{ e.title }}
+              </h3>
+              <p class="text-sm text-gray-700 line-clamp-3">{{ e.body }}</p>
+            </div>
+          </NuxtLink>
         </article>
       </div>
     </section>
@@ -134,6 +178,13 @@ const llaNewsEvents = computed(() => (newsData.value || []).filter((n) => n.lla)
 </template>
 
 <style scoped>
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }
