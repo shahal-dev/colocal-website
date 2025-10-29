@@ -22,7 +22,7 @@ const { data: newsData } = await useAsyncData(
   () => `news-events:${slug}`,
   () => $fetch('/api/news-events', { params: { projectSlug: String(slug) } })
 );
-const newsEvents = computed(() => newsData.value ?? []);
+const newsEvents = computed(() => (newsData.value ?? []).filter((n) => !n.blog));
 
 function excerpt(text?: string | null, n = 220) {
   if (!text) return '';
