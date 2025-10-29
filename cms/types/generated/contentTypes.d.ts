@@ -477,6 +477,10 @@ export interface ApiAuthorAuthor extends Struct.CollectionTypeSchema {
     > &
       Schema.Attribute.Private;
     name: Schema.Attribute.String & Schema.Attribute.Required;
+    news_event: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::news-event.news-event'
+    >;
     publishedAt: Schema.Attribute.DateTime;
     research_publications: Schema.Attribute.Relation<
       'manyToMany',
@@ -651,6 +655,8 @@ export interface ApiNewsEventNewsEvent extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
+    authors: Schema.Attribute.Relation<'oneToMany', 'api::author.author'>;
+    blog: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     body: Schema.Attribute.RichText & Schema.Attribute.Required;
     cover: Schema.Attribute.Media<'images' | 'videos'> &
       Schema.Attribute.Required;

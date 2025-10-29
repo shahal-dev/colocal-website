@@ -137,6 +137,8 @@ export interface NewsEvent {
   body: string; // required (RichText Markdown stored as string)
   section: 'policy dialogue' | 'seminar and conference' | null; // optional section
   lla: boolean; // required
+  blog?: boolean; // optional flag for blog posts
+  authors?: Author[] | null; // optional relation (one-to-many to Author)
   projects?: Project[] | null; // optional relation (many-to-many to Project)
 }
 

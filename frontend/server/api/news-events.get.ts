@@ -1,6 +1,6 @@
 import { defineEventHandler, createError, getQuery } from 'h3';
 import { useRuntimeConfig } from '#imports';
-import type { NewsEvent, StrapiMedia, StrapiImageFormat } from '../../types/content';
+import type { NewsEvent, StrapiMedia, StrapiImageFormat, Author } from '../../types/content';
 import type {
   RawEntity,
   RawRelationOne,
@@ -12,6 +12,7 @@ import type {
   FlatMedia,
   _FlatNewsEvent,
   StrapiListResponseFlat,
+  FlatAuthor,
 } from '../../types/raw-strapi-types';
 
 type StrapiListResponseUnion =
@@ -176,6 +177,23 @@ function mapNewsEvent(
   };
 }
 
+function mapFlatAuthors(baseUrl: string, list?: FlatAuthor[] | null): Author[] | null {
+  if (!Array.isArray(list)) return null;
+  return list.map(
+    (a): Author => ({
+      id: a.id,
+      name: a.name,
+      title: a.title ?? null,
+      avatar: mapFlatMedia(baseUrl, a.avatar ?? null),
+      email: a.email ?? null,
+      research_publications: null,
+      colocal: !!a.colocal,
+      admin: !!a.admin,
+      country: a.country ?? null,
+    })
+  );
+}
+
 function mapFlatNewsEvents(baseUrl: string, list?: _FlatNewsEvent[] | null): NewsEvent[] | null {
   if (!Array.isArray(list)) return null;
   return list.map(
@@ -189,6 +207,8 @@ function mapFlatNewsEvents(baseUrl: string, list?: _FlatNewsEvent[] | null): New
       body: e.body,
       section: e.section ?? null,
       lla: !!e.lla,
+      blog: e.blog,
+      authors: mapFlatAuthors(baseUrl, e.authors ?? null),
       projects: null,
     })
   );

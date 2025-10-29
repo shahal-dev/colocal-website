@@ -59,6 +59,16 @@
         "policy dialogue",
         "seminar and conference"
       ]
+    },
+    "blog": {
+      "type": "boolean",
+      "default": false
+    },
+    "authors": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::author.author",
+      "mappedBy": "news_event"
     }
   }
 }

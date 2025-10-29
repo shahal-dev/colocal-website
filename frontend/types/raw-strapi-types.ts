@@ -194,6 +194,8 @@ export type _RawNewsEventAttributes = {
   body: string;
   section?: 'policy dialogue' | 'seminar and conference' | null;
   lla: boolean;
+  blog?: boolean;
+  authors?: RawRelationMany<RawAuthorAttributes>;
 };
 
 export type _FlatNewsEvent = {
@@ -206,4 +208,6 @@ export type _FlatNewsEvent = {
   body: string;
   section?: 'policy dialogue' | 'seminar and conference' | null;
   lla: boolean;
+  blog?: boolean;
+  authors?: FlatAuthor[] | null;
 };

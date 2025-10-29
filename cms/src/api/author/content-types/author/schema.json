@@ -60,6 +60,12 @@
         "nepal",
         "uganda"
       ]
+    },
+    "news_event": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::news-event.news-event",
+      "inversedBy": "authors"
     }
   }
 }

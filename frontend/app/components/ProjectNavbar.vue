@@ -53,7 +53,7 @@ const tabs = computed(() => {
     { key: 'education', label: 'Education & Training', to: `${basePath.value}/education` },
     { key: 'research', label: 'Research & Publications', to: `${basePath.value}/research` },
     { key: 'outreach', label: 'Outreach', to: `${basePath.value}/outreach` },
-    { key: 'lla', label: 'COLOCAL Blog', to: `${basePath.value}/lla` },
+    { key: 'blog', label: 'COLOCAL Blog', to: `${basePath.value}/blog` },
   ];
 });
 
