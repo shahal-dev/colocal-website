@@ -6,3 +6,9 @@ build
 .strapi
 .nuxt
 
+
+# Vercel
+.vercel
+
+# Nuxt build outputs
+.output
