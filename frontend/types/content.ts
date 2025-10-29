@@ -127,6 +127,7 @@ export interface EducationTraining {
   project?: Project | null; // optional relation (many-to-one to Project)
 }
 
+//this
 export interface NewsEvent {
   id: number;
   title: string; // required
