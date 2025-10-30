@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { useRoute } from '#app';
 import type { NewsEvent } from '~~/types/content';
 
@@ -18,19 +18,29 @@ const { data: newsData } = await useAsyncData<NewsEvent[]>(
 );
 const items = computed(() => newsData.value ?? []);
 
+const isColocal = (entry: NewsEvent): boolean =>
+  Boolean((entry as unknown as { blog?: boolean }).blog);
+
+const regularItems = computed(() => items.value.filter((entry) => !isColocal(entry)));
+const colocalItems = computed(() => items.value.filter((entry) => isColocal(entry)));
+
 // 3x3 grid pagination
 const pageSize = 9;
 const page = ref(1);
-const totalPages = computed(() => Math.max(1, Math.ceil(items.value.length / pageSize)));
+const totalPages = computed(() => Math.max(1, Math.ceil(regularItems.value.length / pageSize)));
 const visible = computed(() => {
   const start = (page.value - 1) * pageSize;
-  return items.value.slice(start, start + pageSize);
+  return regularItems.value.slice(start, start + pageSize);
 });
 
 function goTo(p: number) {
   if (p < 1 || p > totalPages.value) return;
   page.value = p;
 }
+
+watch(totalPages, (next) => {
+  if (page.value > next) page.value = next;
+});
 
 function excerpt(text?: string | null, n = 180) {
   if (!text) return '';
@@ -65,7 +75,7 @@ function excerpt(text?: string | null, n = 180) {
             class="border border-gray-200 rounded-md bg-white overflow-hidden hover:shadow transition-shadow"
           >
             <div class="w-full h-40 overflow-hidden">
-              <img :src="e.cover?.url" :alt="e.title" class="w-full h-full object-cover" />
+              <img :src="e.cover?.url" :alt="e.title" class="w-full h-full object-cover">
             </div>
             <div class="p-4">
               <h3 class="text-[16px] font-semibold text-green-800 mb-1">{{ e.title }}</h3>
@@ -90,6 +100,28 @@ function excerpt(text?: string | null, n = 180) {
           >
             {{ i }}
           </button>
+        </div>
+
+        <div v-if="colocalItems.length" class="mt-16">
+          <div class="text-center max-w-3xl mx-auto mb-8">
+            <h2 class="text-[24px] md:text-[28px] font-display font-medium">COLOCAL Blog</h2>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <NuxtLink
+              v-for="e in colocalItems"
+              :key="e.id"
+              :to="`/news-events/${e.id}`"
+              class="border border-gray-200 rounded-md bg-white overflow-hidden hover:shadow transition-shadow"
+            >
+              <div class="w-full h-40 overflow-hidden">
+                <img :src="e.cover?.url" :alt="e.title" class="w-full h-full object-cover">
+              </div>
+              <div class="p-4">
+                <h3 class="text-[16px] font-semibold text-green-800 mb-1">{{ e.title }}</h3>
+                <p class="text-sm text-gray-700 line-clamp-3">{{ excerpt(e.body) }}</p>
+              </div>
+            </NuxtLink>
+          </div>
         </div>
       </section>
     </template>

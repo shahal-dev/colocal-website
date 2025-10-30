@@ -8,7 +8,7 @@ build
 
 
 # Vercel
-# .vercel
+.vercel
 
 # Nuxt build outputs
-# .output
+.output

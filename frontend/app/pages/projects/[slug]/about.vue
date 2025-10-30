@@ -14,7 +14,7 @@ useHead({
 });
 
 // Use shared project navbar
-const basePath = computed(() => `/projects/${slug}`);
+const _basePath = computed(() => `/projects/${slug}`);
 </script>
 
 <template>
@@ -141,5 +141,9 @@ const basePath = computed(() => `/projects/${slug}`);
         </div>
       </div>
     </section>
+
+    <!-- <section class="w-full">
+      <ProjectWorldMap />
+    </section> -->
   </div>
 </template>
