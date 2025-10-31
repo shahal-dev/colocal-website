@@ -39,7 +39,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch, watchEffect } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref, watch, watchEffect } from 'vue';
 
 const props = defineProps<{
   images: Array<string | null | undefined> | null | undefined;
@@ -63,6 +63,31 @@ const normalizedImages = computed(() => {
 
 const carouselImages = computed(() => normalizedImages.value.slice());
 
+const AUTO_ADVANCE_INTERVAL = 3000;
+let autoAdvanceTimer: ReturnType<typeof setInterval> | null = null;
+
+const stopAutoAdvance = () => {
+  if (autoAdvanceTimer !== null) {
+    clearInterval(autoAdvanceTimer);
+    autoAdvanceTimer = null;
+  }
+};
+
+const startAutoAdvance = () => {
+  stopAutoAdvance();
+  if (carouselImages.value.length <= 1) {
+    return;
+  }
+  autoAdvanceTimer = setInterval(() => {
+    advanceNext(true);
+  }, AUTO_ADVANCE_INTERVAL);
+};
+
+const restartAutoAdvance = () => {
+  stopAutoAdvance();
+  startAutoAdvance();
+};
+
 const activeIndex = ref(0);
 const transitionName = ref<'slide-next' | 'slide-prev'>('slide-next');
 const currentSlide = computed(() => carouselImages.value[activeIndex.value] ?? '');
@@ -70,6 +95,7 @@ const currentSlide = computed(() => carouselImages.value[activeIndex.value] ?? '
 watch(carouselImages, (images) => {
   activeIndex.value = 0;
   if (!images.length) transitionName.value = 'slide-next';
+  startAutoAdvance();
 });
 
 function goTo(i: number) {
@@ -80,13 +106,21 @@ function goTo(i: number) {
   const backward = (current - i + total) % total;
   transitionName.value = forward <= backward ? 'slide-next' : 'slide-prev';
   activeIndex.value = i;
+  restartAutoAdvance();
 }
 
-function next() {
+function advanceNext(fromAuto: boolean) {
   const total = carouselImages.value.length;
   if (!total) return;
   transitionName.value = 'slide-next';
   activeIndex.value = (activeIndex.value + 1) % total;
+  if (!fromAuto) {
+    restartAutoAdvance();
+  }
+}
+
+function next() {
+  advanceNext(false);
 }
 
 function prev() {
@@ -94,6 +128,7 @@ function prev() {
   if (!total) return;
   transitionName.value = 'slide-prev';
   activeIndex.value = (activeIndex.value - 1 + total) % total;
+  restartAutoAdvance();
 }
 
 const liveMessage = ref('');
@@ -113,6 +148,14 @@ function slideAlt(index: number) {
   if (!total) return title.value;
   return `${title.value} — image ${index + 1} of ${total}`;
 }
+
+onMounted(() => {
+  startAutoAdvance();
+});
+
+onBeforeUnmount(() => {
+  stopAutoAdvance();
+});
 </script>
 
 <style scoped>
