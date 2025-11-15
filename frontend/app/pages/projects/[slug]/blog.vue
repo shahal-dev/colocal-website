@@ -35,7 +35,40 @@ const { data: newsData } = await useAsyncData(
   () => `lla-news-events:${slug}`,
   () => $fetch('/api/news-events', { params: { projectSlug: String(slug) } })
 );
-const llaNewsEvents = computed(() => (newsData.value || []).filter((n) => n.blog));
+
+// Fetch all authors with avatars
+const { data: authorsData } = await useAsyncData(
+  'all-authors',
+  () => $fetch('/api/authors', { query: { pageSize: '200' } })
+);
+
+// Merge author avatars into news events
+const llaNewsEvents = computed(() => {
+  const events = (newsData.value || []).filter((n) => n.blog);
+  const authorsMap = new Map();
+  
+  // Create a map of author ID to full author data (with avatars)
+  if (authorsData.value?.data) {
+    authorsData.value.data.forEach((author) => {
+      authorsMap.set(author.id, author);
+    });
+  }
+  
+  // Merge author avatars into events
+  return events.map((event) => {
+    if (event.authors && Array.isArray(event.authors)) {
+      const enrichedAuthors = event.authors.map((author) => {
+        const fullAuthor = authorsMap.get(author.id);
+        if (fullAuthor && fullAuthor.avatar) {
+          return { ...author, avatar: fullAuthor.avatar };
+        }
+        return author;
+      });
+      return { ...event, authors: enrichedAuthors };
+    }
+    return event;
+  });
+});
 
 // Pagination for blog posts
 const pageSize = 6;

@@ -25,7 +25,41 @@ const { data: current } = await useAsyncData(
   () => `news-event:${slug}:${id}`,
   () => $fetch('/api/news-events', { params: { projectSlug: String(slug), id: String(id) } })
 );
-const item = computed(() => (current.value && current.value[0]) || null);
+
+// Fetch all authors with avatars
+const { data: authorsData } = await useAsyncData(
+  'all-authors',
+  () => $fetch('/api/authors', { query: { pageSize: '200' } })
+);
+
+// Merge author avatars into the current item
+const item = computed(() => {
+  const currentItem = (current.value && current.value[0]) || null;
+  if (!currentItem) return null;
+  
+  const authorsMap = new Map();
+  
+  // Create a map of author ID to full author data (with avatars)
+  if (authorsData.value?.data) {
+    authorsData.value.data.forEach((author) => {
+      authorsMap.set(author.id, author);
+    });
+  }
+  
+  // Merge author avatars into current item
+  if (currentItem.authors && Array.isArray(currentItem.authors)) {
+    const enrichedAuthors = currentItem.authors.map((author) => {
+      const fullAuthor = authorsMap.get(author.id);
+      if (fullAuthor && fullAuthor.avatar) {
+        return { ...author, avatar: fullAuthor.avatar };
+      }
+      return author;
+    });
+    return { ...currentItem, authors: enrichedAuthors };
+  }
+  
+  return currentItem;
+});
 
 useHead({
   title: item.value?.title
@@ -166,9 +200,65 @@ function formatDate(iso: string) {
             <div v-if="secondaryTitle" class="text-lg text-gray-700 font-display mb-2">
               {{ secondaryTitle }}
             </div>
-            <div v-if="authorLine" class="text-sm text-gray-600 flex items-center gap-2 mb-2">
-              {{ authorLine }}
+
+            <!-- Author(s) with avatars and details -->
+            <div
+              v-if="item.authors && item.authors.length > 0"
+              class="flex items-center gap-3 mb-3 py-3 border-y border-gray-200"
+            >
+              <div class="flex -space-x-3">
+                <div
+                  v-for="(author, idx) in item.authors.slice(0, 3)"
+                  :key="idx"
+                  class="w-12 h-12 rounded-full bg-gray-200 border-2 border-white flex items-center justify-center overflow-hidden"
+                  :title="author.name"
+                >
+                  <img
+                    v-if="author.avatar?.url"
+                    :src="author.avatar.url"
+                    :alt="author.name"
+                    class="w-full h-full object-cover"
+                  />
+                  <svg
+                    v-else
+                    class="w-6 h-6 text-gray-500"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                  >
+                    <path
+                      d="M12 12c2.761 0 5-2.686 5-6s-2.239-6-5-6-5 2.686-5 6 2.239 6 5 6zm0 2c-3.866 0-7 3.134-7 7 0 .552.448 1 1 1h12c.552 0 1-.448 1-1 0-3.866-3.134-7-7-7z"
+                    />
+                  </svg>
+                </div>
+              </div>
+              <div class="flex flex-col">
+                <div class="text-sm text-gray-700">
+                  <span v-if="item.authors.length === 1" class="font-semibold text-base">{{
+                    item.authors[0]?.name
+                  }}</span>
+                  <span v-else-if="item.authors.length === 2" class="font-medium"
+                    >{{ item.authors[0]?.name }} & {{ item.authors[1]?.name }}</span
+                  >
+                  <span v-else class="font-medium"
+                    >{{ item.authors[0]?.name }} +{{ item.authors.length - 1 }} more</span
+                  >
+                </div>
+              </div>
             </div>
+
+            <!-- Fallback for old authorLine format if no authors array -->
+            <div
+              v-else-if="authorLine"
+              class="text-sm text-gray-600 flex items-center gap-2 mb-3 py-3 border-y border-gray-200"
+            >
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M12 12c2.761 0 5-2.686 5-6s-2.239-6-5-6-5 2.686-5 6 2.239 6 5 6zm0 2c-3.866 0-7 3.134-7 7 0 .552.448 1 1 1h12c.552 0 1-.448 1-1 0-3.866-3.134-7-7-7z"
+                />
+              </svg>
+              <span class="font-medium">{{ authorLine }}</span>
+            </div>
+
             <div class="text-sm text-gray-600 flex items-center gap-2 mb-4">
               <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <path
