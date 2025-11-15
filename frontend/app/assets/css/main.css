@@ -40,6 +40,11 @@ body {
     'Noto Color Emoji';
 }
 
+/* Apply justified text alignment to all paragraphs */
+p {
+  text-align: justify;
+}
+
 .navbar-item {
   @apply rounded-xl py-2 px-3 hover:bg-gray-100 text-base;
 }
