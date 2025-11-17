@@ -52,7 +52,7 @@ const tabs = computed(() => {
   return [
     { key: 'education', label: 'Education & Training', to: `${basePath.value}/education` },
     { key: 'research', label: 'Research & Publications', to: `${basePath.value}/research` },
-    { key: 'outreach', label: 'Outreach and Dissemination', to: `${basePath.value}/outreach` },
+    { key: 'outreach', label: 'Outreach', to: `${basePath.value}/outreach` },
     { key: 'blog', label: 'COLOCAL Blog', to: `${basePath.value}/blog` },
   ];
 });
@@ -80,8 +80,8 @@ const isActive = (to: string) => {
         <!-- Home link -->
         <NuxtLink :to="basePath"
           class="px-4 py-5 text-sm md:text-base font-semibold whitespace-nowrap transition-colors duration-200" :class="route.path === basePath
-              ? 'bg-green-100 text-green-900 border-b-2 border-green-700'
-              : 'bg-white text-gray-700 hover:text-green-700'
+            ? 'bg-green-100 text-green-900 border-b-2 border-green-700'
+            : 'bg-white text-gray-700 hover:text-green-700'
             ">
           Home
         </NuxtLink>
@@ -91,9 +91,9 @@ const isActive = (to: string) => {
           <a href="#"
             class="px-4 py-5 text-sm md:text-base font-semibold whitespace-nowrap transition-colors duration-200 inline-flex items-center hover:text-green-700"
             :class="route.path.startsWith(`${basePath}/about`) ||
-                route.path.startsWith(`${basePath}/team`)
-                ? 'bg-green-100 text-green-900 border-b-2 border-green-700'
-                : 'bg-white text-gray-700'
+              route.path.startsWith(`${basePath}/team`)
+              ? 'bg-green-100 text-green-900 border-b-2 border-green-700'
+              : 'bg-white text-gray-700'
               " @click.prevent>
             About {{ projectName }}
             <svg class="ml-1 h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
@@ -107,8 +107,8 @@ const isActive = (to: string) => {
         <!-- Other tabs -->
         <NuxtLink v-for="t in tabs" :key="t.key" :to="t.to"
           class="px-4 py-5 text-sm md:text-base font-semibold whitespace-nowrap transition-colors duration-200" :class="isActive(t.to)
-              ? 'bg-green-100 text-green-900 border-b-2 border-green-700'
-              : 'bg-white text-gray-700 border-gray-300 hover:border-green-300 hover:text-green-700'
+            ? 'bg-green-100 text-green-900 border-b-2 border-green-700'
+            : 'bg-white text-gray-700 border-gray-300 hover:border-green-300 hover:text-green-700'
             ">
           {{ t.label }}
         </NuxtLink>

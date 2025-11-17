@@ -51,11 +51,8 @@ const _basePath = computed(() => `/projects/${slug}`);
         Objectives
       </h2>
       <div v-if="project?.objectives" class="space-y-4">
-        <div
-          v-for="objective in project?.objectives || []"
-          :key="project?.objectives.indexOf(objective)"
-          class="bg-gray-50 border border-gray-200 rounded-md p-4 md:p-5 text-gray-800"
-        >
+        <div v-for="objective in project?.objectives || []" :key="project?.objectives.indexOf(objective)"
+          class="bg-gray-50 border border-gray-200 rounded-md p-4 md:p-5 text-gray-800">
           {{ objective.objective }}
         </div>
       </div>
@@ -70,11 +67,8 @@ const _basePath = computed(() => `/projects/${slug}`);
         <!-- Bangladesh -->
         <div class="flex flex-col items-center text-center bg-gray-50 rounded-lg p-6">
           <div class="w-32 h-24 mb-4 flex items-center justify-center">
-            <img
-              src="https://flagcdn.com/w320/bd.png"
-              alt="Bangladesh Flag"
-              class="max-w-full max-h-full object-contain"
-            />
+            <img src="https://flagcdn.com/w320/bd.png" alt="Bangladesh Flag"
+              class="max-w-full max-h-full object-contain" />
           </div>
           <h3 class="text-lg font-semibold text-gray-900 mb-2">Bangladesh</h3>
           <p class="text-sm text-gray-600">Independent University, Bangladesh</p>
@@ -83,11 +77,8 @@ const _basePath = computed(() => `/projects/${slug}`);
         <!-- Mozambique -->
         <div class="flex flex-col items-center text-center bg-gray-50 rounded-lg p-6">
           <div class="w-32 h-24 mb-4 flex items-center justify-center">
-            <img
-              src="https://flagcdn.com/w320/mz.png"
-              alt="Mozambique Flag"
-              class="max-w-full max-h-full object-contain"
-            />
+            <img src="https://flagcdn.com/w320/mz.png" alt="Mozambique Flag"
+              class="max-w-full max-h-full object-contain" />
           </div>
           <h3 class="text-lg font-semibold text-gray-900 mb-2">Mozambique</h3>
           <p class="text-sm text-gray-600">Eduardo Mondlane University</p>
@@ -96,11 +87,7 @@ const _basePath = computed(() => `/projects/${slug}`);
         <!-- Nepal -->
         <div class="flex flex-col items-center text-center bg-gray-50 rounded-lg p-6">
           <div class="w-32 h-24 mb-4 flex items-center justify-center">
-            <img
-              src="https://flagcdn.com/w320/np.png"
-              alt="Nepal Flag"
-              class="max-w-full max-h-full object-contain"
-            />
+            <img src="https://flagcdn.com/w320/np.png" alt="Nepal Flag" class="max-w-full max-h-full object-contain" />
           </div>
           <h3 class="text-lg font-semibold text-gray-900 mb-2">Nepal</h3>
           <p class="text-sm text-gray-600">Pokhara University</p>
@@ -109,11 +96,7 @@ const _basePath = computed(() => `/projects/${slug}`);
         <!-- Uganda -->
         <div class="flex flex-col items-center text-center bg-gray-50 rounded-lg p-6">
           <div class="w-32 h-24 mb-4 flex items-center justify-center">
-            <img
-              src="https://flagcdn.com/w320/ug.png"
-              alt="Uganda Flag"
-              class="max-w-full max-h-full object-contain"
-            />
+            <img src="https://flagcdn.com/w320/ug.png" alt="Uganda Flag" class="max-w-full max-h-full object-contain" />
           </div>
           <h3 class="text-lg font-semibold text-gray-900 mb-2">Uganda</h3>
           <p class="text-sm text-gray-600">Makerere University</p>
@@ -124,17 +107,13 @@ const _basePath = computed(() => `/projects/${slug}`);
     <!-- North Partners -->
     <section class="w-full max-w-6xl mx-auto px-4 md:px-0 pb-8">
       <h2 class="text-center text-[22px] md:text-[26px] font-display font-semibold mb-8">
-        North Partners
+        North Partner
       </h2>
       <div class="flex flex-wrap gap-8 items-center justify-center">
         <!-- Norway -->
         <div class="flex flex-col items-center text-center bg-gray-50 rounded-lg p-6">
           <div class="w-32 h-24 mb-4 flex items-center justify-center">
-            <img
-              src="https://flagcdn.com/w320/no.png"
-              alt="Norway Flag"
-              class="max-w-full max-h-full object-contain"
-            />
+            <img src="https://flagcdn.com/w320/no.png" alt="Norway Flag" class="max-w-full max-h-full object-contain" />
           </div>
           <h3 class="text-lg font-semibold text-gray-900 mb-2">Norway</h3>
           <p class="text-sm text-gray-600">Norwegian University of Life Sciences</p>

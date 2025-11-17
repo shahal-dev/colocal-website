@@ -15,11 +15,12 @@
             'We are a network of universities dedicated to building climate resilience in Least Developed Countries (LDCs) through education, research, and policy advocacy.'
           }}
         </p>
-        <button
+        <NuxtLink
           class="px-5 py-3 bg-green-600 text-white rounded-sm font-body text-base font-semibold mx-auto md:mx-0"
+          to="/about"
         >
           More About Us
-        </button>
+        </NuxtLink>
       </div>
 
       <div class="flex flex-col gap-4 w-full md:w-auto">
