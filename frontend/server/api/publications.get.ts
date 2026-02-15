@@ -2,7 +2,6 @@ import { defineEventHandler, createError, getQuery } from 'h3';
 import { useRuntimeConfig } from '#imports';
 import type {
   ResearchPublication,
-  Author,
   Tag,
   StrapiMedia,
   StrapiImageFormat,
@@ -16,7 +15,6 @@ import type {
   RawRelationMany,
   RawImageFormat,
   RawMediaAttributes,
-  RawAuthorAttributes,
   RawTagComponent,
   RawPublicationTypeComponent,
   RawThemeComponent,
@@ -24,7 +22,6 @@ import type {
   RawPublicationAttributes,
   StrapiListResponseRaw,
   FlatMedia,
-  FlatAuthor,
   FlatPublication,
   StrapiListResponseFlat,
 } from '../../types/raw-strapi-types';
@@ -188,44 +185,6 @@ function mapCountry(c?: RawCountryComponent | null): Country | null {
   return { name: c.name ?? '' };
 }
 
-function mapAuthors(
-  baseUrl: string,
-  raw: RawRelationMany<RawAuthorAttributes> | RawEntity<RawAuthorAttributes>[] | null | undefined
-): Author[] | null {
-  const arr = hasDataKey(raw)
-    ? (raw as RawRelationMany<RawAuthorAttributes>).data
-    : (raw as RawEntity<RawAuthorAttributes>[] | null | undefined);
-  if (!Array.isArray(arr)) return null;
-  return arr.map((item) => {
-    const a = item.attributes || ({} as RawAuthorAttributes);
-    return {
-      id: item.id,
-      name: a.name,
-      avatar: mapStrapiMedia(baseUrl, a.avatar),
-      email: a.email ?? null,
-      research_publications: null,
-      colocal: !!a.colocal,
-    } as Author;
-  });
-}
-
-function mapFlatAuthors(baseUrl: string, list?: FlatAuthor[] | null): Author[] | null {
-  if (!Array.isArray(list)) return null;
-  return list.map(
-    (a): Author => ({
-      id: a.id,
-      name: a.name,
-      title: a.title ?? null,
-      avatar: mapFlatMedia(baseUrl, a.avatar ?? null),
-      email: a.email ?? null,
-      research_publications: null,
-      colocal: !!a.colocal,
-      admin: !!a.admin,
-      country: a.country ?? null,
-    })
-  );
-}
-
 function mapPublication(
   baseUrl: string,
   raw: RawEntity<RawPublicationAttributes> | null | undefined
@@ -238,14 +197,13 @@ function mapPublication(
     secondaryTitle: a.secondary_title ?? null,
     abstract: a.abstract,
     date: a.date,
-    authors: mapAuthors(baseUrl, a.authors) ?? [],
+    authors_text: a.authors_text ?? null,
     tags: mapTags(a.tags),
     url: a.url,
     file: mapStrapiMedia(baseUrl, a.file),
     imageCover: mapStrapiMedia(baseUrl, a.image_cover) ?? null,
     images: mapStrapiMediaMany(baseUrl, a.images),
     project: null,
-    lla: !!a.lla,
     publication_type: mapPublicationType(a.publication_type),
     theme: mapTheme(a.theme ?? null),
     country: mapCountry(a.country ?? null),
@@ -264,14 +222,13 @@ function mapFlatPublications(
       secondaryTitle: p.secondary_title ?? null,
       abstract: p.abstract,
       date: p.date,
-      authors: mapFlatAuthors(baseUrl, p.authors) ?? [],
+      authors_text: p.authors_text ?? null,
       tags: mapTags(p.tags),
       url: p.url ?? p.URL ?? '',
       file: mapFlatMedia(baseUrl, p.file ?? null),
       imageCover: mapFlatMedia(baseUrl, p.image_cover ?? null),
       images: mapFlatMediaList(baseUrl, p.images ?? null),
       project: null,
-      lla: !!p.lla,
       publication_type: mapPublicationType(p.publication_type),
       theme: mapTheme(p.theme ?? null),
       country: mapCountry(p.country ?? null),

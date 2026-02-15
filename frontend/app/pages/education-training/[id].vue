@@ -120,7 +120,7 @@ function formatDate(iso) {
               <GalleryCarousel :images="carouselImages" :title="item.title" />
             </div>
             <div v-else-if="coverUrl" class="w-full rounded-lg overflow-hidden mb-5">
-              <img :src="coverUrl" :alt="item.title" class="w-full h-full object-contain" />
+              <img :src="coverUrl" :alt="item.title" class="w-full h-full object-contain" >
             </div>
             <h1 class="text-2xl md:text-3xl font-display font-semibold mb-2">{{ item.title }}</h1>
             <div v-if="secondaryTitle" class="text-lg text-gray-700 font-display mb-2">

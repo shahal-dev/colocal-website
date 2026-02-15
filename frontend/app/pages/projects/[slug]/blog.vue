@@ -187,13 +187,15 @@ function excerpt(text?: string | null, n = 180) {
     <!-- Blog Posts -->
     <section v-if="llaNewsEvents.length > 0" class="w-full max-w-6xl mx-auto px-4 md:px-0 pb-12">
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <article v-for="post in visiblePosts" :key="post.id"
+        <article
+v-for="post in visiblePosts" :key="post.id"
           class="border border-gray-200 rounded-lg bg-white overflow-hidden hover:shadow-lg transition-shadow">
           <NuxtLink :to="`${basePath}/outreach/${post.id}`" class="block">
             <!-- Featured Image -->
             <div class="w-full h-48 overflow-hidden">
-              <img :src="post.cover?.url" :alt="post.title"
-                class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
+              <img
+:src="post.cover?.url" :alt="post.title"
+                class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" >
             </div>
 
             <!-- Content -->
@@ -201,7 +203,8 @@ function excerpt(text?: string | null, n = 180) {
               <!-- Date -->
               <div class="flex items-center text-xs text-gray-500 mb-2">
                 <svg class="w-4 h-4 mr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2z"
+                  <path
+d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2z"
                     stroke-width="2" />
                 </svg>
                 <span>{{ formatDate(post.date) }}</span>
@@ -220,10 +223,12 @@ function excerpt(text?: string | null, n = 180) {
               <!-- Author(s) -->
               <div v-if="post.authors && post.authors.length > 0" class="flex items-center gap-2">
                 <div class="flex -space-x-2">
-                  <div v-for="(author, idx) in post.authors.slice(0, 3)" :key="idx"
+                  <div
+v-for="(author, idx) in post.authors.slice(0, 3)" :key="idx"
                     class="w-8 h-8 rounded-full bg-gray-200 border-2 border-white flex items-center justify-center overflow-hidden">
-                    <img v-if="author.avatar?.url" :src="author.avatar.url" :alt="author.name"
-                      class="w-full h-full object-cover" />
+                    <img
+v-if="author.avatar?.url" :src="author.avatar.url" :alt="author.name"
+                      class="w-full h-full object-cover" >
                     <svg v-else class="w-4 h-4 text-gray-500" viewBox="0 0 24 24" fill="currentColor">
                       <path
                         d="M12 12c2.761 0 5-2.686 5-6s-2.239-6-5-6-5 2.686-5 6 2.239 6 5 6zm0 2c-3.866 0-7 3.134-7 7 0 .552.448 1 1 1h12c.552 0 1-.448 1-1 0-3.866-3.134-7-7-7z" />
@@ -244,7 +249,8 @@ function excerpt(text?: string | null, n = 180) {
 
       <!-- Pagination -->
       <div v-if="totalPages > 1" class="mt-10 flex items-center justify-center gap-2">
-        <button v-for="i in totalPages" :key="i" :aria-label="`Go to page ${i}`"
+        <button
+v-for="i in totalPages" :key="i" :aria-label="`Go to page ${i}`"
           class="min-w-[32px] h-8 px-3 text-sm rounded border transition-colors" :class="i === page
               ? 'bg-green-600 text-white border-green-600'
               : 'bg-white text-gray-800 border-gray-300 hover:border-green-400'

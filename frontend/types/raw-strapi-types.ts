@@ -52,13 +52,12 @@ export type RawPublicationAttributes = {
   secondary_title?: string | null;
   abstract: string;
   date: string;
-  authors: RawRelationMany<RawAuthorAttributes>;
+  authors_text?: string | null; // optional text field for author names
   tags?: RawTagComponent[] | null;
   url: string;
   file?: RawRelationOne<RawMediaAttributes>;
   image_cover?: RawRelationOne<RawMediaAttributes> | null;
   images?: RawRelationMany<RawMediaAttributes> | null;
-  lla?: boolean; // whether it is an LLA publication
   // project?: RawRelationOne<RawProjectAttributes> // avoid cycle
   publication_type?: RawPublicationTypeComponent; // component
   theme?: RawThemeComponent | null; // optional component
@@ -125,12 +124,11 @@ export type FlatPublication = {
   date: string;
   URL?: string; // original field name may be URL in Strapi
   url?: string; // or lower-case in some setups
-  authors?: FlatAuthor[] | null;
+  authors_text?: string | null; // optional text field for author names
   tags?: RawTagComponent[] | null;
   file?: FlatMedia | null;
   image_cover?: FlatMedia | null;
   images?: FlatMedia[] | null;
-  lla?: boolean;
   publication_type?: RawPublicationTypeComponent; // component flattened
   theme?: RawThemeComponent | null; // optional component
   country?: RawCountryComponent | null; // optional component

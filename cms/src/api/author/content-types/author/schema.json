@@ -29,12 +29,6 @@
     "email": {
       "type": "string"
     },
-    "research_publications": {
-      "type": "relation",
-      "relation": "manyToMany",
-      "target": "api::research-publication.research-publication",
-      "mappedBy": "authors"
-    },
     "colocal": {
       "type": "boolean",
       "required": true,

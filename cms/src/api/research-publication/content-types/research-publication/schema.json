@@ -30,6 +30,9 @@
       "type": "string",
       "required": true
     },
+    "authors_text": {
+      "type": "text"
+    },
     "file": {
       "type": "media",
       "multiple": false,
@@ -47,17 +50,6 @@
       "relation": "manyToOne",
       "target": "api::project.project",
       "inversedBy": "research_publications"
-    },
-    "authors": {
-      "type": "relation",
-      "relation": "manyToMany",
-      "target": "api::author.author",
-      "inversedBy": "research_publications"
-    },
-    "lla": {
-      "type": "boolean",
-      "required": true,
-      "default": false
     },
     "publication_type": {
       "type": "component",

@@ -23,7 +23,7 @@
                 v-if="currentSlide.srcset"
                 :srcset="currentSlide.srcset"
                 sizes="(min-width: 768px) 720px, 100vw"
-              />
+              >
               <img
                 :src="currentSlide.image"
                 :alt="currentSlide.alt || 'Feature image'"
@@ -31,7 +31,7 @@
                 loading="lazy"
                 decoding="async"
                 aria-hidden="true"
-              />
+              >
             </picture>
 
             <!-- Main image with object-contain -->
@@ -40,14 +40,14 @@
                 v-if="currentSlide.srcset"
                 :srcset="currentSlide.srcset"
                 sizes="(min-width: 768px) 720px, 100vw"
-              />
+              >
               <img
                 :src="currentSlide.image"
                 :alt="currentSlide.alt || 'Feature image'"
                 class="w-full h-full object-contain"
                 loading="lazy"
                 decoding="async"
-              />
+              >
             </picture>
           </div>
         </div>

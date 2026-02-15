@@ -174,7 +174,7 @@ function goToPage(
                     :src="card.cover?.url"
                     :alt="card.title"
                     class="w-full h-full object-cover"
-                  />
+                  >
                 </div>
                 <div class="p-4">
                   <h3 class="text-[15px] font-semibold text-green-800 mb-1">
@@ -227,7 +227,7 @@ function goToPage(
                     :src="card.cover?.url"
                     :alt="card.title"
                     class="w-full h-full object-cover"
-                  />
+                  >
                 </div>
                 <div class="p-4">
                   <h3 class="text-[15px] font-semibold text-green-800 mb-1">
@@ -280,7 +280,7 @@ function goToPage(
                     :src="card.cover?.url"
                     :alt="card.title"
                     class="w-full h-full object-cover"
-                  />
+                  >
                 </div>
                 <div class="p-4">
                   <h3 class="text-[15px] font-semibold text-green-800 mb-1">
@@ -336,7 +336,7 @@ function goToPage(
                     :src="card.cover?.url"
                     :alt="card.title"
                     class="w-full h-full object-cover"
-                  />
+                  >
                 </div>
                 <div class="p-4">
                   <h3 class="text-[15px] font-semibold text-green-800 mb-1">

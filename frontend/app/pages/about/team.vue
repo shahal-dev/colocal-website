@@ -217,7 +217,7 @@ function goTo(page: number) {
               :src="coverMedia?.url"
               alt="Team"
               class="w-full h-56 sm:h-72 md:h-96 object-cover rounded"
-            />
+            >
           </template>
           <template v-else>
             <div
@@ -252,7 +252,7 @@ function goTo(page: number) {
                 :src="leadAuthor.avatar?.url"
                 :alt="leadAuthor.name"
                 class="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full object-cover mb-3"
-              />
+              >
             </template>
             <template v-else>
               <div
@@ -286,7 +286,7 @@ function goTo(page: number) {
                   :src="m.avatar?.url"
                   :alt="m.name"
                   class="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full object-cover mb-3"
-                />
+                >
               </template>
               <template v-else>
                 <div

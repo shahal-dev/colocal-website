@@ -233,7 +233,7 @@ function onTouchEnd() {
                 @mouseup.prevent="onTouchEnd"
               >
                 <div v-for="(src, i) in images" :key="i" class="flex-none w-full h-full">
-                  <img :src="src" :alt="item.title" class="w-full h-full object-cover" />
+                  <img :src="src" :alt="item.title" class="w-full h-full object-cover" >
                 </div>
               </div>
 
@@ -266,15 +266,18 @@ function onTouchEnd() {
                 :src="item.imageCover?.url"
                 :alt="item.title"
                 class="w-full h-full object-cover"
-              />
+              >
             </div>
 
             <div v-if="item.secondaryTitle" class="text-lg text-gray-700 font-display mb-2">
               {{ item.secondaryTitle }}
             </div>
 
-            <div class="text-sm text-gray-600 flex flex-wrap items-center gap-2 mb-2">
-              <span>{{ (item.authors || []).map((a) => a.name).join(' • ') }}</span>
+            <div
+              v-if="item.authors_text"
+              class="text-sm text-gray-600 flex flex-wrap items-center gap-2 mb-2"
+            >
+              <span>{{ item.authors_text }}</span>
             </div>
             <div class="text-sm text-gray-600 mb-4">
               <span>{{
@@ -336,8 +339,8 @@ function onTouchEnd() {
               class="group block"
             >
               <p class="text-sm text-green-700 group-hover:underline line-clamp-2">{{ m.title }}</p>
-              <div class="text-xs text-gray-600">
-                {{ (m.authors || []).map((a) => a.name).join(', ') }}
+              <div v-if="m.authors_text" class="text-xs text-gray-600">
+                {{ m.authors_text }}
               </div>
               <div class="text-xs text-gray-500">{{ m.publication_type?.type }}</div>
             </NuxtLink>

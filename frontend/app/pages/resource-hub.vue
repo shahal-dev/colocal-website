@@ -13,7 +13,7 @@ type HubItem = {
   date: string;
   title: string;
   summary: string;
-  authors?: string[];
+  authors_text?: string | null;
   tags?: { tag: string }[] | null;
   eduType?: string | null;
 };
@@ -41,7 +41,7 @@ const items = computed<HubItem[]>(() => {
     date: p.date,
     title: p.title,
     summary: p.abstract || '',
-    authors: p.authors?.map((a) => a.name) ?? [],
+    authors_text: p.authors_text ?? null,
     tags: p.tags ?? null,
   }));
   const edus = (educations.value ?? []).map<HubItem>((e) => ({
@@ -63,8 +63,7 @@ const filtered = computed(() => {
   return items.value.filter((it) => {
     if (it.title.toLowerCase().includes(query)) return true;
     if (it.summary && it.summary.toLowerCase().includes(query)) return true;
-    if (it.kind === 'publication' && it.authors?.join(' ').toLowerCase().includes(query))
-      return true;
+    if (it.kind === 'publication' && it.authors_text?.toLowerCase().includes(query)) return true;
     if (it.kind === 'education' && (it.eduType || '').toLowerCase().includes(query)) return true;
     return false;
   });
@@ -114,7 +113,7 @@ function excerpt(text?: string | null, n = 260) {
             type="text"
             placeholder="Search resources"
             class="w-full border rounded-md pl-4 pr-10 py-3 outline-none focus:border-green-600"
-          />
+          >
           <span class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">
             <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <circle cx="11" cy="11" r="7" stroke-width="2" />
@@ -151,14 +150,14 @@ function excerpt(text?: string | null, n = 260) {
                 {{ item.title }}
               </h3>
               <div
-                v-if="item.kind === 'publication' && item.authors?.length"
+                v-if="item.kind === 'publication' && item.authors_text"
                 class="flex items-center text-sm text-gray-600 mb-3"
               >
                 <svg class="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                   <path d="M20 21v-2a4 4 0 0 0-3-3.87M4 21v-2a4 4 0 0 1 3-3.87" stroke-width="2" />
                   <circle cx="12" cy="7" r="4" stroke-width="2" />
                 </svg>
-                <span>{{ item.authors.join(' • ') }}</span>
+                <span>{{ item.authors_text }}</span>
               </div>
               <p class="text-sm text-gray-700 mb-3">{{ excerpt(item.summary) }}</p>
               <div

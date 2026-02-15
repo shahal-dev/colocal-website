@@ -218,7 +218,7 @@ function formatDate(iso: string) {
                     :src="author.avatar.url"
                     :alt="author.name"
                     class="w-full h-full object-cover"
-                  />
+                  >
                   <svg
                     v-else
                     class="w-6 h-6 text-gray-500"

@@ -168,7 +168,7 @@ function formatDate(iso: string) {
               v-else-if="coverUrl"
               class="w-full h-[24rem] md:h-[30rem] rounded-lg overflow-hidden mb-5"
             >
-              <img :src="coverUrl" :alt="item.title" class="w-full h-full object-cover" />
+              <img :src="coverUrl" :alt="item.title" class="w-full h-full object-cover" >
             </div>
 
             <h1 class="text-2xl md:text-3xl font-display font-semibold mb-2">{{ item.title }}</h1>

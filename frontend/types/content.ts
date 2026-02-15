@@ -81,14 +81,13 @@ export interface ResearchPublication {
   secondaryTitle?: string | null;
   abstract: string; // required (RichText Markdown stored as string)
   date: string; // required (Date as ISO string)
-  authors: Author[]; // required relation (one-to-many to Author)
+  authors_text?: string | null; // optional text field for author names
   tags: Tag[] | null; // optional repeatable component → can be null
   url: string; // required
   file: StrapiMedia | null; // optional media → can be null
   imageCover?: StrapiMedia | null; // optional hero/feature image
   images?: StrapiMedia[] | null; // optional gallery
   project: Project | null; // optional relation (many-to-one to Project) → can be null
-  lla: boolean | false; // whether it is a LLA publication (default: false)
   publication_type: PublicationType; // required (component)
   theme?: Theme | null; // optional component → can be null
   country?: Country | null; // optional component → can be null
