@@ -74,7 +74,7 @@ const isActive = (to: string) => {
       style="overflow-y: visible !important">
       <NuxtLink v-if="projectName === 'COLOCAL'" :to="basePath"
         class="flex items-center shrink-0 mr-2 md:mr-16 px-1 py-0.5 h-6">
-        <img src="~/assets/logos/colocal.png" alt="CoLocal logo" class="h-8 w-auto" />
+        <img src="~/assets/logos/COLOCAL-logo.png" alt="CoLocal logo" class="h-16 w-auto" />
       </NuxtLink>
       <div class="flex items-center md:mx-auto">
         <!-- Home link -->
