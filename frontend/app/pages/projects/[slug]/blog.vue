@@ -6,6 +6,7 @@ import { useRoute } from '#app';
 // Route + derived project name
 const route = useRoute();
 const slug = route.params.slug;
+const hasChild = computed(() => Boolean(route.params.id));
 // const project = useState<Project | null>(`project:${slug}`, () => null);
 // const projectName = computed(() => project.value?.shortTitle || 'Project');
 
@@ -37,9 +38,8 @@ const { data: newsData } = await useAsyncData(
 );
 
 // Fetch all authors with avatars
-const { data: authorsData } = await useAsyncData(
-  'all-authors',
-  () => $fetch('/api/authors', { query: { pageSize: '200' } })
+const { data: authorsData } = await useAsyncData('all-authors', () =>
+  $fetch('/api/authors', { query: { pageSize: '200' } })
 );
 
 // Merge author avatars into news events
@@ -102,8 +102,10 @@ function excerpt(text?: string | null, n = 180) {
 
 <template>
   <div class="flex flex-col items-center w-full justify-center">
-    <!-- Breadcrumb -->
-    <!-- <BreadCrumb
+    <NuxtPage v-if="hasChild" />
+    <template v-else>
+      <!-- Breadcrumb -->
+      <!-- <BreadCrumb
       :breadcrumb-items="[
         { text: 'Home', href: '/' },
         { text: 'Projects & Programmes', href: '/projects' },
@@ -113,26 +115,26 @@ function excerpt(text?: string | null, n = 180) {
       :page-title="projectName + ' — LLA Hub'"
     /> -->
 
-    <!-- Secondary navbar (links to sibling pages) -->
-    <!-- <ProjectNavbar :project="project" :slug="String(slug)" /> -->
+      <!-- Secondary navbar (links to sibling pages) -->
+      <!-- <ProjectNavbar :project="project" :slug="String(slug)" /> -->
 
-    <!-- Intro/description -->
-    <section class="w-full max-w-6xl mx-auto py-10 px-4 md:px-0">
-      <h1 class="text-[26px] md:text-[30px] font-display font-medium mb-3">COLOCAL Blog</h1>
-      <p class="text-gray-700 leading-relaxed max-w-3xl">
-        COLOCAL Blog is a platform for sharing insights, updates, and stories related to our
-        collaborative local development initiatives. Here, we explore topics such as community
-        engagement, sustainable practices, and innovative solutions that drive positive change at
-        the local level.
-      </p>
-      <!-- <p class="mt-4 text-gray-700"> -->
-      <!--   If you would like to contribute to the COLOCAL Blog, please contact us at: -->
-      <!--   <a href="mailto:mail2ena@gmail.com" class="text-green-700 underline" aria-label="Email COLOCAL Blog">mail2ena@gmail.com</a> -->
-      <!-- </p> -->
-    </section>
+      <!-- Intro/description -->
+      <section class="w-full max-w-6xl mx-auto py-10 px-4 md:px-0">
+        <h1 class="text-[26px] md:text-[30px] font-display font-medium mb-3">COLOCAL Blog</h1>
+        <p class="text-gray-700 leading-relaxed max-w-3xl">
+          COLOCAL Blog is a platform for sharing insights, updates, and stories related to our
+          collaborative local development initiatives. Here, we explore topics such as community
+          engagement, sustainable practices, and innovative solutions that drive positive change at
+          the local level.
+        </p>
+        <!-- <p class="mt-4 text-gray-700"> -->
+        <!--   If you would like to contribute to the COLOCAL Blog, please contact us at: -->
+        <!--   <a href="mailto:mail2ena@gmail.com" class="text-green-700 underline" aria-label="Email COLOCAL Blog">mail2ena@gmail.com</a> -->
+        <!-- </p> -->
+      </section>
 
-    <!-- Publications list (LLA only) -->
-    <!-- <section v-if="llaPublications.length > 0" class="w-full max-w-6xl mx-auto px-4 md:px-0 pb-12">
+      <!-- Publications list (LLA only) -->
+      <!-- <section v-if="llaPublications.length > 0" class="w-full max-w-6xl mx-auto px-4 md:px-0 pb-12">
       <h2 class="text-center text-[24px] md:text-[28px] font-display font-medium mb-6">
         Featured Publications
       </h2>
@@ -166,8 +168,8 @@ function excerpt(text?: string | null, n = 180) {
         </article>
       </div> -->
 
-    <!-- Pagination -->
-    <!-- <div v-if="totalPages > 1" class="mt-6 flex items-center justify-center gap-2">
+      <!-- Pagination -->
+      <!-- <div v-if="totalPages > 1" class="mt-6 flex items-center justify-center gap-2">
         <button
           v-for="i in totalPages"
           :key="i"
@@ -184,84 +186,111 @@ function excerpt(text?: string | null, n = 180) {
       </div>
     </section> -->
 
-    <!-- Blog Posts -->
-    <section v-if="llaNewsEvents.length > 0" class="w-full max-w-6xl mx-auto px-4 md:px-0 pb-12">
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <article
-v-for="post in visiblePosts" :key="post.id"
-          class="border border-gray-200 rounded-lg bg-white overflow-hidden hover:shadow-lg transition-shadow">
-          <NuxtLink :to="`${basePath}/outreach/${post.id}`" class="block">
-            <!-- Featured Image -->
-            <div class="w-full h-48 overflow-hidden">
-              <img
-:src="post.cover?.url" :alt="post.title"
-                class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" >
-            </div>
-
-            <!-- Content -->
-            <div class="p-5">
-              <!-- Date -->
-              <div class="flex items-center text-xs text-gray-500 mb-2">
-                <svg class="w-4 h-4 mr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path
-d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2z"
-                    stroke-width="2" />
-                </svg>
-                <span>{{ formatDate(post.date) }}</span>
+      <!-- Blog Posts -->
+      <section v-if="llaNewsEvents.length > 0" class="w-full max-w-6xl mx-auto px-4 md:px-0 pb-12">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <article
+            v-for="post in visiblePosts"
+            :key="post.id"
+            class="border border-gray-200 rounded-lg bg-white overflow-hidden hover:shadow-lg transition-shadow"
+          >
+            <NuxtLink :to="`${basePath}/blog/${post.id}`" class="block">
+              <!-- Featured Image -->
+              <div class="w-full h-48 overflow-hidden">
+                <img
+                  :src="post.cover?.url"
+                  :alt="post.title"
+                  class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                />
               </div>
 
-              <!-- Title -->
-              <h3 class="text-lg font-semibold text-gray-900 mb-2 hover:text-green-700 line-clamp-2">
-                {{ post.title }}
-              </h3>
+              <!-- Content -->
+              <div class="p-5">
+                <!-- Date -->
+                <div class="flex items-center text-xs text-gray-500 mb-2">
+                  <svg class="w-4 h-4 mr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path
+                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2z"
+                      stroke-width="2"
+                    />
+                  </svg>
+                  <span>{{ formatDate(post.date) }}</span>
+                </div>
 
-              <!-- Excerpt -->
-              <p class="text-sm text-gray-700 mb-4 line-clamp-3">
-                {{ excerpt(post.body, 120) }}
-              </p>
+                <!-- Title -->
+                <h3
+                  class="text-lg font-semibold text-gray-900 mb-2 hover:text-green-700 line-clamp-2"
+                >
+                  {{ post.title }}
+                </h3>
 
-              <!-- Author(s) -->
-              <div v-if="post.authors && post.authors.length > 0" class="flex items-center gap-2">
-                <div class="flex -space-x-2">
-                  <div
-v-for="(author, idx) in post.authors.slice(0, 3)" :key="idx"
-                    class="w-8 h-8 rounded-full bg-gray-200 border-2 border-white flex items-center justify-center overflow-hidden">
-                    <img
-v-if="author.avatar?.url" :src="author.avatar.url" :alt="author.name"
-                      class="w-full h-full object-cover" >
-                    <svg v-else class="w-4 h-4 text-gray-500" viewBox="0 0 24 24" fill="currentColor">
-                      <path
-                        d="M12 12c2.761 0 5-2.686 5-6s-2.239-6-5-6-5 2.686-5 6 2.239 6 5 6zm0 2c-3.866 0-7 3.134-7 7 0 .552.448 1 1 1h12c.552 0 1-.448 1-1 0-3.866-3.134-7-7-7z" />
-                    </svg>
+                <!-- Excerpt -->
+                <p class="text-sm text-gray-700 mb-4 line-clamp-3">
+                  {{ excerpt(post.body, 120) }}
+                </p>
+
+                <!-- Author(s) -->
+                <div v-if="post.authors && post.authors.length > 0" class="flex items-center gap-2">
+                  <div class="flex -space-x-2">
+                    <div
+                      v-for="(author, idx) in post.authors.slice(0, 3)"
+                      :key="idx"
+                      class="w-8 h-8 rounded-full bg-gray-200 border-2 border-white flex items-center justify-center overflow-hidden"
+                    >
+                      <img
+                        v-if="author.avatar?.url"
+                        :src="author.avatar.url"
+                        :alt="author.name"
+                        class="w-full h-full object-cover"
+                      />
+                      <svg
+                        v-else
+                        class="w-4 h-4 text-gray-500"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                      >
+                        <path
+                          d="M12 12c2.761 0 5-2.686 5-6s-2.239-6-5-6-5 2.686-5 6 2.239 6 5 6zm0 2c-3.866 0-7 3.134-7 7 0 .552.448 1 1 1h12c.552 0 1-.448 1-1 0-3.866-3.134-7-7-7z"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                  <div class="text-xs text-gray-600">
+                    <span v-if="post.authors.length === 1">{{ post.authors[0]?.name }}</span>
+                    <span v-else-if="post.authors.length === 2"
+                      >{{ post.authors[0]?.name }} & {{ post.authors[1]?.name }}</span
+                    >
+                    <span v-else
+                      >{{ post.authors[0]?.name }} +{{ post.authors.length - 1 }} more</span
+                    >
                   </div>
                 </div>
-                <div class="text-xs text-gray-600">
-                  <span v-if="post.authors.length === 1">{{ post.authors[0]?.name }}</span>
-                  <span v-else-if="post.authors.length === 2">{{ post.authors[0]?.name }} & {{ post.authors[1]?.name
-                    }}</span>
-                  <span v-else>{{ post.authors[0]?.name }} +{{ post.authors.length - 1 }} more</span>
-                </div>
               </div>
-            </div>
-          </NuxtLink>
-        </article>
-      </div>
+            </NuxtLink>
+          </article>
+        </div>
 
-      <!-- Pagination -->
-      <div v-if="totalPages > 1" class="mt-10 flex items-center justify-center gap-2">
-        <button
-v-for="i in totalPages" :key="i" :aria-label="`Go to page ${i}`"
-          class="min-w-[32px] h-8 px-3 text-sm rounded border transition-colors" :class="i === page
-              ? 'bg-green-600 text-white border-green-600'
-              : 'bg-white text-gray-800 border-gray-300 hover:border-green-400'
-            " @click="page = i">
-          {{ i }}
-        </button>
-      </div>
-    </section>
+        <!-- Pagination -->
+        <div v-if="totalPages > 1" class="mt-10 flex items-center justify-center gap-2">
+          <button
+            v-for="i in totalPages"
+            :key="i"
+            :aria-label="`Go to page ${i}`"
+            class="min-w-[32px] h-8 px-3 text-sm rounded border transition-colors"
+            :class="
+              i === page
+                ? 'bg-green-600 text-white border-green-600'
+                : 'bg-white text-gray-800 border-gray-300 hover:border-green-400'
+            "
+            @click="page = i"
+          >
+            {{ i }}
+          </button>
+        </div>
+      </section>
 
-    <!-- Education and Trainings (LLA only) -->
-    <!-- <section v-if="llaEduTrainings.length > 0" class="w-full max-w-7xl mx-auto px-4 md:px-0 pb-12">
+      <!-- Education and Trainings (LLA only) -->
+      <!-- <section v-if="llaEduTrainings.length > 0" class="w-full max-w-7xl mx-auto px-4 md:px-0 pb-12">
       <h2 class="text-center text-[24px] md:text-[28px] font-display font-medium mb-6">
         Education and Training
       </h2>
@@ -285,6 +314,7 @@ v-for="i in totalPages" :key="i" :aria-label="`Go to page ${i}`"
         </article>
       </div>
     </section> -->
+    </template>
   </div>
 </template>
 
