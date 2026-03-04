@@ -41,7 +41,10 @@ body {
 }
 
 /* Apply justified text alignment to all paragraphs */
-p {
+/* p { */
+/*   text-align: justify; */
+/* } */
+.mdc-body p {
   text-align: justify;
 }
 
