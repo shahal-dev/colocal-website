@@ -89,13 +89,10 @@ function excerpt(text?: string | null, n = 260) {
   <div class="flex flex-col items-center w-full justify-center">
     <NuxtPage v-if="hasChild" />
     <template v-else>
-      <BreadCrumb
-        :breadcrumb-items="[
-          { text: 'Home', href: '/' },
-          { text: 'Resource Hub', href: '/resource-hub' },
-        ]"
-        page-title="Resource Hub"
-      />
+      <BreadCrumb :breadcrumb-items="[
+        { text: 'Home', href: '/' },
+        { text: 'Resource Hub', href: '/resource-hub' },
+      ]" page-title="Resource Hub" />
 
       <section class="w-full max-w-6xl mx-auto py-10 px-4 md:px-0">
         <div class="text-center max-w-3xl mx-auto">
@@ -108,12 +105,8 @@ function excerpt(text?: string | null, n = 260) {
 
         <!-- Search -->
         <div class="mt-6 relative">
-          <input
-            v-model="q"
-            type="text"
-            placeholder="Search resources"
-            class="w-full border rounded-md pl-4 pr-10 py-3 outline-none focus:border-green-600"
-          >
+          <input v-model="q" type="text" placeholder="Search resources"
+            class="w-full border rounded-md pl-4 pr-10 py-3 outline-none focus:border-green-600">
           <span class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">
             <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <circle cx="11" cy="11" r="7" stroke-width="2" />
@@ -124,22 +117,14 @@ function excerpt(text?: string | null, n = 260) {
 
         <!-- Combined list -->
         <div class="mt-6 space-y-4">
-          <NuxtLink
-            v-for="item in visible"
-            :key="`${item.kind}-${item.id}`"
-            :to="`/resource-hub/${item.id}`"
-            class="border border-gray-200 rounded-md bg-white p-0 overflow-hidden block hover:shadow transition-shadow"
-          >
+          <NuxtLink v-for="item in visible" :key="`${item.kind}-${item.id}`" :to="`/resource-hub/${item.id}`"
+            class="border border-gray-200 rounded-md bg-white p-0 overflow-hidden block hover:shadow transition-shadow">
             <div class="block p-4 md:p-5">
               <div class="flex items-center gap-2 text-xs mb-2">
-                <span
-                  class="inline-block px-2 py-0.5 rounded border"
-                  :class="
-                    item.kind === 'publication'
-                      ? 'border-blue-200 text-blue-700 bg-blue-50'
-                      : 'border-green-200 text-green-700 bg-green-50'
-                  "
-                >
+                <span class="inline-block px-2 py-0.5 rounded border" :class="item.kind === 'publication'
+                  ? 'border-blue-200 text-blue-700 bg-blue-50'
+                  : 'border-green-200 text-green-700 bg-green-50'
+                  ">
                   {{ item.kind === 'publication' ? 'Publication' : 'Education & Training' }}
                 </span>
                 <span v-if="item.kind === 'education' && item.eduType" class="text-gray-600">
@@ -149,27 +134,17 @@ function excerpt(text?: string | null, n = 260) {
               <h3 class="text-base md:text-lg font-semibold text-gray-900 mb-2">
                 {{ item.title }}
               </h3>
-              <div
-                v-if="item.kind === 'publication' && item.authors_text"
-                class="flex items-center text-sm text-gray-600 mb-3"
-              >
-                <svg class="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path d="M20 21v-2a4 4 0 0 0-3-3.87M4 21v-2a4 4 0 0 1 3-3.87" stroke-width="2" />
-                  <circle cx="12" cy="7" r="4" stroke-width="2" />
-                </svg>
+              <div v-if="item.kind === 'publication' && item.authors_text"
+                class="flex items-center text-sm text-gray-600 mb-3">
+                <img src="~/assets/user.png" alt="Authors" class="w-4 h-4 mr-1">
                 <span>{{ item.authors_text }}</span>
               </div>
+
               <p class="text-sm text-gray-700 mb-3">{{ excerpt(item.summary) }}</p>
-              <div
-                v-if="item.kind === 'publication' && item.tags?.length"
-                class="flex flex-wrap gap-2"
-              >
-                <span
-                  v-for="(tag, idx) in item.tags"
-                  :key="idx"
-                  class="inline-block text-xs px-2 py-1 rounded border border-green-200 text-green-700 bg-green-50"
-                  >{{ tag.tag }}</span
-                >
+              <div v-if="item.kind === 'publication' && item.tags?.length" class="flex flex-wrap gap-2">
+                <span v-for="(tag, idx) in item.tags" :key="idx"
+                  class="inline-block text-xs px-2 py-1 rounded border border-green-200 text-green-700 bg-green-50">{{
+                    tag.tag }}</span>
               </div>
             </div>
           </NuxtLink>
@@ -177,17 +152,10 @@ function excerpt(text?: string | null, n = 260) {
 
         <!-- Pagination -->
         <div v-if="totalPages > 1" class="mt-6 flex items-center justify-center gap-2">
-          <button
-            v-for="i in totalPages"
-            :key="i"
-            class="min-w-[32px] h-7 px-2 text-sm rounded border"
-            :class="
-              i === page
-                ? 'bg-green-600 text-white border-green-600'
-                : 'bg-white text-gray-800 border-gray-300'
-            "
-            @click="page = i"
-          >
+          <button v-for="i in totalPages" :key="i" class="min-w-[32px] h-7 px-2 text-sm rounded border" :class="i === page
+            ? 'bg-green-600 text-white border-green-600'
+            : 'bg-white text-gray-800 border-gray-300'
+            " @click="page = i">
             {{ i }}
           </button>
         </div>
