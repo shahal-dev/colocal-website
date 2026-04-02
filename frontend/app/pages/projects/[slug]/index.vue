@@ -343,7 +343,8 @@ const _fellows = ref([
           <!-- Bangladesh -->
           <div class="flex flex-col items-center text-center bg-gray-50 rounded-lg p-6">
             <div class="w-32 h-24 mb-4 flex items-center justify-center">
-              <img src="https://flagcdn.com/w320/bd.png" alt="Bangladesh Flag"
+              <img
+src="https://flagcdn.com/w320/bd.png" alt="Bangladesh Flag"
                 class="max-w-full max-h-full object-contain">
             </div>
             <h3 class="text-lg font-semibold text-gray-900 mb-2">Bangladesh</h3>
@@ -353,7 +354,8 @@ const _fellows = ref([
           <!-- Mozambique -->
           <div class="flex flex-col items-center text-center bg-gray-50 rounded-lg p-6">
             <div class="w-32 h-24 mb-4 flex items-center justify-center">
-              <img src="https://flagcdn.com/w320/mz.png" alt="Mozambique Flag"
+              <img
+src="https://flagcdn.com/w320/mz.png" alt="Mozambique Flag"
                 class="max-w-full max-h-full object-contain">
             </div>
             <h3 class="text-lg font-semibold text-gray-900 mb-2">Mozambique</h3>
@@ -403,7 +405,8 @@ const _fellows = ref([
           Featured Publications
         </h2>
         <div class="space-y-4">
-          <article v-for="p in recent3Publications" :key="p.id"
+          <article
+v-for="p in recent3Publications" :key="p.id"
             class="border border-gray-200 rounded-md bg-white p-4 md:p-5">
             <NuxtLink :to="`${basePath}/research/${p.id}`">
               <h3 class="text-base md:text-lg font-semibold text-gray-900 mb-2">{{ p.title }}</h3>
@@ -413,7 +416,8 @@ const _fellows = ref([
               </div>
               <p class="text-sm text-gray-700 mb-3">{{ excerpt(p.abstract) }}</p>
               <div class="flex flex-wrap gap-2">
-                <span v-for="(tag, idx) in p.tags" :key="idx"
+                <span
+v-for="(tag, idx) in p.tags" :key="idx"
                   class="inline-block text-xs px-2 py-1 rounded border border-green-200 text-green-700 bg-green-50">{{
                     tag.tag }}</span>
               </div>
@@ -444,7 +448,8 @@ const _fellows = ref([
           Featured News
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <article v-for="n in newsVisible" :key="n.id"
+          <article
+v-for="n in newsVisible" :key="n.id"
             class="border border-gray-200 rounded-md bg-white overflow-hidden flex">
             <NuxtLink :to="n.to" class="flex flex-1 hover:bg-green-50 transition-colors duration-150">
               <div class="w-40 h-36 flex-shrink-0">
@@ -459,7 +464,8 @@ const _fellows = ref([
         </div>
         <!-- News pagination -->
         <div v-if="newsTotal > 1" class="mt-6 flex items-center justify-center gap-2">
-          <button v-for="page in newsTotal" :key="page" class="min-w-[32px] h-7 px-2 text-sm rounded border" :class="page === newsPage
+          <button
+v-for="page in newsTotal" :key="page" class="min-w-[32px] h-7 px-2 text-sm rounded border" :class="page === newsPage
             ? 'bg-green-600 text-white border-green-600'
             : 'bg-white text-gray-800 border-gray-300'
             " @click="newsPage = page">

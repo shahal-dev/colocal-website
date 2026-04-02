@@ -201,7 +201,7 @@ function excerpt(text?: string | null, n = 180) {
                   :src="post.cover?.url"
                   :alt="post.title"
                   class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                />
+                >
               </div>
 
               <!-- Content -->
@@ -242,7 +242,7 @@ function excerpt(text?: string | null, n = 180) {
                         :src="author.avatar.url"
                         :alt="author.name"
                         class="w-full h-full object-cover"
-                      />
+                      >
                       <svg
                         v-else
                         class="w-4 h-4 text-gray-500"
