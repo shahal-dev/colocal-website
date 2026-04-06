@@ -250,7 +250,7 @@ export default defineEventHandler(async (event) => {
     'http://localhost:1337';
   const token = (config?.strapi?.token as string) || '';
 
-  const query: Record<string, string> = { populate: '*' };
+  const query: Record<string, string> = { populate: '*', 'pagination[pageSize]': '100' };
 
   const slug = (q.projectSlug || q.project) as string | undefined;
   const id = q.projectId ? Number(q.projectId) : undefined;

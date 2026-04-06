@@ -46,7 +46,10 @@ const items = computed<HubItem[]>(() => {
     tags: p.tags ?? null,
     pubType: p.publication_type?.type ?? null,
   }));
-  console.log('Pubs title:', pubs.map((p) => p.title));
+  console.log(
+    'Pubs title:',
+    pubs.map((p) => p.title)
+  );
   const edus = (educations.value ?? []).map<HubItem>((e) => ({
     kind: 'education',
     id: e.id,
@@ -72,13 +75,13 @@ const filtered = computed(() => {
   const tabFiltered = items.value.filter((it) => {
     const typeStr = (it.pubType || '').toLowerCase();
     if (activeTab.value === 'Capacity Building Opportunities') {
-      return typeStr.includes('Capacity Building');
+      return typeStr.includes('capacity building');
     }
     if (activeTab.value === 'Funding Opportunities') {
-      return typeStr.includes('Funding');
+      return typeStr.includes('funding');
     }
     // Publications tab: everything else
-    return !typeStr.includes('Capacity Building') && !typeStr.includes('Funding');
+    return !typeStr.includes('capacity building') && !typeStr.includes('funding');
   });
 
   const query = q.value.trim().toLowerCase();
@@ -142,7 +145,7 @@ function excerpt(text?: string | null, n = 260) {
         <!-- Search -->
         <div class="mt-6 relative">
           <input v-model="q" type="text" placeholder="Search resources"
-            class="w-full border rounded-md pl-4 pr-10 py-3 outline-none focus:border-green-600">
+            class="w-full border rounded-md pl-4 pr-10 py-3 outline-none focus:border-green-600" />
           <span class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">
             <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <circle cx="11" cy="11" r="7" stroke-width="2" />
@@ -165,8 +168,8 @@ function excerpt(text?: string | null, n = 260) {
                 {{ item.title }}
               </h3>
               <div v-if="item.kind === 'publication' && item.authors_text"
-                class="flex items-center text-sm text-gray-600 mb-3">
-                <img src="~/assets/user.png" alt="Authors" class="w-4 h-4 mr-1">
+                class="flex items-start text-sm text-gray-600 mb-3">
+                <img src="~/assets/user.png" alt="Authors" class="w-4 h-4 mr-1 mt-0.5" />
                 <span>{{ item.authors_text }}</span>
               </div>
 

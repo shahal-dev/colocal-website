@@ -17,12 +17,12 @@ const resources = [
     title: 'Capacity Building',
     description: 'Providing education, training, and resources to enhance climate resilience.',
   },
-  {
-    id: 'publications-2',
-    icon: HandIcon,
-    title: 'Publications',
-    description: 'Financial support for climate research and sustainable projects.',
-  },
+  // {
+  //   id: 'publications-2',
+  //   icon: HandIcon,
+  //   title: 'Publications',
+  //   description: 'Financial support for climate research and sustainable projects.',
+  // },
 ];
 </script>
 
@@ -35,14 +35,8 @@ const resources = [
 
       <!-- responsive grid: 1 column on mobile, 2 on small, 3 on large -->
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
-        <ResourceCard
-          v-for="res in resources"
-          :key="res.id"
-          :icon="res.icon"
-          :title="res.title"
-          :description="res.description"
-          class="w-full"
-        />
+        <ResourceCard v-for="res in resources" :key="res.id" :icon="res.icon" :title="res.title"
+          :description="res.description" class="w-full" />
       </div>
     </div>
   </section>
