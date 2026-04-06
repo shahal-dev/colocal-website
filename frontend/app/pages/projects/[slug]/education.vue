@@ -160,74 +160,15 @@ function goToPage(
 
       <section class="w-full max-w-6xl mx-auto py-10 px-4 md:px-0">
         <!-- Education & Training Section (items with no section or null) -->
-        <div v-if="generalEducation.length > 0" class="mb-16">
-          <h2 class="text-2xl font-semibold text-gray-900 mb-6">Education & Training</h2>
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <article
-              v-for="card in generalEduVisible"
-              :key="card.id"
-              class="border border-gray-200 rounded-md overflow-hidden bg-white hover:shadow transition-shadow"
-            >
-              <NuxtLink :to="`${basePath}/education/${card.id}`" class="block">
-                <div class="h-44 w-full overflow-hidden">
-                  <img
-                    :src="card.cover?.url"
-                    :alt="card.title"
-                    class="w-full h-full object-cover"
-                  >
-                </div>
-                <div class="p-4">
-                  <h3 class="text-[15px] font-semibold text-green-800 mb-1">
-                    {{ card.title }}
-                  </h3>
-                  <p class="text-sm text-gray-700 line-clamp-3 mb-4">{{ card.body }}</p>
-                  <div v-if="card.type?.type" class="flex items-center gap-2">
-                    <span
-                      class="inline-block text-xs px-2 py-1 rounded border border-green-200 text-green-700 bg-green-50"
-                    >
-                      {{ card.type.type }}
-                    </span>
-                  </div>
-                </div>
-              </NuxtLink>
-            </article>
-          </div>
-
-          <!-- Pagination for General Education -->
-          <div v-if="generalEduTotalPages > 1" class="mt-10 flex items-center justify-center gap-2">
-            <button
-              v-for="page in generalEduTotalPages"
-              :key="page"
-              :aria-current="page === generalEduPage ? 'true' : 'false'"
-              class="min-w-[32px] h-7 px-2 text-sm rounded border"
-              :class="
-                page === generalEduPage
-                  ? 'bg-green-600 text-white border-green-600'
-                  : 'bg-white text-gray-800 border-gray-300'
-              "
-              @click="goToPage(page, 'generalEdu')"
-            >
-              {{ page }}
-            </button>
-          </div>
-        </div>
-
         <!-- Module Development Section -->
         <div v-if="moduleDevelopment.length > 0" class="mb-16">
           <h2 class="text-2xl font-semibold text-gray-900 mb-6">Module Development</h2>
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <article
-              v-for="card in moduleDevVisible"
-              :key="card.id"
-              class="border border-gray-200 rounded-md overflow-hidden bg-white hover:shadow transition-shadow"
-            >
+            <article v-for="card in moduleDevVisible" :key="card.id"
+              class="border border-gray-200 rounded-md overflow-hidden bg-white hover:shadow transition-shadow">
               <NuxtLink :to="`${basePath}/education/${card.id}`" class="block">
                 <div class="h-44 w-full overflow-hidden">
-                  <img
-                    :src="card.cover?.url"
-                    :alt="card.title"
-                    class="w-full h-full object-cover"
-                  >
+                  <img :src="card.cover?.url" :alt="card.title" class="w-full h-full object-cover">
                 </div>
                 <div class="p-4">
                   <h3 class="text-[15px] font-semibold text-green-800 mb-1">
@@ -236,8 +177,7 @@ function goToPage(
                   <p class="text-sm text-gray-700 line-clamp-3 mb-4">{{ card.body }}</p>
                   <div v-if="card.type?.type" class="flex items-center gap-2">
                     <span
-                      class="inline-block text-xs px-2 py-1 rounded border border-green-200 text-green-700 bg-green-50"
-                    >
+                      class="inline-block text-xs px-2 py-1 rounded border border-green-200 text-green-700 bg-green-50">
                       {{ card.type.type }}
                     </span>
                   </div>
@@ -248,18 +188,12 @@ function goToPage(
 
           <!-- Pagination for Module Development -->
           <div v-if="moduleDevTotalPages > 1" class="mt-10 flex items-center justify-center gap-2">
-            <button
-              v-for="page in moduleDevTotalPages"
-              :key="page"
+            <button v-for="page in moduleDevTotalPages" :key="page"
               :aria-current="page === moduleDevPage ? 'true' : 'false'"
-              class="min-w-[32px] h-7 px-2 text-sm rounded border"
-              :class="
-                page === moduleDevPage
-                  ? 'bg-green-600 text-white border-green-600'
-                  : 'bg-white text-gray-800 border-gray-300'
-              "
-              @click="goToPage(page, 'moduleDev')"
-            >
+              class="min-w-[32px] h-7 px-2 text-sm rounded border" :class="page === moduleDevPage
+                ? 'bg-green-600 text-white border-green-600'
+                : 'bg-white text-gray-800 border-gray-300'
+                " @click="goToPage(page, 'moduleDev')">
               {{ page }}
             </button>
           </div>
@@ -267,20 +201,13 @@ function goToPage(
 
         <!-- Short Course Section -->
         <div v-if="shortCourse.length > 0" class="mb-16">
-          <h2 class="text-2xl font-semibold text-gray-900 mb-6">Short Course</h2>
+          <h2 class="text-2xl font-semibold text-gray-900 mb-6">Short Courses</h2>
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <article
-              v-for="card in shortCourseVisible"
-              :key="card.id"
-              class="border border-gray-200 rounded-md overflow-hidden bg-white hover:shadow transition-shadow"
-            >
+            <article v-for="card in shortCourseVisible" :key="card.id"
+              class="border border-gray-200 rounded-md overflow-hidden bg-white hover:shadow transition-shadow">
               <NuxtLink :to="`${basePath}/education/${card.id}`" class="block">
                 <div class="h-44 w-full overflow-hidden">
-                  <img
-                    :src="card.cover?.url"
-                    :alt="card.title"
-                    class="w-full h-full object-cover"
-                  >
+                  <img :src="card.cover?.url" :alt="card.title" class="w-full h-full object-cover">
                 </div>
                 <div class="p-4">
                   <h3 class="text-[15px] font-semibold text-green-800 mb-1">
@@ -289,8 +216,7 @@ function goToPage(
                   <p class="text-sm text-gray-700 line-clamp-3 mb-4">{{ card.body }}</p>
                   <div v-if="card.type?.type" class="flex items-center gap-2">
                     <span
-                      class="inline-block text-xs px-2 py-1 rounded border border-green-200 text-green-700 bg-green-50"
-                    >
+                      class="inline-block text-xs px-2 py-1 rounded border border-green-200 text-green-700 bg-green-50">
                       {{ card.type.type }}
                     </span>
                   </div>
@@ -300,22 +226,13 @@ function goToPage(
           </div>
 
           <!-- Pagination for Short Course -->
-          <div
-            v-if="shortCourseTotalPages > 1"
-            class="mt-10 flex items-center justify-center gap-2"
-          >
-            <button
-              v-for="page in shortCourseTotalPages"
-              :key="page"
+          <div v-if="shortCourseTotalPages > 1" class="mt-10 flex items-center justify-center gap-2">
+            <button v-for="page in shortCourseTotalPages" :key="page"
               :aria-current="page === shortCoursePage ? 'true' : 'false'"
-              class="min-w-[32px] h-7 px-2 text-sm rounded border"
-              :class="
-                page === shortCoursePage
-                  ? 'bg-green-600 text-white border-green-600'
-                  : 'bg-white text-gray-800 border-gray-300'
-              "
-              @click="goToPage(page, 'shortCourse')"
-            >
+              class="min-w-[32px] h-7 px-2 text-sm rounded border" :class="page === shortCoursePage
+                ? 'bg-green-600 text-white border-green-600'
+                : 'bg-white text-gray-800 border-gray-300'
+                " @click="goToPage(page, 'shortCourse')">
               {{ page }}
             </button>
           </div>
@@ -323,20 +240,13 @@ function goToPage(
 
         <!-- Training Workshop Section -->
         <div v-if="trainingWorkshop.length > 0" class="mb-16">
-          <h2 class="text-2xl font-semibold text-gray-900 mb-6">Training Workshop</h2>
+          <h2 class="text-2xl font-semibold text-gray-900 mb-6">Training Workshops</h2>
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <article
-              v-for="card in trainingWorkshopVisible"
-              :key="card.id"
-              class="border border-gray-200 rounded-md overflow-hidden bg-white hover:shadow transition-shadow"
-            >
+            <article v-for="card in trainingWorkshopVisible" :key="card.id"
+              class="border border-gray-200 rounded-md overflow-hidden bg-white hover:shadow transition-shadow">
               <NuxtLink :to="`${basePath}/education/${card.id}`" class="block">
                 <div class="h-44 w-full overflow-hidden">
-                  <img
-                    :src="card.cover?.url"
-                    :alt="card.title"
-                    class="w-full h-full object-cover"
-                  >
+                  <img :src="card.cover?.url" :alt="card.title" class="w-full h-full object-cover">
                 </div>
                 <div class="p-4">
                   <h3 class="text-[15px] font-semibold text-green-800 mb-1">
@@ -345,8 +255,7 @@ function goToPage(
                   <p class="text-sm text-gray-700 line-clamp-3 mb-4">{{ card.body }}</p>
                   <div v-if="card.type?.type" class="flex items-center gap-2">
                     <span
-                      class="inline-block text-xs px-2 py-1 rounded border border-green-200 text-green-700 bg-green-50"
-                    >
+                      class="inline-block text-xs px-2 py-1 rounded border border-green-200 text-green-700 bg-green-50">
                       {{ card.type.type }}
                     </span>
                   </div>
@@ -356,26 +265,58 @@ function goToPage(
           </div>
 
           <!-- Pagination for Training Workshop -->
-          <div
-            v-if="trainingWorkshopTotalPages > 1"
-            class="mt-10 flex items-center justify-center gap-2"
-          >
-            <button
-              v-for="page in trainingWorkshopTotalPages"
-              :key="page"
+          <div v-if="trainingWorkshopTotalPages > 1" class="mt-10 flex items-center justify-center gap-2">
+            <button v-for="page in trainingWorkshopTotalPages" :key="page"
               :aria-current="page === trainingWorkshopPage ? 'true' : 'false'"
-              class="min-w-[32px] h-7 px-2 text-sm rounded border"
-              :class="
-                page === trainingWorkshopPage
-                  ? 'bg-green-600 text-white border-green-600'
-                  : 'bg-white text-gray-800 border-gray-300'
-              "
-              @click="goToPage(page, 'trainingWorkshop')"
-            >
+              class="min-w-[32px] h-7 px-2 text-sm rounded border" :class="page === trainingWorkshopPage
+                ? 'bg-green-600 text-white border-green-600'
+                : 'bg-white text-gray-800 border-gray-300'
+                " @click="goToPage(page, 'trainingWorkshop')">
               {{ page }}
             </button>
           </div>
         </div>
+
+        <!-- Others section -->
+        <div v-if="generalEducation.length > 0" class="mb-16">
+          <h2 class="text-2xl font-semibold text-gray-900 mb-6">Others</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <article v-for="card in generalEduVisible" :key="card.id"
+              class="border border-gray-200 rounded-md overflow-hidden bg-white hover:shadow transition-shadow">
+              <NuxtLink :to="`${basePath}/education/${card.id}`" class="block">
+                <div class="h-44 w-full overflow-hidden">
+                  <img :src="card.cover?.url" :alt="card.title" class="w-full h-full object-cover">
+                </div>
+                <div class="p-4">
+                  <h3 class="text-[15px] font-semibold text-green-800 mb-1">
+                    {{ card.title }}
+                  </h3>
+                  <p class="text-sm text-gray-700 line-clamp-3 mb-4">{{ card.body }}</p>
+                  <div v-if="card.type?.type" class="flex items-center gap-2">
+                    <span
+                      class="inline-block text-xs px-2 py-1 rounded border border-green-200 text-green-700 bg-green-50">
+                      {{ card.type.type }}
+                    </span>
+                  </div>
+                </div>
+              </NuxtLink>
+            </article>
+          </div>
+
+          <!-- Pagination for General Education -->
+          <div v-if="generalEduTotalPages > 1" class="mt-10 flex items-center justify-center gap-2">
+            <button v-for="page in generalEduTotalPages" :key="page"
+              :aria-current="page === generalEduPage ? 'true' : 'false'"
+              class="min-w-[32px] h-7 px-2 text-sm rounded border" :class="page === generalEduPage
+                ? 'bg-green-600 text-white border-green-600'
+                : 'bg-white text-gray-800 border-gray-300'
+                " @click="goToPage(page, 'generalEdu')">
+              {{ page }}
+            </button>
+          </div>
+        </div>
+
+
       </section>
     </template>
   </div>
@@ -389,9 +330,11 @@ function goToPage(
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
 .hide-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;

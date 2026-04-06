@@ -98,12 +98,52 @@ const filtered = computed(() => {
 });
 
 // Pagination
-const pageSize = 5;
+const pageSize = 15;
 const page = ref(1);
 const totalPages = computed(() => Math.max(1, Math.ceil(filtered.value.length / pageSize)));
 const visible = computed(() => {
   const start = (page.value - 1) * pageSize;
   return filtered.value.slice(start, start + pageSize);
+});
+
+const visiblePages = computed(() => {
+  const total = totalPages.value;
+  const current = page.value;
+  const delta = 2; // Number of pages to show before and after the current page
+
+  if (total <= 7) {
+    return Array.from({ length: total }, (_, i) => i + 1);
+  }
+
+  let left = Math.max(2, current - delta);
+  let right = Math.min(total - 1, current + delta);
+
+  if (current - 1 <= delta) {
+    right = Math.min(total - 1, 1 + delta * 2);
+  }
+  if (total - current <= delta) {
+    left = Math.max(2, total - delta * 2);
+  }
+
+  const pages: (number | string)[] = [];
+
+  pages.push(1);
+
+  if (left > 2) {
+    pages.push('...');
+  }
+
+  for (let i = left; i <= right; i++) {
+    pages.push(i);
+  }
+
+  if (right < total - 1) {
+    pages.push('...');
+  }
+
+  pages.push(total);
+
+  return pages;
 });
 
 function excerpt(text?: string | null, n = 260) {
@@ -185,11 +225,28 @@ function excerpt(text?: string | null, n = 260) {
 
         <!-- Pagination -->
         <div v-if="totalPages > 1" class="mt-6 flex items-center justify-center gap-2">
-          <button v-for="i in totalPages" :key="i" class="min-w-[32px] h-7 px-2 text-sm rounded border" :class="i === page
-            ? 'bg-green-600 text-white border-green-600'
-            : 'bg-white text-gray-800 border-gray-300'
-            " @click="page = i">
-            {{ i }}
+          <!-- Previous Button -->
+          <button type="button"
+            class="min-w-[32px] h-7 px-2 text-sm rounded border bg-white text-gray-800 border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            :disabled="page === 1" @click="page > 1 && page--">
+            &laquo;
+          </button>
+
+          <template v-for="(p, idx) in visiblePages" :key="idx">
+            <span v-if="p === '...'" class="text-gray-500 px-1">...</span>
+            <button v-else type="button" class="min-w-[32px] h-7 px-2 text-sm rounded border transition-colors" :class="p === page
+              ? 'bg-green-600 text-white border-green-600 shadow-sm'
+              : 'bg-white text-gray-800 border-gray-300 hover:border-green-400'
+              " @click="page = Number(p)">
+              {{ p }}
+            </button>
+          </template>
+
+          <!-- Next Button -->
+          <button type="button"
+            class="min-w-[32px] h-7 px-2 text-sm rounded border bg-white text-gray-800 border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            :disabled="page === totalPages" @click="page < totalPages && page++">
+            &raquo;
           </button>
         </div>
       </section>

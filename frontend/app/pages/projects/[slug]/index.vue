@@ -468,9 +468,6 @@ const _fellows = ref([
         </div>
       </section>
 
-      <section>
-        <ProjectWorldMap class="w-full" />
-      </section>
       <!-- Our Fellows -->
       <!-- <section class="w-full max-w-6xl mx-auto px-4 md:px-0 py-12">
         <h2 class="text-center text-[24px] md:text-[28px] font-display font-medium mb-8">
