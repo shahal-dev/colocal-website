@@ -97,8 +97,7 @@ const primaryLinks = [
 ];
 
 const secondaryLinks = [
-  { label: 'News', path: '/news-events' },
-  { label: 'Events', path: '/news-events' },
+  { label: 'News & Events', path: '/news-events' },
 ];
 
 const scrollToTop = () => {
