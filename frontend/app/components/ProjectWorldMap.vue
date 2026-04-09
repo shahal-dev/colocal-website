@@ -178,20 +178,24 @@ const extendBoundingBox = (
     return { ...base };
   }
 
-  const ratio = Number.isFinite(visibleRatio) && visibleRatio > 0 && visibleRatio <= 1
-    ? visibleRatio
-    : SUPPLEMENTAL_VISIBLE_RATIO;
+  const ratio =
+    Number.isFinite(visibleRatio) && visibleRatio > 0 && visibleRatio <= 1
+      ? visibleRatio
+      : SUPPLEMENTAL_VISIBLE_RATIO;
 
-  return extras.reduce<BoundingBox>((acc, box) => {
-    const accBottom = acc.y + acc.height;
-    const boxBottom = box.y + box.height;
-    const minX = Math.min(acc.x, box.x);
-    const maxX = Math.max(acc.x + acc.width, box.x + box.width);
-    const cutoffY = box.y + box.height * (1 - ratio);
-    const newTop = Math.min(acc.y, cutoffY);
-    const newBottom = Math.max(accBottom, boxBottom);
-    return { x: minX, y: newTop, width: maxX - minX, height: newBottom - newTop };
-  }, { ...base });
+  return extras.reduce<BoundingBox>(
+    (acc, box) => {
+      const accBottom = acc.y + acc.height;
+      const boxBottom = box.y + box.height;
+      const minX = Math.min(acc.x, box.x);
+      const maxX = Math.max(acc.x + acc.width, box.x + box.width);
+      const cutoffY = box.y + box.height * (1 - ratio);
+      const newTop = Math.min(acc.y, cutoffY);
+      const newBottom = Math.max(accBottom, boxBottom);
+      return { x: minX, y: newTop, width: maxX - minX, height: newBottom - newTop };
+    },
+    { ...base }
+  );
 };
 
 const padBox = (box: BoundingBox, ratio: number): BoundingBox => {
@@ -711,9 +715,9 @@ const bindSvg = () => {
     combinedBoundingBox.value = merged;
   }
 
-  const primaryBoxes = PRIMARY_VIEW_ISOS.map((iso: string) => isoToBoundingBox.get(iso) ?? null).filter(
-    (box): box is BoundingBox => Boolean(box)
-  );
+  const primaryBoxes = PRIMARY_VIEW_ISOS.map(
+    (iso: string) => isoToBoundingBox.get(iso) ?? null
+  ).filter((box): box is BoundingBox => Boolean(box));
 
   let baseDefault: BoundingBox | null = null;
   if (primaryBoxes.length) {
@@ -810,7 +814,7 @@ watch(selectedCountryId, (iso) => {
       </div>
     </div> -->
 
-    <div class="relative w-full h-120">
+    <div class="relative w-full">
       <div class="map-stage">
         <div class="zoom-controls">
           <button
