@@ -3,18 +3,18 @@ import { computed } from 'vue';
 import { useRoute } from '#app';
 
 const route = useRoute();
-const id = Number(route.params.id);
+const id = String(route.params.id);
 
 // Try both: publications and education-trainings
 const { data: pubData } = await useAsyncData(
   () => `resource-hub:publication:${id}`,
-  () => $fetch('/api/publications', { params: { id: String(id) } })
+  () => $fetch('/api/publications', { params: { id } })
 );
 const publication = computed(() => (pubData.value && pubData.value[0]) || null);
 
 const { data: eduData } = await useAsyncData(
   () => `resource-hub:education:${id}`,
-  () => $fetch('/api/education-trainings', { params: { id: String(id) } })
+  () => $fetch('/api/education-trainings', { params: { id } })
 );
 const education = computed(() => (eduData.value && eduData.value[0]) || null);
 
@@ -53,9 +53,11 @@ const { data: allEdus } = await useAsyncData('resource-hub:all-edus', () =>
 );
 
 const morePublications = computed(() =>
-  (allPubs.value || []).filter((p) => p.id !== id).slice(0, 6)
+  (allPubs.value || []).filter((p) => String(p.documentId || p.id) !== id).slice(0, 6)
 );
-const moreEducations = computed(() => (allEdus.value || []).filter((e) => e.id !== id).slice(0, 6));
+const moreEducations = computed(() =>
+  (allEdus.value || []).filter((e) => String(e.documentId || e.id) !== id).slice(0, 6)
+);
 
 function formatMonthYear(iso) {
   try {
@@ -142,7 +144,7 @@ function onTouchEnd() {
                   @mouseup.prevent="onTouchEnd"
                 >
                   <div v-for="(src, i) in images" :key="i" class="flex-none w-full h-full">
-                    <img :src="src" :alt="item.title" class="w-full h-full object-cover" />
+                    <img :src="src" :alt="item.title" class="w-full h-full object-cover" >
                   </div>
                 </div>
 
@@ -174,7 +176,7 @@ function onTouchEnd() {
                   :src="item.imageCover?.url"
                   :alt="item.title"
                   class="w-full h-full object-cover"
-                />
+                >
               </div>
               <h1 class="text-2xl md:text-3xl font-display font-semibold mb-2">{{ item.title }}</h1>
               <div v-if="item.secondaryTitle" class="text-lg text-gray-700 font-display mb-2">
@@ -239,7 +241,7 @@ function onTouchEnd() {
                   @mouseup.prevent="onTouchEnd"
                 >
                   <div v-for="(src, i) in images" :key="i" class="flex-none w-full h-full">
-                    <img :src="src" :alt="item.title" class="w-full h-full object-cover" />
+                    <img :src="src" :alt="item.title" class="w-full h-full object-cover" >
                   </div>
                 </div>
 
@@ -274,7 +276,7 @@ function onTouchEnd() {
                   :src="item.imageCover?.url"
                   :alt="item.title"
                   class="w-full h-full object-cover"
-                />
+                >
               </div>
               <h1 class="text-2xl md:text-3xl font-display font-semibold mb-2">{{ item.title }}</h1>
               <div v-if="item.secondaryTitle" class="text-lg text-gray-700 font-medium mb-2">
@@ -304,8 +306,8 @@ function onTouchEnd() {
             <div class="space-y-5">
               <NuxtLink
                 v-for="m in morePublications"
-                :key="m.id"
-                :to="`/resource-hub/${m.id}`"
+                :key="m.documentId || m.id"
+                :to="`/resource-hub/${m.documentId || m.id}`"
                 class="group block"
               >
                 <p class="text-sm text-green-700 group-hover:underline line-clamp-2">
@@ -323,12 +325,12 @@ function onTouchEnd() {
             <div class="space-y-4">
               <NuxtLink
                 v-for="m in moreEducations"
-                :key="m.id"
-                :to="`/resource-hub/${m.id}`"
+                :key="m.documentId || m.id"
+                :to="`/resource-hub/${m.documentId || m.id}`"
                 class="flex gap-3 items-center group"
               >
                 <div class="w-20 h-14 rounded overflow-hidden flex-shrink-0">
-                  <img :src="m.cover?.url" :alt="m.title" class="w-full h-full object-cover" />
+                  <img :src="m.cover?.url" :alt="m.title" class="w-full h-full object-cover" >
                 </div>
                 <div class="min-w-0">
                   <p class="text-sm text-green-700 group-hover:underline truncate">{{ m.title }}</p>

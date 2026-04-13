@@ -49,7 +49,7 @@ const carouselItems = computed<CarouselItem[]>(() => {
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     .slice(0, 5)
     .map((e) => ({
-      id: String(e.id),
+      id: String(e.documentId || e.id),
       title: e.title,
       description: excerpt(e.body, 140),
       cover: e.cover,
@@ -169,13 +169,13 @@ function goToPage(
               :key="card.id"
               class="border border-gray-200 rounded-md overflow-hidden bg-white hover:shadow transition-shadow"
             >
-              <NuxtLink :to="`${basePath}/education/${card.id}`" class="block">
+              <NuxtLink :to="`${basePath}/education/${card.documentId || card.id}`" class="block">
                 <div class="h-44 w-full overflow-hidden">
                   <img
                     :src="card.cover?.url"
                     :alt="card.title"
                     class="w-full h-full object-cover"
-                  />
+                  >
                 </div>
                 <div class="p-4">
                   <h3 class="text-[15px] font-semibold text-green-800 mb-1">
@@ -222,13 +222,13 @@ function goToPage(
               :key="card.id"
               class="border border-gray-200 rounded-md overflow-hidden bg-white hover:shadow transition-shadow"
             >
-              <NuxtLink :to="`${basePath}/education/${card.id}`" class="block">
+              <NuxtLink :to="`${basePath}/education/${card.documentId || card.id}`" class="block">
                 <div class="h-44 w-full overflow-hidden">
                   <img
                     :src="card.cover?.url"
                     :alt="card.title"
                     class="w-full h-full object-cover"
-                  />
+                  >
                 </div>
                 <div class="p-4">
                   <h3 class="text-[15px] font-semibold text-green-800 mb-1">
@@ -278,13 +278,13 @@ function goToPage(
               :key="card.id"
               class="border border-gray-200 rounded-md overflow-hidden bg-white hover:shadow transition-shadow"
             >
-              <NuxtLink :to="`${basePath}/education/${card.id}`" class="block">
+              <NuxtLink :to="`${basePath}/education/${card.documentId || card.id}`" class="block">
                 <div class="h-44 w-full overflow-hidden">
                   <img
                     :src="card.cover?.url"
                     :alt="card.title"
                     class="w-full h-full object-cover"
-                  />
+                  >
                 </div>
                 <div class="p-4">
                   <h3 class="text-[15px] font-semibold text-green-800 mb-1">
@@ -334,13 +334,13 @@ function goToPage(
               :key="card.id"
               class="border border-gray-200 rounded-md overflow-hidden bg-white hover:shadow transition-shadow"
             >
-              <NuxtLink :to="`${basePath}/education/${card.id}`" class="block">
+              <NuxtLink :to="`${basePath}/education/${card.documentId || card.id}`" class="block">
                 <div class="h-44 w-full overflow-hidden">
                   <img
                     :src="card.cover?.url"
                     :alt="card.title"
                     class="w-full h-full object-cover"
-                  />
+                  >
                 </div>
                 <div class="p-4">
                   <h3 class="text-[15px] font-semibold text-green-800 mb-1">

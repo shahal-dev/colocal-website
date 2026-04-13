@@ -1,5 +1,6 @@
 // --- Raw Strapi REST shapes (subset we use) ---------------------------------
-export type RawEntity<T> = { id: number; attributes: T };
+export type RawEntity<T> = { id: number;
+  documentId?: string; attributes: T };
 export type RawRelationOne<T> = { data: RawEntity<T> | null };
 export type RawRelationMany<T> = { data: RawEntity<T>[] };
 
@@ -91,6 +92,7 @@ export type StrapiListResponseRaw<T> = {
 // --- Flattened shapes (Strapi v5 or transform enabled) --------------------
 export type FlatMedia = {
   id: number;
+  documentId?: string;
   url: string;
   alternativeText?: string | null;
   caption?: string | null;
@@ -107,6 +109,7 @@ export type FlatMedia = {
 
 export type FlatAuthor = {
   id: number;
+  documentId?: string;
   name: string;
   title?: string | null;
   avatar?: FlatMedia | null;
@@ -118,6 +121,7 @@ export type FlatAuthor = {
 
 export type FlatPublication = {
   id: number;
+  documentId?: string;
   title: string;
   secondary_title?: string | null;
   abstract: string;
@@ -136,6 +140,7 @@ export type FlatPublication = {
 
 export type FlatProject = {
   id: number;
+  documentId?: string;
   shortTitle: string;
   longTitle: string;
   slug: string;
@@ -172,6 +177,7 @@ export type _RawEducationTrainingAttributes = {
 
 export type _FlatEducationTraining = {
   id: number;
+  documentId?: string;
   title: string;
   secondary_title?: string | null;
   date: string;
@@ -198,6 +204,7 @@ export type _RawNewsEventAttributes = {
 
 export type _FlatNewsEvent = {
   id: number;
+  documentId?: string;
   title: string;
   secondary_title?: string | null;
   date: string;

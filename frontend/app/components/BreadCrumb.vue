@@ -70,5 +70,5 @@ const props = defineProps({
 });
 
 // toRefs so template gets reactive, but values are auto-unwrapped in template
-const { breadcrumbItems, pageTitle } = toRefs(props);
+const { breadcrumbItems } = toRefs(props);
 </script>

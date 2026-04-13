@@ -880,7 +880,8 @@ watch(selectedCountryId, (iso) => {
                 <!-- </div> -->
               </div>
 
-              <NuxtLink v-if="$route.params.slug" :to="`/projects/${$route.params.slug}/about/${selectedCountry.link}`"
+              <NuxtLink
+v-if="$route.params.slug" :to="`/projects/${$route.params.slug}/about/${selectedCountry.link}`"
                 class="panel-cta">
                 View Country Details
               </NuxtLink>

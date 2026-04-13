@@ -9,7 +9,7 @@ useHead({
 
 type HubItem = {
   kind: 'publication' | 'education';
-  id: number;
+  id: number | string;
   date: string;
   title: string;
   summary: string;
@@ -38,7 +38,7 @@ const [{ data: publications }, { data: educations }] = await Promise.all([
 const items = computed<HubItem[]>(() => {
   const pubs = (publications.value ?? []).map<HubItem>((p) => ({
     kind: 'publication',
-    id: p.id,
+    id: p.documentId || p.id,
     date: p.date,
     title: p.title,
     summary: p.abstract || '',
@@ -52,7 +52,7 @@ const items = computed<HubItem[]>(() => {
   );
   const edus = (educations.value ?? []).map<HubItem>((e) => ({
     kind: 'education',
-    id: e.id,
+    id: e.documentId || e.id,
     date: e.date,
     title: e.title,
     summary: e.body || '',
@@ -202,7 +202,7 @@ function excerpt(text?: string | null, n = 260) {
             type="text"
             placeholder="Search resources"
             class="w-full border rounded-md pl-4 pr-10 py-3 outline-none focus:border-green-600"
-          />
+          >
           <span class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">
             <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <circle cx="11" cy="11" r="7" stroke-width="2" />
@@ -237,7 +237,7 @@ function excerpt(text?: string | null, n = 260) {
                 v-if="item.kind === 'publication' && item.authors_text"
                 class="flex items-start text-sm text-gray-600 mb-3"
               >
-                <img src="~/assets/user.png" alt="Authors" class="w-4 h-4 mr-1 mt-0.5" />
+                <img src="~/assets/user.png" alt="Authors" class="w-4 h-4 mr-1 mt-0.5" >
                 <span>{{ item.authors_text }}</span>
               </div>
 

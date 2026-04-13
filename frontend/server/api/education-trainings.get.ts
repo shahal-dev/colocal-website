@@ -175,6 +175,7 @@ function mapEducationTraining(
   const a = raw.attributes;
   return {
     id: raw.id,
+    documentId: raw.documentId || String(raw.id),
     title: a.title,
     secondaryTitle: a.secondary_title ?? null,
     date: a.date,
@@ -196,6 +197,7 @@ function mapFlatEducationTrainings(
   return list.map(
     (e): EducationTraining => ({
       id: e.id,
+      documentId: e.documentId || String(e.id),
       title: e.title,
       secondaryTitle: e.secondary_title ?? null,
       date: e.date,
@@ -228,15 +230,19 @@ export default defineEventHandler(async (event) => {
 
   const slug = (q.projectSlug || q.project) as string | undefined;
   const id = q.projectId ? Number(q.projectId) : undefined;
-  const itemId = q.id ? Number(q.id) : undefined;
+  const itemId = q.id;
   if (slug) {
     // Education/Training expected to have a single relation 'project'
     query['filters[project][slug][$eq]'] = String(slug);
   } else if (typeof id === 'number' && !Number.isNaN(id)) {
     query['filters[project][id][$eq]'] = String(id);
   }
-  if (typeof itemId === 'number' && !Number.isNaN(itemId)) {
-    query['filters[id][$eq]'] = String(itemId);
+  if (itemId) {
+    if (/^\d+$/.test(String(itemId))) {
+      query['filters[id][$eq]'] = String(itemId);
+    } else {
+      query['filters[documentId][$eq]'] = String(itemId);
+    }
   }
 
   const headers: Record<string, string> = { 'Content-Type': 'application/json' };

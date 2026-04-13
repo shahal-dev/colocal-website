@@ -47,7 +47,7 @@ const carouselItems = computed<CarouselItem[]>(() => {
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     .slice(0, 5)
     .map((n) => ({
-      id: String(n.id),
+      id: String(n.documentId || n.id),
       title: n.secondaryTitle || n.title,
       description: excerpt(n.body, 140),
       cover: n.cover,
@@ -105,11 +105,11 @@ function goTo(page: number) {
             class="border border-gray-200 rounded-md bg-white p-0 overflow-hidden"
           >
             <NuxtLink
-              :to="`${basePath}/outreach/${e.id}`"
+              :to="`${basePath}/outreach/${e.documentId || e.id}`"
               class="flex gap-4 items-start p-3 md:p-4 group"
             >
               <div class="w-36 h-24 flex-shrink-0 rounded overflow-hidden">
-                <img :src="e.cover?.url" :alt="e.title" class="w-full h-full object-cover" />
+                <img :src="e.cover?.url" :alt="e.title" class="w-full h-full object-cover" >
               </div>
               <div>
                 <h3 class="text-[16px] font-semibold text-green-800 mb-1 group-hover:underline">

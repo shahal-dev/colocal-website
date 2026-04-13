@@ -4,7 +4,7 @@
   >
     <div class="flex items-center">
       <a href="/" class="flex items-center">
-        <img src="../assets/logos/luccc-logo.png" alt="Logo" class="h-10 md:h-12" />
+        <img src="../assets/logos/luccc-logo.png" alt="Logo" class="h-10 md:h-12" >
       </a>
     </div>
 

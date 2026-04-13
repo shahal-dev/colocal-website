@@ -96,19 +96,22 @@ useHead({
     <div
       class="relative w-full md:w-[60%] bg-[#041b18] min-h-[50vh] md:min-h-screen flex items-center justify-center p-8">
       <!-- Back button -->
-      <NuxtLink :to="`/projects/${slug}`"
+      <NuxtLink
+:to="`/projects/${slug}`"
         class="absolute top-6 left-6 z-10 w-10 h-10 bg-white rounded-full flex items-center justify-center text-green-700 hover:bg-green-50 shadow-md transition-colors cursor-pointer"
         aria-label="Go back">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-          <path fill-rule="evenodd"
+          <path
+fill-rule="evenodd"
             d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
             clip-rule="evenodd" />
         </svg>
       </NuxtLink>
 
       <!-- Map Image -->
-      <img v-if="svgMap[countryData.iso.toLowerCase()]" :src="svgMap[countryData.iso.toLowerCase()]"
-        :alt="`Map of ${countryData.name}`" class="w-full h-full max-h-[80vh] object-contain" />
+      <img
+v-if="svgMap[countryData.iso.toLowerCase()]" :src="svgMap[countryData.iso.toLowerCase()]"
+        :alt="`Map of ${countryData.name}`" class="w-full h-full max-h-[80vh] object-contain" >
     </div>
 
     <!-- Text Content Area (40%) -->

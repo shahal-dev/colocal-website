@@ -5,7 +5,7 @@ import type { Project } from '~~/types/content';
 
 const route = useRoute();
 const slug = route.params.slug;
-const id = Number(route.params.id);
+const id = String(route.params.id);
 const project = useState<Project | null>(`project:${slug}`, () => null);
 const projectName = computed(() => project.value?.shortTitle || 'Project');
 
@@ -111,7 +111,9 @@ const { data: moreList } = await useAsyncData(
   () => `education-trainings-more:${slug}`,
   () => $fetch('/api/education-trainings', { params: { projectSlug: String(slug) } })
 );
-const more = computed(() => (moreList.value || []).filter((n) => n.id !== id).slice(0, 6));
+const more = computed(() =>
+  (moreList.value || []).filter((n) => n.documentId !== id && String(n.id) !== id).slice(0, 6)
+);
 
 function formatDate(iso: string) {
   try {
@@ -168,7 +170,7 @@ function formatDate(iso: string) {
               v-else-if="coverUrl"
               class="w-full h-[24rem] md:h-[30rem] rounded-lg overflow-hidden mb-5"
             >
-              <img :src="coverUrl" :alt="item.title" class="w-full h-full object-cover" />
+              <img :src="coverUrl" :alt="item.title" class="w-full h-full object-cover" >
             </div>
 
             <h1 class="text-2xl md:text-3xl font-display font-semibold mb-2">{{ item.title }}</h1>
@@ -196,12 +198,12 @@ function formatDate(iso: string) {
           <div class="space-y-4">
             <NuxtLink
               v-for="m in more"
-              :key="m.id"
-              :to="`${basePath}/education/${m.id}`"
+              :key="m.documentId || m.id"
+              :to="`${basePath}/education/${m.documentId}`"
               class="flex gap-3 items-center group"
             >
               <div class="w-20 h-14 rounded overflow-hidden flex-shrink-0">
-                <img :src="m.cover?.url" :alt="m.title" class="w-full h-full object-cover" />
+                <img :src="m.cover?.url" :alt="m.title" class="w-full h-full object-cover" >
               </div>
               <div class="min-w-0">
                 <p

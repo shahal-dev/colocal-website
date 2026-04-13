@@ -65,6 +65,7 @@ export type Theme = {
 // --- Collection Types ----------------------------------------------------
 export interface Author {
   id: number;
+  documentId: string;
   name: string; // required
   title: string | null; // optional title/position
   avatar: StrapiMedia | null; // optional in Strapi → can be null
@@ -77,6 +78,7 @@ export interface Author {
 
 export interface ResearchPublication {
   id: number;
+  documentId: string;
   title: string; // required
   secondaryTitle?: string | null;
   abstract: string; // required (RichText Markdown stored as string)
@@ -95,6 +97,7 @@ export interface ResearchPublication {
 
 export interface Project {
   id: number;
+  documentId: string;
   shortTitle: string; // required
   longTitle: string; // required
   slug: string; // required
@@ -114,6 +117,7 @@ export interface Project {
 // New collection types ----------------------------------------------------
 export interface EducationTraining {
   id: number;
+  documentId: string;
   title: string; // required
   secondaryTitle?: string | null;
   date: string; // required (Date as ISO string)
@@ -128,6 +132,7 @@ export interface EducationTraining {
 
 export interface NewsEvent {
   id: number;
+  documentId: string;
   title: string; // required
   secondaryTitle?: string | null;
   date: string; // required (Date as ISO string)

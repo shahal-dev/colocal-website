@@ -22,14 +22,14 @@
               v-if="currentSlide.srcset"
               :srcset="currentSlide.srcset"
               sizes="(min-width: 768px) 720px, 100vw"
-            />
+            >
             <img
               :src="currentSlide.image"
               :alt="currentSlide.title || 'Project image'"
               class="w-full h-full object-cover"
               loading="lazy"
               decoding="async"
-            />
+            >
           </picture>
         </div>
 

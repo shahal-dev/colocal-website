@@ -5,7 +5,7 @@ import type { Project } from '~~/types/content';
 
 const route = useRoute();
 const slug = route.params.slug;
-const id = Number(route.params.id);
+const id = String(route.params.id);
 const project = useState<Project | null>(`project:${slug}`, () => null);
 const projectName = computed(() => project.value?.shortTitle || 'Project');
 
@@ -26,11 +26,7 @@ const basePath = computed(() => `/projects/${slug}`);
 // const isActive = (to) => route.path.startsWith(to);
 
 // Fetch current publication and more publications for sidebar
-const {
-  data: current,
-  status,
-  refresh,
-} = await useAsyncData(
+const { data: current, status } = await useAsyncData(
   () => `publication:${slug}:${id}`,
   () => $fetch('/api/publications', { params: { projectSlug: String(slug), id: String(id) } }),
   {
@@ -70,7 +66,9 @@ const { data: moreList, status: moreStatus } = await useAsyncData(
   () => `publications-more:${slug}`,
   () => $fetch('/api/publications', { params: { projectSlug: String(slug) } })
 );
-const more = computed(() => (moreList.value || []).filter((n) => n.id !== id).slice(0, 6));
+const more = computed(() =>
+  (moreList.value || []).filter((n) => n.documentId !== id && String(n.id) !== id).slice(0, 6)
+);
 
 /* Carousel state & handlers */
 const activeIndex = ref(0);
@@ -233,7 +231,7 @@ function onTouchEnd() {
                 @mouseup.prevent="onTouchEnd"
               >
                 <div v-for="(src, i) in images" :key="i" class="flex-none w-full h-full">
-                  <img :src="src" :alt="item.title" class="w-full h-full object-cover" />
+                  <img :src="src" :alt="item.title" class="w-full h-full object-cover" >
                 </div>
               </div>
 
@@ -266,7 +264,7 @@ function onTouchEnd() {
                 :src="item.imageCover?.url"
                 :alt="item.title"
                 class="w-full h-full object-cover"
-              />
+              >
             </div>
 
             <div v-if="item.secondaryTitle" class="text-lg text-gray-700 font-display mb-2">
@@ -334,8 +332,8 @@ function onTouchEnd() {
           <div v-else class="space-y-5">
             <NuxtLink
               v-for="m in more"
-              :key="m.id"
-              :to="`${basePath}/research/${m.id}`"
+              :key="m.documentId || m.id"
+              :to="`${basePath}/research/${m.documentId}`"
               class="group block"
             >
               <p class="text-sm text-green-700 group-hover:underline line-clamp-2">{{ m.title }}</p>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import HandIcon from './icons/HandIcon.vue';
+// import HandIcon from './icons/HandIcon.vue';
 import HatIcon from './icons/HatIcon.vue';
 import PublicationsIcon from './icons/PublicationsIcon.vue';
 import ResourceCard from './ResourceCard.vue';

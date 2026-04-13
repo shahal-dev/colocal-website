@@ -163,8 +163,8 @@ if (membersError?.value) {
   console.error('Failed to fetch team members:', membersError.value);
 }
 
-const aboutText = computed(() => teamSingle.value?.about || '');
-const coverMedia = computed(() => mapMedia(teamSingle.value?.cover || null));
+// const aboutText = computed(() => teamSingle.value?.about || '');
+// const coverMedia = computed(() => mapMedia(teamSingle.value?.cover || null));
 const leadAuthor = computed<Author | null>(() => mapAuthor(teamSingle.value?.lead || null));
 
 const members = computed<Author[]>(() => {
@@ -284,7 +284,7 @@ function selectCountry(index: number) {
                 :src="leadAuthor.avatar?.url"
                 :alt="leadAuthor.name"
                 class="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full object-cover mb-3"
-              />
+              >
             </template>
             <template v-else>
               <div
@@ -318,7 +318,7 @@ function selectCountry(index: number) {
                   :src="m.avatar?.url"
                   :alt="m.name"
                   class="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full object-cover mb-3"
-                />
+                >
               </template>
               <template v-else>
                 <div
@@ -383,7 +383,7 @@ function selectCountry(index: number) {
                   :src="countryData.flagUrl"
                   :alt="`${countryData.displayName} Flag`"
                   class="max-w-full max-h-full object-contain"
-                />
+                >
               </div>
               <span class="text-sm font-semibold text-gray-700">
                 {{ countryData.displayName }}
@@ -409,13 +409,13 @@ function selectCountry(index: number) {
                     :src="admin.avatar?.url"
                     :alt="admin.name"
                     class="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full object-cover mb-3"
-                  />
+                  >
                 </template>
                 <template v-else>
                   <div
                     class="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full bg-gray-200 flex items-center justify-center mb-3 text-gray-500"
                   >
-                    <img src="~/assets/user.png" alt="Authors" class="w-8 h-8 mr-1" />
+                    <img src="~/assets/user.png" alt="Authors" class="w-8 h-8 mr-1" >
                   </div>
                 </template>
                 <p class="m-0 font-medium text-gray-900 text-sm sm:text-base">{{ admin.name }}</p>
@@ -441,13 +441,13 @@ function selectCountry(index: number) {
                     :src="fellow.avatar?.url"
                     :alt="fellow.name"
                     class="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full object-cover mb-3"
-                  />
+                  >
                 </template>
                 <template v-else>
                   <div
                     class="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full bg-gray-200 flex items-center justify-center mb-3 text-gray-500"
                   >
-                    <img src="~/assets/user.png" alt="Authors" class="w-8 h-8 mr-1" />
+                    <img src="~/assets/user.png" alt="Authors" class="w-8 h-8 mr-1" >
                   </div>
                 </template>
                 <p class="m-0 font-medium text-gray-900 text-sm sm:text-base">

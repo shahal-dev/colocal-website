@@ -27,7 +27,7 @@
                 :src="currentProject.imageUrl"
                 :alt="currentProject.title || 'Project image'"
                 class="w-full h-36 sm:h-44 object-cover rounded-md"
-              />
+              >
 
               <div class="mt-3">
                 <h3 class="text-base font-semibold sm:text-lg sm:font-medium leading-tight">

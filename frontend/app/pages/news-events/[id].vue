@@ -3,12 +3,12 @@ import { computed } from 'vue';
 import { useRoute } from '#app';
 
 const route = useRoute();
-const id = Number(route.params.id);
+const id = String(route.params.id);
 
 // Fetch current news/event and more for sidebar (no project filter)
 const { data: current } = await useAsyncData(
   () => `news-event:${id}`,
-  () => $fetch('/api/news-events', { params: { id: String(id) } })
+  () => $fetch('/api/news-events', { params: { id } })
 );
 const item = computed(() => (current.value && current.value[0]) || null);
 
@@ -17,7 +17,9 @@ useHead({
 });
 
 const { data: moreList } = await useAsyncData('news-events:all', () => $fetch('/api/news-events'));
-const more = computed(() => (moreList.value || []).filter((n) => n.id !== id).slice(0, 6));
+const more = computed(() =>
+  (moreList.value || []).filter((n) => String(n.documentId || n.id) !== id).slice(0, 6)
+);
 
 const carouselImages = computed(() => {
   const extras = [];
@@ -111,7 +113,7 @@ function formatDate(iso) {
               <GalleryCarousel :images="carouselImages" :title="item.title" />
             </div>
             <div v-else-if="item.cover?.url" class="w-full rounded-lg overflow-hidden mb-5">
-              <img :src="item.cover?.url" :alt="item.title" class="w-full h-full object-cover" />
+              <img :src="item.cover?.url" :alt="item.title" class="w-full h-full object-cover" >
             </div>
             <h1 class="text-2xl md:text-3xl font-display font-semibold mb-2">{{ item.title }}</h1>
             <div v-if="secondaryTitle" class="text-lg text-gray-700 font-display mb-2">
@@ -138,12 +140,12 @@ function formatDate(iso) {
           <div class="space-y-4">
             <NuxtLink
               v-for="m in more"
-              :key="m.id"
-              :to="`/news-events/${m.id}`"
+              :key="m.documentId || m.id"
+              :to="`/news-events/${m.documentId || m.id}`"
               class="flex gap-3 items-center group"
             >
               <div class="w-20 h-14 rounded overflow-hidden flex-shrink-0">
-                <img :src="m.cover?.url" :alt="m.title" class="w-full h-full object-cover" />
+                <img :src="m.cover?.url" :alt="m.title" class="w-full h-full object-cover" >
               </div>
               <div class="min-w-0">
                 <p

@@ -194,14 +194,14 @@ function excerpt(text?: string | null, n = 180) {
             :key="post.id"
             class="border border-gray-200 rounded-lg bg-white overflow-hidden hover:shadow-lg transition-shadow"
           >
-            <NuxtLink :to="`${basePath}/blog/${post.id}`" class="block">
+            <NuxtLink :to="`${basePath}/blog/${post.documentId || post.id}`" class="block">
               <!-- Featured Image -->
               <div class="w-full h-48 overflow-hidden">
                 <img
                   :src="post.cover?.url"
                   :alt="post.title"
                   class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                />
+                >
               </div>
 
               <!-- Content -->
@@ -242,7 +242,7 @@ function excerpt(text?: string | null, n = 180) {
                         :src="author.avatar.url"
                         :alt="author.name"
                         class="w-full h-full object-cover"
-                      />
+                      >
                       <svg
                         v-else
                         class="w-4 h-4 text-gray-500"
@@ -300,7 +300,7 @@ function excerpt(text?: string | null, n = 180) {
           :key="e.id"
           class="border border-gray-200 rounded-md bg-white overflow-hidden flex"
         >
-          <NuxtLink :to="`${basePath}/education/${e.id}`" class="flex gap-4 items-start p-3 md:p-4">
+          <NuxtLink :to="`${basePath}/education/${e.documentId || e.id}`" class="flex gap-4 items-start p-3 md:p-4">
             <div class="w-36 h-24 flex-shrink-0 rounded overflow-hidden">
               <img :src="e.cover?.url" :alt="e.title" class="w-full h-full object-cover" />
             </div>

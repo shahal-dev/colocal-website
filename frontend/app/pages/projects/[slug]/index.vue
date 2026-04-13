@@ -189,11 +189,11 @@ const newsItems = computed<NewsCard[]>(() => {
     const formats = item.cover?.formats || {};
     const image = formats.medium?.url || formats.small?.url || item.cover?.url || '';
     newsCards.push({
-      id: item.id,
+      id: item.documentId || item.id,
       title: item.title,
       excerpt: excerpt(item.body, 160),
       image,
-      to: `${basePath.value}/outreach/${item.id}`,
+      to: `${basePath.value}/outreach/${item.documentId || item.id}`,
     } satisfies NewsCard);
   });
 
@@ -202,11 +202,11 @@ const newsItems = computed<NewsCard[]>(() => {
     const formats = item.cover?.formats || {};
     const image = formats.medium?.url || formats.small?.url || item.cover?.url || '';
     newsCards.push({
-      id: item.id,
+      id: item.documentId || item.id,
       title: item.title,
       excerpt: excerpt(item.body, 160),
       image,
-      to: `${basePath.value}/education/${item.id}`,
+      to: `${basePath.value}/education/${item.documentId || item.id}`,
     } satisfies NewsCard);
   });
 
@@ -236,7 +236,7 @@ const researchCarouselItems = computed<CarouselItem[]>(() => {
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     .slice(0, 3)
     .map((p) => ({
-      id: String(p.id),
+      id: String(p.documentId || p.id),
       title: p.secondaryTitle || p.title,
       description: excerpt(p.abstract, 140),
       cover: p.imageCover ?? null,
@@ -252,7 +252,7 @@ const outreachCarouselItems = computed<CarouselItem[]>(() => {
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     .slice(0, 3)
     .map((n) => ({
-      id: String(n.id),
+      id: String(n.documentId || n.id),
       title: n.secondaryTitle || n.title,
       description: excerpt(n.body, 140),
       cover: n.cover,
@@ -268,7 +268,7 @@ const educationCarouselItems = computed<CarouselItem[]>(() => {
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     .slice(0, 3)
     .map((e) => ({
-      id: String(e.id),
+      id: String(e.documentId || e.id),
       title: e.title,
       description: excerpt(e.body, 140),
       cover: e.cover,
@@ -350,7 +350,7 @@ const _fellows = ref([
                 src="https://flagcdn.com/w320/bd.png"
                 alt="Bangladesh Flag"
                 class="max-w-full max-h-full object-contain"
-              />
+              >
             </div>
             <h3 class="text-lg font-semibold text-gray-900 mb-2">Bangladesh</h3>
             <p class="text-sm text-gray-600">Independent University, Bangladesh</p>
@@ -366,7 +366,7 @@ const _fellows = ref([
                 src="https://flagcdn.com/w320/mz.png"
                 alt="Mozambique Flag"
                 class="max-w-full max-h-full object-contain"
-              />
+              >
             </div>
             <h3 class="text-lg font-semibold text-gray-900 mb-2">Mozambique</h3>
             <p class="text-sm text-gray-600">Eduardo Mondlane University</p>
@@ -382,7 +382,7 @@ const _fellows = ref([
                 src="https://flagcdn.com/w320/np.png"
                 alt="Nepal Flag"
                 class="max-w-full max-h-full object-contain"
-              />
+              >
             </div>
             <h3 class="text-lg font-semibold text-gray-900 mb-2">Nepal</h3>
             <p class="text-sm text-gray-600">Pokhara University</p>
@@ -398,7 +398,7 @@ const _fellows = ref([
                 src="https://flagcdn.com/w320/ug.png"
                 alt="Uganda Flag"
                 class="max-w-full max-h-full object-contain"
-              />
+              >
             </div>
             <h3 class="text-lg font-semibold text-gray-900 mb-2">Uganda</h3>
             <p class="text-sm text-gray-600">Makerere University</p>
@@ -422,7 +422,7 @@ const _fellows = ref([
                 src="https://flagcdn.com/w320/no.png"
                 alt="Norway Flag"
                 class="max-w-full max-h-full object-contain"
-              />
+              >
             </div>
             <h3 class="text-lg font-semibold text-gray-900 mb-2">Norway</h3>
             <p class="text-sm text-gray-600">Norwegian University of Life Sciences</p>
@@ -441,10 +441,10 @@ const _fellows = ref([
             :key="p.id"
             class="border border-gray-200 rounded-md bg-white p-4 md:p-5"
           >
-            <NuxtLink :to="`${basePath}/research/${p.id}`">
+            <NuxtLink :to="`${basePath}/research/${p.documentId || p.id}`">
               <h3 class="text-base md:text-lg font-semibold text-gray-900 mb-2">{{ p.title }}</h3>
               <div v-if="p.authors_text" class="flex items-start text-sm text-gray-600 mb-3">
-                <img src="~/assets/user.png" alt="Authors" class="w-4 h-4 mx-4 my-1" />
+                <img src="~/assets/user.png" alt="Authors" class="w-4 h-4 mx-4 my-1" >
                 <span>{{ p.authors_text }}</span>
               </div>
               <p class="text-sm text-gray-700 mb-3">{{ excerpt(p.abstract) }}</p>
@@ -493,7 +493,7 @@ const _fellows = ref([
               class="flex flex-1 hover:bg-green-50 transition-colors duration-150"
             >
               <div class="w-40 h-36 flex-shrink-0">
-                <img :src="n.image" :alt="n.title" class="w-full h-full object-cover" />
+                <img :src="n.image" :alt="n.title" class="w-full h-full object-cover" >
               </div>
               <div class="p-4 flex flex-col justify-center">
                 <h3 class="text-[15px] font-semibold text-green-700 mb-1">{{ n.title }}</h3>

@@ -5,7 +5,7 @@ import type { Project } from '~~/types/content';
 
 const route = useRoute();
 const slug = route.params.slug;
-const id = Number(route.params.id);
+const id = String(route.params.id);
 const project = useState<Project | null>(`project:${slug}`, () => null);
 const projectName = computed(() => project.value?.shortTitle || 'Project');
 
@@ -123,7 +123,9 @@ const { data: moreList } = await useAsyncData(
   () => $fetch('/api/news-events', { params: { projectSlug: String(slug) } })
 );
 const more = computed(() =>
-  (moreList.value || []).filter((n) => n.id !== id && n.blog).slice(0, 6)
+  (moreList.value || [])
+    .filter((n) => n.documentId !== id && String(n.id) !== id && n.blog)
+    .slice(0, 6)
 );
 
 function formatDate(iso: string) {
@@ -153,7 +155,7 @@ function formatDate(iso: string) {
               v-else-if="item.cover?.url"
               class="w-full h-[24rem] md:h-[30rem] rounded-lg overflow-hidden mb-5"
             >
-              <img :src="item.cover.url" :alt="item.title" class="w-full h-full object-cover" />
+              <img :src="item.cover.url" :alt="item.title" class="w-full h-full object-cover" >
             </div>
 
             <h1 class="text-2xl md:text-3xl font-display font-semibold mb-2">{{ item.title }}</h1>
@@ -178,7 +180,7 @@ function formatDate(iso: string) {
                     :src="author.avatar.url"
                     :alt="author.name"
                     class="w-full h-full object-cover"
-                  />
+                  >
                   <svg v-else class="w-6 h-6 text-gray-500" viewBox="0 0 24 24" fill="currentColor">
                     <path
                       d="M12 12c2.761 0 5-2.686 5-6s-2.239-6-5-6-5 2.686-5 6 2.239 6 5 6zm0 2c-3.866 0-7 3.134-7 7 0 .552.448 1 1 1h12c.552 0 1-.448 1-1 0-3.866-3.134-7-7-7z"
@@ -233,12 +235,12 @@ function formatDate(iso: string) {
           <div class="space-y-4">
             <NuxtLink
               v-for="m in more"
-              :key="m.id"
-              :to="`${basePath}/blog/${m.id}`"
+              :key="m.documentId || m.id"
+              :to="`${basePath}/blog/${m.documentId}`"
               class="flex gap-3 items-center group"
             >
               <div class="w-20 h-14 rounded overflow-hidden flex-shrink-0">
-                <img :src="m.cover?.url" :alt="m.title" class="w-full h-full object-cover" />
+                <img :src="m.cover?.url" :alt="m.title" class="w-full h-full object-cover" >
               </div>
               <div class="min-w-0">
                 <p
