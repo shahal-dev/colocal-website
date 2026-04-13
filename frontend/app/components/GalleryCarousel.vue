@@ -3,7 +3,7 @@
     <div class="carousel" role="region" aria-label="Image gallery carousel">
       <transition :name="transitionName" mode="out-in">
         <div :key="`${activeIndex}-${currentSlide}`" class="carousel-slide">
-          <img :src="currentSlide" :alt="slideAlt(activeIndex)" class="media" >
+          <img :src="currentSlide" :alt="slideAlt(activeIndex)" class="media" />
         </div>
       </transition>
 

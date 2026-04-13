@@ -341,7 +341,10 @@ const _fellows = ref([
         </h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           <!-- Bangladesh -->
-          <div class="flex flex-col items-center text-center bg-gray-50 rounded-lg p-6">
+          <NuxtLink
+            :to="`/projects/${slug}/about/bangladesh`"
+            class="flex flex-col items-center text-center bg-gray-50 rounded-lg p-6 hover:shadow-lg transition-shadow"
+          >
             <div class="w-32 h-24 mb-4 flex items-center justify-center">
               <img
                 src="https://flagcdn.com/w320/bd.png"
@@ -351,10 +354,13 @@ const _fellows = ref([
             </div>
             <h3 class="text-lg font-semibold text-gray-900 mb-2">Bangladesh</h3>
             <p class="text-sm text-gray-600">Independent University, Bangladesh</p>
-          </div>
+          </NuxtLink>
 
           <!-- Mozambique -->
-          <div class="flex flex-col items-center text-center bg-gray-50 rounded-lg p-6">
+          <NuxtLink
+            :to="`/projects/${slug}/about/mozambique`"
+            class="flex flex-col items-center text-center bg-gray-50 rounded-lg p-6 hover:shadow-lg transition-shadow"
+          >
             <div class="w-32 h-24 mb-4 flex items-center justify-center">
               <img
                 src="https://flagcdn.com/w320/mz.png"
@@ -364,10 +370,13 @@ const _fellows = ref([
             </div>
             <h3 class="text-lg font-semibold text-gray-900 mb-2">Mozambique</h3>
             <p class="text-sm text-gray-600">Eduardo Mondlane University</p>
-          </div>
+          </NuxtLink>
 
           <!-- Nepal -->
-          <div class="flex flex-col items-center text-center bg-gray-50 rounded-lg p-6">
+          <NuxtLink
+            :to="`/projects/${slug}/about/nepal`"
+            class="flex flex-col items-center text-center bg-gray-50 rounded-lg p-6 hover:shadow-lg transition-shadow"
+          >
             <div class="w-32 h-24 mb-4 flex items-center justify-center">
               <img
                 src="https://flagcdn.com/w320/np.png"
@@ -377,10 +386,13 @@ const _fellows = ref([
             </div>
             <h3 class="text-lg font-semibold text-gray-900 mb-2">Nepal</h3>
             <p class="text-sm text-gray-600">Pokhara University</p>
-          </div>
+          </NuxtLink>
 
           <!-- Uganda -->
-          <div class="flex flex-col items-center text-center bg-gray-50 rounded-lg p-6">
+          <NuxtLink
+            :to="`/projects/${slug}/about/uganda`"
+            class="flex flex-col items-center text-center bg-gray-50 rounded-lg p-6 hover:shadow-lg transition-shadow"
+          >
             <div class="w-32 h-24 mb-4 flex items-center justify-center">
               <img
                 src="https://flagcdn.com/w320/ug.png"
@@ -390,7 +402,7 @@ const _fellows = ref([
             </div>
             <h3 class="text-lg font-semibold text-gray-900 mb-2">Uganda</h3>
             <p class="text-sm text-gray-600">Makerere University</p>
-          </div>
+          </NuxtLink>
         </div>
       </section>
 
@@ -401,7 +413,10 @@ const _fellows = ref([
         </h2>
         <div class="flex flex-wrap gap-8 items-center justify-center">
           <!-- Norway -->
-          <div class="flex flex-col items-center text-center bg-gray-50 rounded-lg p-6">
+          <NuxtLink
+            :to="`/projects/${slug}/about/norway`"
+            class="flex flex-col items-center text-center bg-gray-50 rounded-lg p-6 hover:shadow-lg transition-shadow"
+          >
             <div class="w-32 h-24 mb-4 flex items-center justify-center">
               <img
                 src="https://flagcdn.com/w320/no.png"
@@ -411,7 +426,7 @@ const _fellows = ref([
             </div>
             <h3 class="text-lg font-semibold text-gray-900 mb-2">Norway</h3>
             <p class="text-sm text-gray-600">Norwegian University of Life Sciences</p>
-          </div>
+          </NuxtLink>
         </div>
       </section>
 

@@ -27,25 +27,24 @@ const { data: current } = await useAsyncData(
 );
 
 // Fetch all authors with avatars
-const { data: authorsData } = await useAsyncData(
-  'all-authors',
-  () => $fetch('/api/authors', { query: { pageSize: '200' } })
+const { data: authorsData } = await useAsyncData('all-authors', () =>
+  $fetch('/api/authors', { query: { pageSize: '200' } })
 );
 
 // Merge author avatars into the current item
 const item = computed(() => {
   const currentItem = (current.value && current.value[0]) || null;
   if (!currentItem) return null;
-  
+
   const authorsMap = new Map();
-  
+
   // Create a map of author ID to full author data (with avatars)
   if (authorsData.value?.data) {
     authorsData.value.data.forEach((author) => {
       authorsMap.set(author.id, author);
     });
   }
-  
+
   // Merge author avatars into current item
   if (currentItem.authors && Array.isArray(currentItem.authors)) {
     const enrichedAuthors = currentItem.authors.map((author) => {
@@ -57,7 +56,7 @@ const item = computed(() => {
     });
     return { ...currentItem, authors: enrichedAuthors };
   }
-  
+
   return currentItem;
 });
 
@@ -193,7 +192,7 @@ function formatDate(iso: string) {
               v-else-if="item.cover?.url"
               class="w-full h-[24rem] md:h-[30rem] rounded-lg overflow-hidden mb-5"
             >
-              <img :src="item.cover.url" :alt="item.title" class="w-full h-full object-cover">
+              <img :src="item.cover.url" :alt="item.title" class="w-full h-full object-cover" />
             </div>
 
             <h1 class="text-2xl md:text-3xl font-display font-semibold mb-2">{{ item.title }}</h1>
@@ -218,13 +217,8 @@ function formatDate(iso: string) {
                     :src="author.avatar.url"
                     :alt="author.name"
                     class="w-full h-full object-cover"
-                  >
-                  <svg
-                    v-else
-                    class="w-6 h-6 text-gray-500"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                  >
+                  />
+                  <svg v-else class="w-6 h-6 text-gray-500" viewBox="0 0 24 24" fill="currentColor">
                     <path
                       d="M12 12c2.761 0 5-2.686 5-6s-2.239-6-5-6-5 2.686-5 6 2.239 6 5 6zm0 2c-3.866 0-7 3.134-7 7 0 .552.448 1 1 1h12c.552 0 1-.448 1-1 0-3.866-3.134-7-7-7z"
                     />
@@ -268,10 +262,7 @@ function formatDate(iso: string) {
               </svg>
               <span>{{ formatDate(item.date) }}</span>
             </div>
-            <MDC
-              :value="item.body"
-              class="mdc-body prose max-w-none text-gray-800 space-y-6"
-            />
+            <MDC :value="item.body" class="mdc-body prose max-w-none text-gray-800 space-y-6" />
           </div>
         </div>
 
@@ -286,7 +277,7 @@ function formatDate(iso: string) {
               class="flex gap-3 items-center group"
             >
               <div class="w-20 h-14 rounded overflow-hidden flex-shrink-0">
-                <img :src="m.cover?.url" :alt="m.title" class="w-full h-full object-cover" >
+                <img :src="m.cover?.url" :alt="m.title" class="w-full h-full object-cover" />
               </div>
               <div class="min-w-0">
                 <p

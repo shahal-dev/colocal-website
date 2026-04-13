@@ -43,7 +43,7 @@
             :src="currentItem.image"
             :alt="currentItem.title"
             class="w-full h-full object-cover"
-          >
+          />
         </div>
       </div>
     </transition>

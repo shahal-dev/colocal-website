@@ -233,7 +233,7 @@ function onTouchEnd() {
                 @mouseup.prevent="onTouchEnd"
               >
                 <div v-for="(src, i) in images" :key="i" class="flex-none w-full h-full">
-                  <img :src="src" :alt="item.title" class="w-full h-full object-cover" >
+                  <img :src="src" :alt="item.title" class="w-full h-full object-cover" />
                 </div>
               </div>
 
@@ -266,7 +266,7 @@ function onTouchEnd() {
                 :src="item.imageCover?.url"
                 :alt="item.title"
                 class="w-full h-full object-cover"
-              >
+              />
             </div>
 
             <div v-if="item.secondaryTitle" class="text-lg text-gray-700 font-display mb-2">

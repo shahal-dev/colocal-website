@@ -1,29 +1,45 @@
 <template>
   <div class="w-full bg-green-600 px-4 sm:px-6 lg:px-10 py-3 sm:py-4">
-    <div class="w-full flex flex-col sm:flex-row items-center sm:items-center gap-2 justify-between">
+    <div
+      class="w-full flex flex-col sm:flex-row items-center sm:items-center gap-2 justify-between"
+    >
       <nav
-class="flex items-center gap-2 overflow-x-auto whitespace-nowrap max-w-full sm:max-w-[60%]"
-        aria-label="Breadcrumb">
+        class="flex items-center gap-2 overflow-x-auto whitespace-nowrap max-w-full sm:max-w-[60%]"
+        aria-label="Breadcrumb"
+      >
         <template v-for="(item, index) in breadcrumbItems" :key="index">
           <a
-v-if="item.href" :href="item.href"
+            v-if="item.href"
+            :href="item.href"
             class="text-white font-sans font-medium hover:underline truncate max-w-[160px] sm:max-w-[240px]"
-            :aria-current="index === breadcrumbItems.length - 1 ? 'page' : null">
+            :aria-current="index === breadcrumbItems.length - 1 ? 'page' : null"
+          >
             {{ item.text }}
           </a>
 
           <span
-v-else class="text-white font-sans font-medium truncate max-w-[160px] sm:max-w-[240px]"
-            :aria-current="index === breadcrumbItems.length - 1 ? 'page' : null">
+            v-else
+            class="text-white font-sans font-medium truncate max-w-[160px] sm:max-w-[240px]"
+            :aria-current="index === breadcrumbItems.length - 1 ? 'page' : null"
+          >
             {{ item.text }}
           </span>
 
           <!-- separator (don't render after last item) -->
           <svg
-v-if="index < breadcrumbItems.length - 1"
-            class="rotate-90 w-3 h-3 sm:w-4 sm:h-4 text-white mx-1 flex-shrink-0" fill="none" stroke="currentColor"
-            viewBox="0 0 24 24" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+            v-if="index < breadcrumbItems.length - 1"
+            class="rotate-90 w-3 h-3 sm:w-4 sm:h-4 text-white mx-1 flex-shrink-0"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M5 15l7-7 7 7"
+            />
           </svg>
         </template>
       </nav>

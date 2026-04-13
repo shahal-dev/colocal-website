@@ -34,7 +34,7 @@ const countries: Country[] = [
     researchMore: 1,
     policyBriefs: ['River Basin Policy Brief', 'Coastal Management Insights'],
     policyMore: 1,
-    link: '#',
+    link: 'bangladesh',
   },
   {
     iso: 'NP',
@@ -47,7 +47,7 @@ const countries: Country[] = [
     researchMore: 2,
     policyBriefs: ['Water Security Roadmap', 'Adaptive Agriculture Brief'],
     policyMore: 1,
-    link: '#',
+    link: 'nepal',
   },
   {
     iso: 'MZ',
@@ -60,7 +60,7 @@ const countries: Country[] = [
     researchMore: 2,
     policyBriefs: ['Delta Adaptation Policy', 'Risk Reduction Guideline'],
     policyMore: 2,
-    link: '#',
+    link: 'mozambique',
   },
   {
     iso: 'UG',
@@ -73,7 +73,7 @@ const countries: Country[] = [
     researchMore: 1,
     policyBriefs: ['Resilience Financing Brief', 'Agroforestry Policy Note'],
     policyMore: 1,
-    link: '#',
+    link: 'uganda',
   },
   {
     iso: 'NO',
@@ -86,7 +86,7 @@ const countries: Country[] = [
     researchMore: 1,
     policyBriefs: ['Nordic Climate Cooperation', 'Sustainable Fisheries Brief'],
     policyMore: 0,
-    link: '#',
+    link: 'norway',
   },
 ];
 
@@ -817,22 +817,10 @@ watch(selectedCountryId, (iso) => {
     <div class="relative w-full">
       <div class="map-stage">
         <div class="zoom-controls">
-          <button
-            type="button"
-            class="zoom-button"
-            :disabled="!canZoomIn"
-            aria-label="Zoom in"
-            @click="zoomIn"
-          >
+          <button type="button" class="zoom-button" :disabled="!canZoomIn" aria-label="Zoom in" @click="zoomIn">
             +
           </button>
-          <button
-            type="button"
-            class="zoom-button"
-            :disabled="!canZoomOut"
-            aria-label="Zoom out"
-            @click="zoomOut"
-          >
+          <button type="button" class="zoom-button" :disabled="!canZoomOut" aria-label="Zoom out" @click="zoomOut">
             -
           </button>
         </div>
@@ -844,13 +832,7 @@ watch(selectedCountryId, (iso) => {
             <div class="info-panel" role="dialog" :aria-label="selectedCountry.name">
               <button type="button" class="panel-close" @click="closePanel">
                 <span class="sr-only">Close</span>
-                <svg
-                  viewBox="0 0 24 24"
-                  class="h-5 w-5"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                >
+                <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M6 6l12 12M6 18L18 6" />
                 </svg>
               </button>
@@ -860,46 +842,46 @@ watch(selectedCountryId, (iso) => {
               <p class="panel-body">{{ selectedCountry.description }}</p>
 
               <div class="space-y-4">
-                <div>
-                  <p class="panel-section">Research:</p>
-                  <div class="panel-chip-row">
-                    <span
-                      v-for="(item, index) in selectedCountry.research"
-                      :key="`research-${selectedCountry.iso}-${index}`"
-                      class="panel-chip panel-chip--primary"
-                    >
-                      {{ item }}
-                    </span>
-                    <span
-                      v-if="selectedCountry.researchMore"
-                      class="panel-chip panel-chip--outline"
-                    >
-                      +{{ selectedCountry.researchMore }}
-                    </span>
-                  </div>
-                </div>
-
-                <div>
-                  <p class="panel-section">Policy Brief:</p>
-                  <div class="panel-chip-row">
-                    <span
-                      v-for="(item, index) in selectedCountry.policyBriefs"
-                      :key="`policy-${selectedCountry.iso}-${index}`"
-                      class="panel-chip panel-chip--muted"
-                    >
-                      {{ item }}
-                    </span>
-                    <span
-                      v-if="selectedCountry.policyMore"
-                      class="panel-chip panel-chip--outline-muted"
-                    >
-                      +{{ selectedCountry.policyMore }}
-                    </span>
-                  </div>
-                </div>
+                <!--   <p class="panel-section">Research:</p> -->
+                <!--   <div class="panel-chip-row"> -->
+                <!--     <span -->
+                <!--       v-for="(item, index) in selectedCountry.research" -->
+                <!--       :key="`research-${selectedCountry.iso}-${index}`" -->
+                <!--       class="panel-chip panel-chip--primary" -->
+                <!--     > -->
+                <!--       {{ item }} -->
+                <!--     </span> -->
+                <!--     <span -->
+                <!--       v-if="selectedCountry.researchMore" -->
+                <!--       class="panel-chip panel-chip--outline" -->
+                <!--     > -->
+                <!--       +{{ selectedCountry.researchMore }} -->
+                <!--     </span> -->
+                <!--   </div> -->
+                <!-- </div> -->
+                <!---->
+                <!-- <div> -->
+                <!--   <p class="panel-section">Policy Brief:</p> -->
+                <!--   <div class="panel-chip-row"> -->
+                <!--     <span -->
+                <!--       v-for="(item, index) in selectedCountry.policyBriefs" -->
+                <!--       :key="`policy-${selectedCountry.iso}-${index}`" -->
+                <!--       class="panel-chip panel-chip--muted" -->
+                <!--     > -->
+                <!--       {{ item }} -->
+                <!--     </span> -->
+                <!--     <span -->
+                <!--       v-if="selectedCountry.policyMore" -->
+                <!--       class="panel-chip panel-chip--outline-muted" -->
+                <!--     > -->
+                <!--       +{{ selectedCountry.policyMore }} -->
+                <!--     </span> -->
+                <!--   </div> -->
+                <!-- </div> -->
               </div>
 
-              <NuxtLink :to="selectedCountry.link" class="panel-cta">
+              <NuxtLink v-if="$route.params.slug" :to="`/projects/${$route.params.slug}/about/${selectedCountry.link}`"
+                class="panel-cta">
                 View Country Details
               </NuxtLink>
             </div>

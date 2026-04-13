@@ -257,11 +257,14 @@ function selectCountry(index: number) {
 
 <template>
   <div class="flex flex-col items-center w-full justify-center bg-white">
-    <BreadCrumb :breadcrumb-items="[
-      { text: 'Home', href: '/' },
-      { text: 'About Us', href: '/about' },
-      { text: 'Our Team', href: '/about/team' },
-    ]" page-title="Our Team" />
+    <BreadCrumb
+      :breadcrumb-items="[
+        { text: 'Home', href: '/' },
+        { text: 'About Us', href: '/about' },
+        { text: 'Our Team', href: '/about/team' },
+      ]"
+      page-title="Our Team"
+    />
 
     <!-- Team Members Section: separate background and padding for consistent components -->
     <section class="w-full bg-white">
@@ -274,17 +277,23 @@ function selectCountry(index: number) {
         <div v-if="leadAuthor" class="mt-6 text-center">
           <p class="text-sm font-semibold text-gray-700 mb-4">Lead</p>
           <div
-            class="mx-auto max-w-sm bg-blue-gray-50 border border-gray-200 rounded-md p-4 sm:p-6 flex flex-col items-center">
+            class="mx-auto max-w-sm bg-blue-gray-50 border border-gray-200 rounded-md p-4 sm:p-6 flex flex-col items-center"
+          >
             <template v-if="leadAuthor.avatar?.url">
-              <img :src="leadAuthor.avatar?.url" :alt="leadAuthor.name"
-                class="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full object-cover mb-3" />
+              <img
+                :src="leadAuthor.avatar?.url"
+                :alt="leadAuthor.name"
+                class="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full object-cover mb-3"
+              />
             </template>
             <template v-else>
               <div
-                class="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full bg-gray-200 flex items-center justify-center mb-3 text-gray-500">
+                class="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full bg-gray-200 flex items-center justify-center mb-3 text-gray-500"
+              >
                 <svg class="w-10 h-10" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                   <path
-                    d="M12 12c2.761 0 5-2.686 5-6s-2.239-6-5-6-5 2.686-5 6 2.239 6 5 6zm0 2c-3.866 0-7 3.134-7 7 0 .552.448 1 1 1h12c.552 0 1-.448 1-1 0-3.866-3.134-7-7-7z" />
+                    d="M12 12c2.761 0 5-2.686 5-6s-2.239-6-5-6-5 2.686-5 6 2.239 6 5 6zm0 2c-3.866 0-7 3.134-7 7 0 .552.448 1 1 1h12c.552 0 1-.448 1-1 0-3.866-3.134-7-7-7z"
+                  />
                 </svg>
               </div>
             </template>
@@ -299,18 +308,26 @@ function selectCountry(index: number) {
         <div class="mt-10">
           <p class="text-center text-sm font-semibold text-gray-700 mb-6">Members</p>
           <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            <div v-for="m in pagedMembers" :key="m.id"
-              class="bg-blue-gray-50 border border-gray-200 rounded-md p-4 sm:p-6 flex flex-col items-center text-center">
+            <div
+              v-for="m in pagedMembers"
+              :key="m.id"
+              class="bg-blue-gray-50 border border-gray-200 rounded-md p-4 sm:p-6 flex flex-col items-center text-center"
+            >
               <template v-if="m.avatar?.url">
-                <img :src="m.avatar?.url" :alt="m.name"
-                  class="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full object-cover mb-3" />
+                <img
+                  :src="m.avatar?.url"
+                  :alt="m.name"
+                  class="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full object-cover mb-3"
+                />
               </template>
               <template v-else>
                 <div
-                  class="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full bg-gray-200 flex items-center justify-center mb-3 text-gray-500">
+                  class="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full bg-gray-200 flex items-center justify-center mb-3 text-gray-500"
+                >
                   <svg class="w-8 h-8" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                     <path
-                      d="M12 12c2.761 0 5-2.686 5-6s-2.239-6-5-6-5 2.686-5 6 2.239 6 5 6zm0 2c-3.866 0-7 3.134-7 7 0 .552.448 1 1 1h12c.552 0 1-.448 1-1 0-3.866-3.134-7-7-7z" />
+                      d="M12 12c2.761 0 5-2.686 5-6s-2.239-6-5-6-5 2.686-5 6 2.239 6 5 6zm0 2c-3.866 0-7 3.134-7 7 0 .552.448 1 1 1h12c.552 0 1-.448 1-1 0-3.866-3.134-7-7-7z"
+                    />
                   </svg>
                 </div>
               </template>
@@ -321,11 +338,18 @@ function selectCountry(index: number) {
 
           <!-- Pagination -->
           <div v-if="totalPages > 1" class="mt-8 flex items-center justify-center gap-2">
-            <button v-for="page in totalPages" :key="page" :aria-current="page === currentPage ? 'true' : 'false'"
-              class="min-w-[32px] h-7 px-2 text-sm rounded border" :class="page === currentPage
-                ? 'bg-green-600 text-white border-green-600'
-                : 'bg-white text-gray-800 border-gray-300'
-                " @click="goTo(page)">
+            <button
+              v-for="page in totalPages"
+              :key="page"
+              :aria-current="page === currentPage ? 'true' : 'false'"
+              class="min-w-[32px] h-7 px-2 text-sm rounded border"
+              :class="
+                page === currentPage
+                  ? 'bg-green-600 text-white border-green-600'
+                  : 'bg-white text-gray-800 border-gray-300'
+              "
+              @click="goTo(page)"
+            >
               {{ page }}
             </button>
           </div>
@@ -343,14 +367,23 @@ function selectCountry(index: number) {
         <!-- Country Navigation -->
         <div v-if="countriesWithMembers.length > 0" class="mb-10">
           <div class="flex flex-wrap justify-center gap-4">
-            <button v-for="(countryData, index) in countriesWithMembers" :key="countryData.country"
-              class="flex flex-col items-center gap-2 p-4 rounded-lg border-2 transition-all hover:shadow-md" :class="index === activeCountryIndex
-                ? 'border-green-600 bg-green-50'
-                : 'border-gray-300 bg-white hover:border-green-300'
-                " @click="selectCountry(index)">
+            <button
+              v-for="(countryData, index) in countriesWithMembers"
+              :key="countryData.country"
+              class="flex flex-col items-center gap-2 p-4 rounded-lg border-2 transition-all hover:shadow-md"
+              :class="
+                index === activeCountryIndex
+                  ? 'border-green-600 bg-green-50'
+                  : 'border-gray-300 bg-white hover:border-green-300'
+              "
+              @click="selectCountry(index)"
+            >
               <div class="w-20 h-14 flex items-center justify-center overflow-hidden rounded">
-                <img :src="countryData.flagUrl" :alt="`${countryData.displayName} Flag`"
-                  class="max-w-full max-h-full object-contain" />
+                <img
+                  :src="countryData.flagUrl"
+                  :alt="`${countryData.displayName} Flag`"
+                  class="max-w-full max-h-full object-contain"
+                />
               </div>
               <span class="text-sm font-semibold text-gray-700">
                 {{ countryData.displayName }}
@@ -366,15 +399,22 @@ function selectCountry(index: number) {
             <h3 class="text-lg font-semibold text-gray-800 mb-6 text-center">Administrators</h3>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              <div v-for="admin in activeCountry.admins" :key="admin.id"
-                class="bg-blue-gray-50 border border-gray-200 rounded-md p-4 sm:p-6 flex flex-col items-center text-center">
+              <div
+                v-for="admin in activeCountry.admins"
+                :key="admin.id"
+                class="bg-blue-gray-50 border border-gray-200 rounded-md p-4 sm:p-6 flex flex-col items-center text-center"
+              >
                 <template v-if="admin.avatar?.url">
-                  <img :src="admin.avatar?.url" :alt="admin.name"
-                    class="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full object-cover mb-3" />
+                  <img
+                    :src="admin.avatar?.url"
+                    :alt="admin.name"
+                    class="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full object-cover mb-3"
+                  />
                 </template>
                 <template v-else>
                   <div
-                    class="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full bg-gray-200 flex items-center justify-center mb-3 text-gray-500">
+                    class="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full bg-gray-200 flex items-center justify-center mb-3 text-gray-500"
+                  >
                     <img src="~/assets/user.png" alt="Authors" class="w-8 h-8 mr-1" />
                   </div>
                 </template>
@@ -391,15 +431,22 @@ function selectCountry(index: number) {
             <h3 class="text-lg font-semibold text-gray-800 mb-6 text-center">Research Fellows</h3>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              <div v-for="fellow in activeCountry.fellows" :key="fellow.id"
-                class="bg-blue-gray-50 border border-gray-200 rounded-md p-4 sm:p-6 flex flex-col items-center text-center">
+              <div
+                v-for="fellow in activeCountry.fellows"
+                :key="fellow.id"
+                class="bg-blue-gray-50 border border-gray-200 rounded-md p-4 sm:p-6 flex flex-col items-center text-center"
+              >
                 <template v-if="fellow.avatar?.url">
-                  <img :src="fellow.avatar?.url" :alt="fellow.name"
-                    class="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full object-cover mb-3" />
+                  <img
+                    :src="fellow.avatar?.url"
+                    :alt="fellow.name"
+                    class="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full object-cover mb-3"
+                  />
                 </template>
                 <template v-else>
                   <div
-                    class="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full bg-gray-200 flex items-center justify-center mb-3 text-gray-500">
+                    class="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full bg-gray-200 flex items-center justify-center mb-3 text-gray-500"
+                  >
                     <img src="~/assets/user.png" alt="Authors" class="w-8 h-8 mr-1" />
                   </div>
                 </template>

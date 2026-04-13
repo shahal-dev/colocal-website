@@ -142,7 +142,7 @@ function onTouchEnd() {
                   @mouseup.prevent="onTouchEnd"
                 >
                   <div v-for="(src, i) in images" :key="i" class="flex-none w-full h-full">
-                    <img :src="src" :alt="item.title" class="w-full h-full object-cover" >
+                    <img :src="src" :alt="item.title" class="w-full h-full object-cover" />
                   </div>
                 </div>
 
@@ -174,7 +174,7 @@ function onTouchEnd() {
                   :src="item.imageCover?.url"
                   :alt="item.title"
                   class="w-full h-full object-cover"
-                >
+                />
               </div>
               <h1 class="text-2xl md:text-3xl font-display font-semibold mb-2">{{ item.title }}</h1>
               <div v-if="item.secondaryTitle" class="text-lg text-gray-700 font-display mb-2">
@@ -239,7 +239,7 @@ function onTouchEnd() {
                   @mouseup.prevent="onTouchEnd"
                 >
                   <div v-for="(src, i) in images" :key="i" class="flex-none w-full h-full">
-                    <img :src="src" :alt="item.title" class="w-full h-full object-cover" >
+                    <img :src="src" :alt="item.title" class="w-full h-full object-cover" />
                   </div>
                 </div>
 
@@ -274,7 +274,7 @@ function onTouchEnd() {
                   :src="item.imageCover?.url"
                   :alt="item.title"
                   class="w-full h-full object-cover"
-                >
+                />
               </div>
               <h1 class="text-2xl md:text-3xl font-display font-semibold mb-2">{{ item.title }}</h1>
               <div v-if="item.secondaryTitle" class="text-lg text-gray-700 font-medium mb-2">
@@ -328,7 +328,7 @@ function onTouchEnd() {
                 class="flex gap-3 items-center group"
               >
                 <div class="w-20 h-14 rounded overflow-hidden flex-shrink-0">
-                  <img :src="m.cover?.url" :alt="m.title" class="w-full h-full object-cover" >
+                  <img :src="m.cover?.url" :alt="m.title" class="w-full h-full object-cover" />
                 </div>
                 <div class="min-w-0">
                   <p class="text-sm text-green-700 group-hover:underline truncate">{{ m.title }}</p>

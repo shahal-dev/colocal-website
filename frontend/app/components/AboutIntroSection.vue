@@ -61,7 +61,7 @@ const aboutParagraphs = computed(() => {
           loading="lazy"
           decoding="async"
           class="w-full h-56 sm:h-72 md:h-[360px] object-cover object-center block"
-        >
+        />
       </figure>
     </div>
   </section>
