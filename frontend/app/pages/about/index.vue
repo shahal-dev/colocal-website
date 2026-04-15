@@ -7,24 +7,18 @@ useHead({
 <template>
   <div class="flex flex-col items-center w-full justify-center">
     <!-- breadcrumb stretched full width on small screens -->
-    <BreadCrumb
-      :breadcrumb-items="[
-        { text: 'Home', href: '/' },
-        { text: 'About LUCCC', href: '/about' },
-      ]"
-      page-title="Least Developed Countries Universities Consortium on Climate Change"
-    />
+    <BreadCrumb :breadcrumb-items="[
+      { text: 'Home', href: '/' },
+      { text: 'About LUCCC', href: '/about' },
+    ]" page-title="Least Developed Countries Universities Consortium on Climate Change" />
 
     <!-- Main Content Container -->
     <div class="w-full max-w-4xl mx-auto px-4 py-12 mb-10">
       <!-- Intro Section -->
       <section class="mb-12">
-        <div class="flex flex-col md:flex-row gap-6 items-center md:items-start mb-8">
-          <img
-            src="http://www.icccad.net/wp-content/uploads/2017/03/Selected-LUCCC-logo-min.png"
-            alt="LUCCC Logo"
-            class="h-20 object-contain shrink-0"
-          />
+        <div class="flex flex-col gap-6 items-center mb-8 text-center">
+          <img src="http://www.icccad.net/wp-content/uploads/2017/03/Selected-LUCCC-logo-min.png" alt="LUCCC Logo"
+            class="h-24 object-contain shrink-0 mb-2">
           <p class="text-gray-700 leading-relaxed text-lg">
             The Least Developed Countries (LDCs) Universities Consortium on Climate Change (LUCCC)
             is a South-South long-term capacity-building platform comprised of 10 universities as
@@ -36,18 +30,12 @@ useHead({
         </div>
 
         <!-- Video -->
-        <div
-          class="relative w-full overflow-hidden rounded-xl shadow-md bg-gray-100"
-          style="padding-top: 56.25%"
-        >
-          <iframe
-            title="Launch of the Least Developed Countries Universities Consortium on Climate Change (LUCCC)"
+        <div class="relative w-full overflow-hidden rounded-xl shadow-md bg-gray-100" style="padding-top: 56.25%">
+          <iframe title="Launch of the Least Developed Countries Universities Consortium on Climate Change (LUCCC)"
             class="absolute top-0 left-0 w-full h-full border-0"
             src="https://www.youtube.com/embed/2Q4xLn54oAg?feature=oembed"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen
-          >
-          </iframe>
+            allowfullscreen />
         </div>
       </section>
 
@@ -131,9 +119,8 @@ useHead({
             <ul class="space-y-4">
               <li class="flex flex-col">
                 <span class="font-semibold text-gray-800">Bangladesh</span>
-                <span class="text-gray-600 text-sm"
-                  >International Centre for Climate Change and Development (ICCCAD)</span
-                >
+                <span class="text-gray-600 text-sm">International Centre for Climate Change and Development
+                  (ICCCAD)</span>
               </li>
               <li class="flex flex-col">
                 <span class="font-semibold text-gray-800">Bhutan</span>
@@ -141,10 +128,9 @@ useHead({
               </li>
               <li class="flex flex-col">
                 <span class="font-semibold text-gray-800">Nepal</span>
-                <span class="text-gray-600 text-sm"
-                  >School of Environmental Science and Management (SchEMS), Pokhara University,
-                  Nepal</span
-                >
+                <span class="text-gray-600 text-sm">School of Environmental Science and Management (SchEMS), Pokhara
+                  University,
+                  Nepal</span>
               </li>
             </ul>
           </div>
@@ -157,9 +143,7 @@ useHead({
             <ul class="space-y-4">
               <li class="flex flex-col">
                 <span class="font-semibold text-gray-800">Ethiopia</span>
-                <span class="text-gray-600 text-sm"
-                  >Climate Science Center, African Centre for DRM</span
-                >
+                <span class="text-gray-600 text-sm">Climate Science Center, African Centre for DRM</span>
               </li>
               <li class="flex flex-col">
                 <span class="font-semibold text-gray-800">Sudan</span>
@@ -175,9 +159,7 @@ useHead({
               </li>
               <li class="flex flex-col">
                 <span class="font-semibold text-gray-800">Malawi</span>
-                <span class="text-gray-600 text-sm"
-                  >Lilongwe University of Agriculture &amp; Natural Resources</span
-                >
+                <span class="text-gray-600 text-sm">Lilongwe University of Agriculture &amp; Natural Resources</span>
               </li>
             </ul>
           </div>
@@ -194,9 +176,7 @@ useHead({
               </li>
               <li class="flex flex-col">
                 <span class="font-semibold text-gray-800">Senegal</span>
-                <span class="text-gray-600 text-sm"
-                  >University of Cheikh Anta Diop, Dakar, Senegal</span
-                >
+                <span class="text-gray-600 text-sm">University of Cheikh Anta Diop, Dakar, Senegal</span>
               </li>
             </ul>
           </div>
@@ -217,27 +197,19 @@ useHead({
       </section>
 
       <!-- Publications & Contacts -->
-      <div
-        class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12 bg-green-50 rounded-2xl p-8 border border-green-100/50"
-      >
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12 bg-green-50 rounded-2xl p-8 border border-green-100/50">
         <div>
           <h3 class="text-xl font-bold text-green-800 mb-5">Publications</h3>
           <ul class="list-disc pl-5 space-y-3 text-green-800/80 marker:text-green-600">
             <li>
-              <a
-                href="http://www.icccad.net/wp-content/uploads/2018/11/Final_LUCCC_Bellagio-Workshop-2018_-Report.pdf"
-                target="_blank"
-                class="hover:text-green-600 hover:underline transition-colors"
-                >Report on the Planning Meeting of the LUCCC Partners</a
-              >
+              <a href="http://www.icccad.net/wp-content/uploads/2018/11/Final_LUCCC_Bellagio-Workshop-2018_-Report.pdf"
+                target="_blank" class="hover:text-green-600 hover:underline transition-colors">Report on the Planning
+                Meeting of the LUCCC Partners</a>
             </li>
             <li>
-              <a
-                href="http://www.icccad.net/wp-content/uploads/2016/08/Capacity-Building-Policy-Brief-July-4.pdf"
-                target="_blank"
-                class="hover:text-green-600 hover:underline transition-colors"
-                >The Role of Universities in Capacity Building under the Paris Agreement</a
-              >
+              <a href="http://www.icccad.net/wp-content/uploads/2016/08/Capacity-Building-Policy-Brief-July-4.pdf"
+                target="_blank" class="hover:text-green-600 hover:underline transition-colors">The Role of Universities
+                in Capacity Building under the Paris Agreement</a>
             </li>
           </ul>
         </div>
@@ -246,15 +218,14 @@ useHead({
           <h3 class="text-xl font-bold text-green-800 mb-5">Contact Information</h3>
           <div class="space-y-5 text-green-800/80">
             <div>
-              <p class="font-bold text-green-900">Dr. Saleemul Huq</p>
-              <p class="text-sm">Director, ICCCAD at Independent University, Bangladesh.</p>
+              <p class="font-bold text-green-900">Late Dr. Saleemul Huq</p>
+              <p class="text-sm">
+                Founding Director, ICCCAD at Independent University, Bangladesh.
+              </p>
               <p class="text-sm mt-1">
                 Email:
-                <a
-                  href="mailto:saleemul.huq@icccad.org"
-                  class="hover:text-green-600 hover:underline transition-colors"
-                  >saleemul.huq@icccad.org</a
-                >
+                <a href="mailto:saleemul.huq@icccad.org"
+                  class="hover:text-green-600 hover:underline transition-colors">saleemul.huq@icccad.org</a>
               </p>
             </div>
             <div>
@@ -262,30 +233,27 @@ useHead({
               <p class="text-sm">Programme Director (LUCCC), ICCCAD at IUB.</p>
               <p class="text-sm mt-1">
                 Email:
-                <a
-                  href="mailto:mizan.khan@icccad.org"
-                  class="hover:text-green-600 hover:underline transition-colors"
-                  >mizan.khan@icccad.org</a
-                >
+                <a href="mailto:mizan.khan@icccad.org"
+                  class="hover:text-green-600 hover:underline transition-colors">mizan.khan@icccad.org</a>
               </p>
             </div>
-            <div class="pt-4 border-t border-green-200/50">
-              <p class="font-medium text-sm mb-1">Visit LUCCC Website:</p>
-              <a
-                href="http://www.luccc.org"
-                target="_blank"
-                class="text-green-700 hover:text-green-500 font-bold hover:underline transition-colors"
-                >www.luccc.org</a
-              >
-            </div>
+            <!-- <div class="pt-4 border-t border-green-200/50"> -->
+            <!--   <p class="font-medium text-sm mb-1">Visit LUCCC Website:</p> -->
+            <!--   <a -->
+            <!--     href="http://www.luccc.org" -->
+            <!--     target="_blank" -->
+            <!--     class="text-green-700 hover:text-green-500 font-bold hover:underline transition-colors" -->
+            <!--     >www.luccc.org</a -->
+            <!--   > -->
+            <!-- </div> -->
           </div>
         </div>
       </div>
     </div>
 
     <!-- Teaser at bottom, centered and responsive -->
-    <div class="w-full mt-4">
-      <UniversitiesTeaser class="mx-auto max-w-4xl" />
-    </div>
+    <!-- <div class="w-full mt-4"> -->
+    <!--   <UniversitiesTeaser class="mx-auto max-w-4xl" /> -->
+    <!-- </div> -->
   </div>
 </template>
