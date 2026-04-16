@@ -113,7 +113,7 @@ const countries: Country[] = [
 const countryLookup = new Map(countries.map((country) => [country.iso, country]));
 const PRIMARY_VIEW_ISOS = countries.map((c) => c.iso);
 const SUPPLEMENTAL_VIEW_ISOS: string[] = [];
-const DEFAULT_INITIAL_ZOOM_EXP = 1;
+const DEFAULT_INITIAL_ZOOM_EXP = 0;
 
 const selectedCountryId = ref<string | null>(null);
 const hoveredCountryId = ref<string | null>(null);
@@ -156,8 +156,8 @@ const stopAnimation = () => {
   activeViewBoxTarget = null;
 };
 
-const DEFAULT_PADDING = 0.05;
-const SELECTED_PADDING = 0.4;
+const DEFAULT_PADDING = 0.02;
+const SELECTED_PADDING = 0.2;
 const DEFAULT_SCALE = 1.0;
 const SELECTED_SCALE = 2;
 const ZOOM_STEP = 1.35;
@@ -326,15 +326,16 @@ const applyZoomExponent = (box: BoundingBox, exponent: number): BoundingBox => {
 
 const clampBoxToBounds = (box: BoundingBox, bounds: BoundingBox | null): BoundingBox => {
   if (!bounds) return box;
-  const width = Math.min(box.width, bounds.width);
-  const height = Math.min(box.height, bounds.height);
-  const minX = bounds.x;
-  const maxX = bounds.x + bounds.width - width;
-  const minY = bounds.y;
-  const maxY = bounds.y + bounds.height - height;
-  const clampedX = Math.min(Math.max(box.x, minX), maxX);
-  const clampedY = Math.min(Math.max(box.y, minY), maxY);
-  return { x: clampedX, y: clampedY, width, height };
+  // Allow aspect-ratio adjusted width/height, just keep center within bounds
+  const clampedX = Math.min(
+    Math.max(box.x, bounds.x - box.width * 0.8),
+    bounds.x + bounds.width - box.width * 0.2
+  );
+  const clampedY = Math.min(
+    Math.max(box.y, bounds.y - box.height * 0.8),
+    bounds.y + bounds.height - box.height * 0.2
+  );
+  return { x: clampedX, y: clampedY, width: box.width, height: box.height };
 };
 
 const areBoxesClose = (a: BoundingBox | null, b: BoundingBox | null, epsilon = 0.25) => {
@@ -659,8 +660,8 @@ const bindSvg = () => {
   svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
   svg.removeAttribute('width');
   svg.removeAttribute('height');
-  svg.style.width = '100%';
-  svg.style.height = 'auto';
+  svg.style.width = '';
+  svg.style.height = '';
 
   countries.forEach((country) => {
     const nodes: Element[] = [];
@@ -853,12 +854,10 @@ watch(selectedCountryId, (iso) => {
               </svg>
             </button>
 
-            <p class="panel-eyebrow">Partner Institutions</p>
-            <h3 class="panel-title text-green-700 font-bold text-xl">{{ selectedCountry.name }}</h3>
-
-            <div class="mt-4 space-y-4">
+            <p class="panel-eyebrow">{{ selectedCountry.name }}</p>
+            <div class="space-y-4">
               <div v-for="(inst, i) in selectedCountry.institutions" :key="i" class="flex flex-col">
-                <span class="text-gray-800 text-sm font-medium">{{ inst }}</span>
+                <h3 class="panel-title text-green-700 font-bold text-xl">{{ inst }}</h3>
               </div>
             </div>
           </div>

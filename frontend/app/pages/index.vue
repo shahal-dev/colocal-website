@@ -65,13 +65,9 @@ const { data: newsData } = await useAsyncData<NewsEvent[]>(
 <template>
   <div class="flex flex-col items-center w-full justify-center">
     <HomeProjectCarousel :projects="projects || []" />
-    <AboutUsSection :title="'About Us'" :description="home?.About" />
-    <StatsSection
-      :countries="home?.country_affiliations"
-      :projects="home?.projects"
-      :years="home?.years"
-      :members="home?.members"
-    />
+    <AboutUsSection :title="'About Us'" />
+    <StatsSection :countries="home?.country_affiliations" :projects="home?.projects" :years="home?.years"
+      :members="home?.members" />
     <!-- Debug list to verify projects from Strapi -->
     <!-- <div class="container mx-auto my-8 px-4">
       <h2 class="text-xl font-semibold">Projects (debug)</h2>
