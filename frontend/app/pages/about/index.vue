@@ -48,15 +48,17 @@ useHead({
             allowfullscreen
           />
         </div>
-        <div class="text-center mt-2 text-gray-700 italic mb-12">
-          The late Dr. Saleemul Huq, the founding director, ICCCAD, on LUCCC
+        <div class="text-center mt-2 text-gray-700 italic mb-12 text-lg">
+          The late Dr. Saleemul Huq, founding director, ICCCAD, on LUCCC
         </div>
       </section>
 
       <!-- Background -->
       <section class="mb-12">
-        <h3 class="text-2xl font-bold text-green-700 mb-4">Background</h3>
-        <div class="space-y-4 text-gray-700 leading-relaxed">
+        <h3 class="text-[22px] md:text-[26px] font-display font-semibold mb-6 text-green-700">
+          Background
+        </h3>
+        <div class="space-y-4 text-gray-700 leading-relaxed text-lg">
           <p>
             At COP21 in Paris the parties to the conference witnessed a discussion, perhaps for the
             first time, on the issue of capacity building that led them to ponder over UNFCCC’s role
@@ -83,8 +85,12 @@ useHead({
 
       <!-- Objectives -->
       <section class="mb-12">
-        <h3 class="text-2xl font-bold text-green-700 mb-4">Objectives</h3>
-        <ul class="list-disc pl-6 space-y-3 text-gray-700 leading-relaxed marker:text-green-600">
+        <h3 class="text-[22px] md:text-[26px] font-display font-semibold mb-6 text-green-700">
+          Objectives
+        </h3>
+        <ul
+          class="list-disc pl-6 space-y-4 text-gray-700 leading-relaxed marker:text-green-600 text-lg"
+        >
           <li>
             To foster a South-South collaborative network for promoting education and skills,
             research capacity and developing multi-dimensional expertise in climate change.
@@ -111,20 +117,53 @@ useHead({
 
       <!-- LUCCC Partners Map -->
       <section class="mb-16">
-        <h3 class="text-2xl font-bold text-green-700 mb-4">Map of LUCCC Partners</h3>
+        <h3 class="text-[22px] md:text-[26px] font-display font-semibold mb-6 text-green-700">
+          Map of LUCCC Partners
+        </h3>
         <LucccPartnerMap />
       </section>
 
       <!-- Partners List -->
       <section class="mb-12">
-        <h3 class="text-2xl font-bold text-green-700 mb-4">LUCCC Partners</h3>
-        <p class="text-gray-700 leading-relaxed mb-8">
+        <h3 class="text-[22px] md:text-[26px] font-display font-semibold mb-6 text-green-700">
+          LUCCC Partners
+        </h3>
+        <p class="text-gray-700 text-lg leading-relaxed mb-10 max-w-3xl">
           The Consortium is managed at the moment by the International Centre for Climate Change and
           Development (ICCCAD) at Independent University, Bangladesh (IUB) in Dhaka. A Governing
           Board as well as an Executive Committee will be formed soon to collectively run LUCCC.
         </p>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8">
+          <!-- West Africa -->
+          <div>
+            <h4 class="text-lg font-bold text-gray-800 border-b-2 border-gray-100 pb-2 mb-4">
+              West Africa
+            </h4>
+            <ul class="space-y-4">
+              <li class="flex flex-col">
+                <span class="font-semibold text-gray-800">Benin</span>
+                <span class="text-gray-600 text-sm">University of Parakou</span>
+              </li>
+              <li class="flex flex-col">
+                <span class="font-semibold text-gray-800">Burkina Faso</span>
+                <span class="text-gray-600 text-sm">University Joseph Ki-Zerbo</span>
+              </li>
+              <li class="flex flex-col">
+                <span class="font-semibold text-gray-800">The Gambia</span>
+                <span class="text-gray-600 text-sm">University of The Gambia</span>
+              </li>
+              <li class="flex flex-col">
+                <span class="font-semibold text-gray-800">Liberia</span>
+                <span class="text-gray-600 text-sm">University of Liberia</span>
+              </li>
+              <li class="flex flex-col">
+                <span class="font-semibold text-gray-800">Senegal</span>
+                <span class="text-gray-600 text-sm">University of Cheikh Anta Diop</span>
+              </li>
+            </ul>
+          </div>
+
           <!-- Asia -->
           <div>
             <h4 class="text-lg font-bold text-gray-800 border-b-2 border-gray-100 pb-2 mb-4">
@@ -202,35 +241,6 @@ useHead({
             </ul>
           </div>
 
-          <!-- West Africa -->
-          <div>
-            <h4 class="text-lg font-bold text-gray-800 border-b-2 border-gray-100 pb-2 mb-4">
-              West Africa
-            </h4>
-            <ul class="space-y-4">
-              <li class="flex flex-col">
-                <span class="font-semibold text-gray-800">Benin</span>
-                <span class="text-gray-600 text-sm">University of Parakou</span>
-              </li>
-              <li class="flex flex-col">
-                <span class="font-semibold text-gray-800">Burkina Faso</span>
-                <span class="text-gray-600 text-sm">University Joseph Ki-Zerbo</span>
-              </li>
-              <li class="flex flex-col">
-                <span class="font-semibold text-gray-800">The Gambia</span>
-                <span class="text-gray-600 text-sm">University of The Gambia</span>
-              </li>
-              <li class="flex flex-col">
-                <span class="font-semibold text-gray-800">Liberia</span>
-                <span class="text-gray-600 text-sm">University of Liberia</span>
-              </li>
-              <li class="flex flex-col">
-                <span class="font-semibold text-gray-800">Senegal</span>
-                <span class="text-gray-600 text-sm">University of Cheikh Anta Diop</span>
-              </li>
-            </ul>
-          </div>
-
           <!-- Central & Southern Africa -->
           <div>
             <h4 class="text-lg font-bold text-gray-800 border-b-2 border-gray-100 pb-2 mb-4">
@@ -255,7 +265,7 @@ useHead({
         class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12 bg-green-50 rounded-2xl p-8 border border-green-100/50"
       >
         <div>
-          <h3 class="text-xl font-bold text-green-800 mb-5">Publications</h3>
+          <h3 class="text-2xl font-display font-semibold text-green-800 mb-6">Publications</h3>
           <ul class="list-disc pl-5 space-y-3 text-green-800/80 marker:text-green-600">
             <li>
               <a
@@ -277,7 +287,9 @@ useHead({
         </div>
 
         <div>
-          <h3 class="text-xl font-bold text-green-800 mb-5">Contact Information</h3>
+          <h3 class="text-2xl font-display font-semibold text-green-800 mb-6">
+            Contact Information
+          </h3>
           <div class="space-y-5 text-green-800/80">
             <div>
               <p class="font-bold text-green-900">Prof. Mizan R. Khan</p>
