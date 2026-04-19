@@ -66,13 +66,53 @@ const { data: publications } = await useAsyncData<ResearchPublication[]>(
   }
 );
 
-const recent3Publications = computed(() => {
+const recentPublications = computed(() => {
   if (!publications.value || !publications.value.length) return [];
   return publications.value
     .slice()
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-    .slice(0, 3);
+    .slice(0, 8);
 });
+
+type PubItem = {
+  isSeeMore?: boolean;
+  id: string | number;
+  title: string;
+  abstract: string;
+  date?: string;
+  documentId?: string;
+  tags?: { tag: string }[];
+  publication_type?: { type: string };
+};
+
+const pubItems = computed<PubItem[]>(() => {
+  const items: PubItem[] = [...recentPublications.value].map((p) => ({
+    ...p,
+    id: p.documentId || p.id,
+    abstract: p.abstract || '',
+  }));
+
+  items.push({
+    isSeeMore: true,
+    id: 'see-more-card',
+    title: 'Explore All Resources',
+    abstract:
+      'Discover more publications, training materials, and funding opportunities in our comprehensive Resource Hub.',
+  });
+  return items;
+});
+
+const pubPageSize = 3;
+const currentPubPage = ref(1);
+const totalPubPages = computed(() => Math.max(1, Math.ceil(pubItems.value.length / pubPageSize)));
+const visiblePubs = computed(() => {
+  const start = (currentPubPage.value - 1) * pubPageSize;
+  return pubItems.value.slice(start, start + pubPageSize);
+});
+function goToPubPage(page: number) {
+  if (page < 1 || page > totalPubPages.value) return;
+  currentPubPage.value = page;
+}
 
 function excerpt(text?: string | null, n = 220) {
   if (!text) return '';
@@ -160,11 +200,15 @@ function goToNewsPage(page: number) {
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           <article
-            v-for="p in recent3Publications"
+            v-for="p in visiblePubs"
             :key="p.id"
             class="flex flex-col border border-gray-200 rounded-xl bg-white p-6 hover:shadow-md transition-shadow h-full"
           >
-            <NuxtLink :to="`/resource-hub/${p.documentId || p.id}`" class="flex flex-col h-full">
+            <NuxtLink
+              v-if="!p.isSeeMore"
+              :to="`/resource-hub/${p.documentId || p.id}`"
+              class="flex flex-col h-full"
+            >
               <h3
                 class="text-lg md:text-xl font-semibold text-green-800 mb-3 line-clamp-3 hover:underline"
               >
@@ -205,7 +249,49 @@ function goToNewsPage(page: number) {
                 </div>
               </div>
             </NuxtLink>
+
+            <!-- Final "See More" Card -->
+            <NuxtLink
+              v-else
+              to="/resource-hub"
+              class="flex flex-col h-full items-center justify-center text-center group"
+            >
+              <div
+                class="w-16 h-16 rounded-full bg-green-50 flex items-center justify-center text-green-600 mb-6 group-hover:bg-green-600 group-hover:text-white transition-colors"
+              >
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M14 5l7 7m0 0l-7 7m7-7H3"
+                  />
+                </svg>
+              </div>
+              <h3 class="text-xl font-semibold text-green-800 mb-3 group-hover:underline">
+                {{ p.title }}
+              </h3>
+              <p class="text-sm text-gray-600">{{ p.abstract }}</p>
+            </NuxtLink>
           </article>
+        </div>
+
+        <!-- Pagination for Publications -->
+        <div v-if="totalPubPages > 1" class="mt-12 flex items-center justify-center gap-2">
+          <button
+            v-for="page in totalPubPages"
+            :key="'pub-' + page"
+            :aria-current="page === currentPubPage ? 'true' : 'false'"
+            class="min-w-[36px] h-9 px-3 text-sm font-medium rounded-md border transition-colors"
+            :class="
+              page === currentPubPage
+                ? 'bg-green-600 text-white border-green-600 shadow-sm'
+                : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+            "
+            @click="goToPubPage(page)"
+          >
+            {{ page }}
+          </button>
         </div>
       </div>
     </section>
