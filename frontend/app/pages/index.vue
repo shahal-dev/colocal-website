@@ -308,10 +308,9 @@ function goToNewsPage(page: number) {
             </div>
             <div class="bg-white/60 p-5 rounded-xl backdrop-blur-sm">
               <p class="text-lg font-bold text-green-900 mb-1">Md Fahad Hossain</p>
-              <p class="text-sm text-gray-700 mb-3">Coordinator</p>
               <a
                 href="mailto:fahad.hossain@icccad.org"
-                class="inline-flex items-center gap-2 text-green-700 hover:text-green-800 hover:underline transition-colors text-sm font-medium"
+                class="inline-flex items-center gap-2 text-green-700 hover:text-green-800 hover:underline transition-colors text-sm font-medium mt-3"
               >
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
@@ -326,10 +325,9 @@ function goToNewsPage(page: number) {
             </div>
             <div class="bg-white/60 p-5 rounded-xl backdrop-blur-sm">
               <p class="text-lg font-bold text-green-900 mb-1">Fahmid Mohtasin</p>
-              <p class="text-sm text-gray-700 mb-3">Coordinator</p>
               <a
                 href="mailto:fahmid.mohtasin@icccad.org"
-                class="inline-flex items-center gap-2 text-green-700 hover:text-green-800 hover:underline transition-colors text-sm font-medium"
+                class="inline-flex items-center gap-2 text-green-700 hover:text-green-800 hover:underline transition-colors text-sm font-medium mt-3"
               >
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
