@@ -37,7 +37,46 @@ const svgMap: Record<string, string> = {
   ug: ugSvg,
 };
 
-// Hardcoded data for the countries
+// Glob import for country images
+const countryImagesRaw = import.meta.glob('~/assets/*/*.{jpg,jpeg,png,webp,svg}', {
+  eager: true,
+  import: 'default',
+});
+
+// Build a map of country iso to array of image URLs
+const countryImagesMap = computed(() => {
+  const map: Record<string, string[]> = {
+    bd: [],
+    mz: [],
+    no: [],
+    np: [],
+    ug: [],
+  };
+
+  for (const [path, url] of Object.entries(countryImagesRaw)) {
+    const parts = path.split('/');
+    if (parts.length >= 3) {
+      // path looks like /app/assets/bd/1.jpg or similar depending on glob resolution
+      // Let's extract the folder name safely
+      const match = path.match(/\/assets\/([^/]+)\//);
+      if (match && match[1]) {
+        const folder = match[1].toLowerCase();
+        if (map[folder]) {
+          map[folder].push(url as string);
+        }
+      }
+    }
+  }
+
+  // Fallback to the SVG map if no images exist for the country
+  for (const iso of Object.keys(map)) {
+    if (map[iso].length === 0 && svgMap[iso]) {
+      map[iso].push(svgMap[iso]);
+    }
+  }
+
+  return map;
+});
 const countryDataRecord: Record<string, CountryData> = {
   bangladesh: {
     id: 'bangladesh',
@@ -94,6 +133,18 @@ Also at IUB, ICCCAD is one of the leading research and capacity building organis
 
 const countryData = computed(() => countryDataRecord[countryParam] || null);
 
+const currentCountryImages = computed(() => {
+  if (!countryData.value) return [];
+  return countryImagesMap.value[countryData.value.iso.toLowerCase()] || [];
+});
+
+const isFallbackSvg = computed(() => {
+  if (!countryData.value) return false;
+  const iso = countryData.value.iso.toLowerCase();
+  const images = currentCountryImages.value;
+  return images.length === 1 && images[0] === svgMap[iso];
+});
+
 // Fetch all necessary data
 const { data: authorsRes } = await useAsyncData<{ data: Author[] }>('authors', () =>
   $fetch('/api/authors')
@@ -112,7 +163,7 @@ const { data: educationTrainings } = await useAsyncData<EducationTraining[]>(
 const teamMembers = computed(() => {
   return (
     authorsRes.value?.data?.filter(
-      (a) => a.country?.toLowerCase() === countryParam.toLowerCase()
+      (a) => a.country?.toLowerCase() === countryParam.toLowerCase() && a.admin
     ) || []
   );
 });
@@ -183,11 +234,14 @@ useHead({
 
       <!-- Carousel -->
       <div
-        v-if="svgMap[countryData.iso.toLowerCase()]"
-        class="mb-8 w-full bg-[#041b18] rounded-xl overflow-hidden flex items-center justify-center p-8 min-h-[400px]"
+        v-if="currentCountryImages.length > 0"
+        :class="[
+          'mb-8 w-full rounded-xl overflow-hidden flex items-center justify-center min-h-[400px]',
+          isFallbackSvg ? 'bg-[#041b18] p-8' : '',
+        ]"
       >
         <GalleryCarousel
-          :images="[svgMap[countryData.iso.toLowerCase()]]"
+          :images="currentCountryImages"
           :title="`Map of ${countryData.name}`"
           large
         />

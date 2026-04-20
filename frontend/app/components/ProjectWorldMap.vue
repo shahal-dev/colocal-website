@@ -798,81 +798,103 @@ watch(selectedCountryId, (iso) => {
 </script>
 
 <template>
-  <div class="relative w-full aspect-[4/3] md:aspect-[2/1] bg-gray-50 rounded-xl overflow-hidden border border-gray-200 shadow-sm">
+  <div
+    class="relative w-full aspect-[4/3] md:aspect-[2/1] bg-gray-50 rounded-xl overflow-hidden border border-gray-200 shadow-sm"
+  >
     <div class="map-stage h-full">
-        <div class="zoom-controls">
-          <button type="button" class="zoom-button" :disabled="!canZoomIn" aria-label="Zoom in" @click="zoomIn">
-            +
-          </button>
-          <button type="button" class="zoom-button" :disabled="!canZoomOut" aria-label="Zoom out" @click="zoomOut">
-            -
-          </button>
-        </div>
-        <!-- eslint-disable-next-line vue/no-v-html -->
-        <div ref="svgContainer" class="map-shell h-full w-full" v-html="worldSvgContent" />
-
-        <Transition name="fade">
-          <div v-if="selectedCountry" class="panel-layer">
-            <div class="info-panel" role="dialog" :aria-label="selectedCountry.name">
-              <button type="button" class="panel-close" @click="closePanel">
-                <span class="sr-only">Close</span>
-                <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 6l12 12M6 18L18 6" />
-                </svg>
-              </button>
-
-              <p class="panel-eyebrow">{{ selectedCountry.headline }}</p>
-              <h3 class="panel-title">{{ selectedCountry.name }}</h3>
-              <p class="panel-body">{{ selectedCountry.description }}</p>
-
-              <div class="space-y-4">
-                <!--   <p class="panel-section">Research:</p> -->
-                <!--   <div class="panel-chip-row"> -->
-                <!--     <span -->
-                <!--       v-for="(item, index) in selectedCountry.research" -->
-                <!--       :key="`research-${selectedCountry.iso}-${index}`" -->
-                <!--       class="panel-chip panel-chip--primary" -->
-                <!--     > -->
-                <!--       {{ item }} -->
-                <!--     </span> -->
-                <!--     <span -->
-                <!--       v-if="selectedCountry.researchMore" -->
-                <!--       class="panel-chip panel-chip--outline" -->
-                <!--     > -->
-                <!--       +{{ selectedCountry.researchMore }} -->
-                <!--     </span> -->
-                <!--   </div> -->
-                <!-- </div> -->
-                <!---->
-                <!-- <div> -->
-                <!--   <p class="panel-section">Policy Brief:</p> -->
-                <!--   <div class="panel-chip-row"> -->
-                <!--     <span -->
-                <!--       v-for="(item, index) in selectedCountry.policyBriefs" -->
-                <!--       :key="`policy-${selectedCountry.iso}-${index}`" -->
-                <!--       class="panel-chip panel-chip--muted" -->
-                <!--     > -->
-                <!--       {{ item }} -->
-                <!--     </span> -->
-                <!--     <span -->
-                <!--       v-if="selectedCountry.policyMore" -->
-                <!--       class="panel-chip panel-chip--outline-muted" -->
-                <!--     > -->
-                <!--       +{{ selectedCountry.policyMore }} -->
-                <!--     </span> -->
-                <!--   </div> -->
-                <!-- </div> -->
-              </div>
-
-              <NuxtLink
-v-if="$route.params.slug" :to="`/projects/${$route.params.slug}/about/${selectedCountry.link}`"
-                class="panel-cta">
-                View Country Details
-              </NuxtLink>
-            </div>
-          </div>
-        </Transition>
+      <div class="zoom-controls">
+        <button
+          type="button"
+          class="zoom-button"
+          :disabled="!canZoomIn"
+          aria-label="Zoom in"
+          @click="zoomIn"
+        >
+          +
+        </button>
+        <button
+          type="button"
+          class="zoom-button"
+          :disabled="!canZoomOut"
+          aria-label="Zoom out"
+          @click="zoomOut"
+        >
+          -
+        </button>
       </div>
+      <!-- eslint-disable-next-line vue/no-v-html -->
+      <div ref="svgContainer" class="map-shell h-full w-full" v-html="worldSvgContent" />
+
+      <Transition name="fade">
+        <div v-if="selectedCountry" class="panel-layer">
+          <div class="info-panel" role="dialog" :aria-label="selectedCountry.name">
+            <button type="button" class="panel-close" @click="closePanel">
+              <span class="sr-only">Close</span>
+              <svg
+                viewBox="0 0 24 24"
+                class="h-5 w-5"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 6l12 12M6 18L18 6" />
+              </svg>
+            </button>
+
+            <p class="panel-eyebrow">{{ selectedCountry.headline }}</p>
+            <h3 class="panel-title">{{ selectedCountry.name }}</h3>
+            <p class="panel-body">{{ selectedCountry.description }}</p>
+
+            <div class="space-y-4">
+              <!--   <p class="panel-section">Research:</p> -->
+              <!--   <div class="panel-chip-row"> -->
+              <!--     <span -->
+              <!--       v-for="(item, index) in selectedCountry.research" -->
+              <!--       :key="`research-${selectedCountry.iso}-${index}`" -->
+              <!--       class="panel-chip panel-chip--primary" -->
+              <!--     > -->
+              <!--       {{ item }} -->
+              <!--     </span> -->
+              <!--     <span -->
+              <!--       v-if="selectedCountry.researchMore" -->
+              <!--       class="panel-chip panel-chip--outline" -->
+              <!--     > -->
+              <!--       +{{ selectedCountry.researchMore }} -->
+              <!--     </span> -->
+              <!--   </div> -->
+              <!-- </div> -->
+              <!---->
+              <!-- <div> -->
+              <!--   <p class="panel-section">Policy Brief:</p> -->
+              <!--   <div class="panel-chip-row"> -->
+              <!--     <span -->
+              <!--       v-for="(item, index) in selectedCountry.policyBriefs" -->
+              <!--       :key="`policy-${selectedCountry.iso}-${index}`" -->
+              <!--       class="panel-chip panel-chip--muted" -->
+              <!--     > -->
+              <!--       {{ item }} -->
+              <!--     </span> -->
+              <!--     <span -->
+              <!--       v-if="selectedCountry.policyMore" -->
+              <!--       class="panel-chip panel-chip--outline-muted" -->
+              <!--     > -->
+              <!--       +{{ selectedCountry.policyMore }} -->
+              <!--     </span> -->
+              <!--   </div> -->
+              <!-- </div> -->
+            </div>
+
+            <NuxtLink
+              v-if="$route.params.slug"
+              :to="`/projects/${$route.params.slug}/about/${selectedCountry.link}`"
+              class="panel-cta"
+            >
+              View Country Details
+            </NuxtLink>
+          </div>
+        </div>
+      </Transition>
+    </div>
   </div>
 </template>
 
