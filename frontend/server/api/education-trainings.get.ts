@@ -18,6 +18,7 @@ import type {
   FlatMedia,
   _FlatEducationTraining,
   StrapiListResponseFlat,
+  RawCountryComponent,
 } from '../../types/raw-strapi-types';
 
 type StrapiListResponseUnion =
@@ -167,6 +168,11 @@ function mapEducation(c?: RawEducationComponent | null): Education | null {
   return { type: c.type ?? '' };
 }
 
+function mapCountry(c?: RawCountryComponent | null) {
+  if (!c) return null;
+  return { name: c.name };
+}
+
 function mapEducationTraining(
   baseUrl: string,
   raw: RawEntity<_RawEducationTrainingAttributes> | null | undefined
@@ -186,6 +192,7 @@ function mapEducationTraining(
     section: a.section ?? null,
     lla: !!a.lla,
     project: null,
+    country: mapCountry(a.country),
   };
 }
 
@@ -208,6 +215,7 @@ function mapFlatEducationTrainings(
       section: e.section ?? null,
       lla: !!e.lla,
       project: null,
+      country: mapCountry(e.country ?? null),
     })
   );
 }

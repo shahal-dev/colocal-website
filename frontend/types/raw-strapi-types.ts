@@ -1,6 +1,5 @@
 // --- Raw Strapi REST shapes (subset we use) ---------------------------------
-export type RawEntity<T> = { id: number;
-  documentId?: string; attributes: T };
+export type RawEntity<T> = { id: number; documentId?: string; attributes: T };
 export type RawRelationOne<T> = { data: RawEntity<T> | null };
 export type RawRelationMany<T> = { data: RawEntity<T>[] };
 
@@ -173,6 +172,7 @@ export type _RawEducationTrainingAttributes = {
   type?: RawEducationComponent | null;
   section?: 'module development' | 'short course' | 'training workshop' | null;
   lla: boolean;
+  country?: RawCountryComponent | null;
 };
 
 export type _FlatEducationTraining = {
@@ -187,6 +187,7 @@ export type _FlatEducationTraining = {
   type?: RawEducationComponent | null;
   section?: 'module development' | 'short course' | 'training workshop' | null;
   lla: boolean;
+  country?: RawCountryComponent | null;
 };
 
 export type _RawNewsEventAttributes = {
@@ -200,6 +201,7 @@ export type _RawNewsEventAttributes = {
   lla: boolean;
   blog?: boolean;
   authors?: RawRelationMany<RawAuthorAttributes>;
+  country?: RawCountryComponent | null;
 };
 
 export type _FlatNewsEvent = {
@@ -215,4 +217,5 @@ export type _FlatNewsEvent = {
   lla: boolean;
   blog?: boolean;
   authors?: FlatAuthor[] | null;
+  country?: RawCountryComponent | null;
 };

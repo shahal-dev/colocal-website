@@ -26,10 +26,7 @@
       "type": "media",
       "multiple": false,
       "required": true,
-      "allowedTypes": [
-        "images",
-        "videos"
-      ]
+      "allowedTypes": ["images", "videos"]
     },
     "body": {
       "type": "richtext",
@@ -54,20 +51,16 @@
     "images": {
       "type": "media",
       "multiple": true,
-      "allowedTypes": [
-        "images",
-        "files",
-        "videos",
-        "audios"
-      ]
+      "allowedTypes": ["images", "files", "videos", "audios"]
     },
     "section": {
       "type": "enumeration",
-      "enum": [
-        "module development",
-        "short course",
-        "training workshop"
-      ]
+      "enum": ["module development", "short course", "training workshop"]
+    },
+    "country": {
+      "type": "component",
+      "component": "shared.country",
+      "repeatable": false
     }
   }
 }

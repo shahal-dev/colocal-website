@@ -128,6 +128,7 @@ export interface EducationTraining {
   section: 'module development' | 'short course' | 'training workshop' | null; // optional section
   lla: boolean; // required
   project?: Project | null; // optional relation (many-to-one to Project)
+  country?: Country | null; // optional component
 }
 
 export interface NewsEvent {
@@ -144,6 +145,7 @@ export interface NewsEvent {
   blog?: boolean; // optional flag for blog posts
   authors?: Author[] | null; // optional relation (one-to-many to Author)
   projects?: Project[] | null; // optional relation (many-to-many to Project)
+  country?: Country | null; // optional component
 }
 
 // --- Helpers -------------------------------------------------------------

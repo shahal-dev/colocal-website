@@ -106,6 +106,7 @@ function mapRawAuthor(baseUrl: string, ent: RawEntity<RawAuthorAttributes>): Aut
 
   return {
     id: ent.id,
+    documentId: ent.documentId || String(ent.id),
     name: a.name,
     title: a.title ?? null,
     avatar: avatarMedia,
@@ -120,6 +121,7 @@ function mapRawAuthor(baseUrl: string, ent: RawEntity<RawAuthorAttributes>): Aut
 function mapFlatAuthor(baseUrl: string, a: FlatAuthor): Author {
   return {
     id: a.id,
+    documentId: a.documentId || String(a.id),
     name: a.name,
     title: a.title ?? null,
     avatar: mapStrapiMedia(baseUrl, a.avatar ?? null),

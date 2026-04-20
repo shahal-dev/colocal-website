@@ -13,6 +13,7 @@ import type {
   _FlatNewsEvent,
   StrapiListResponseFlat,
   FlatAuthor,
+  RawCountryComponent,
 } from '../../types/raw-strapi-types';
 
 type StrapiListResponseUnion =
@@ -157,6 +158,11 @@ function mapFlatMediaList(baseUrl: string, list?: FlatMedia[] | null): StrapiMed
   return mapped.length ? mapped : null;
 }
 
+function mapCountry(c?: RawCountryComponent | null) {
+  if (!c) return null;
+  return { name: c.name };
+}
+
 function mapNewsEvent(
   baseUrl: string,
   raw: RawEntity<_RawNewsEventAttributes> | null | undefined
@@ -175,6 +181,7 @@ function mapNewsEvent(
     section: a.section ?? null,
     lla: !!a.lla,
     projects: null,
+    country: mapCountry(a.country),
   };
 }
 
@@ -213,6 +220,7 @@ function mapFlatNewsEvents(baseUrl: string, list?: _FlatNewsEvent[] | null): New
       blog: e.blog,
       authors: mapFlatAuthors(baseUrl, e.authors ?? null),
       projects: null,
+      country: mapCountry(e.country ?? null),
     })
   );
 }
