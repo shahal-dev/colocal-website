@@ -121,11 +121,16 @@ function excerpt(text?: string | null, n = 180) {
       <!-- Intro/description -->
       <section class="w-full max-w-6xl mx-auto py-10 px-4 md:px-0">
         <h1 class="text-[26px] md:text-[30px] font-display font-medium mb-3">COLOCAL Blog</h1>
-        <p class="text-gray-700 leading-relaxed max-w-3xl">
+        <p class="text-gray-700 leading-relaxed max-w-6xl">
           COLOCAL Blog is a platform for sharing insights, updates, and stories related to our
           collaborative local development initiatives. Here, we explore topics such as community
           engagement, sustainable practices, and innovative solutions that drive positive change at
           the local level.
+
+        </p>
+        <p class="mt-4 text-gray-700 leading-relaxed max-w-6xl">
+          You can send submissions for the blog to: <a href="mailto:fahmid.mohtasin@icccad.org"
+            class="text-green-700 underline" aria-label="Email COLOCAL Blog">fahmid.mohtasin@icccad.org</a>
         </p>
         <!-- <p class="mt-4 text-gray-700"> -->
         <!--   If you would like to contribute to the COLOCAL Blog, please contact us at: -->
@@ -189,19 +194,13 @@ function excerpt(text?: string | null, n = 180) {
       <!-- Blog Posts -->
       <section v-if="llaNewsEvents.length > 0" class="w-full max-w-6xl mx-auto px-4 md:px-0 pb-12">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <article
-            v-for="post in visiblePosts"
-            :key="post.id"
-            class="border border-gray-200 rounded-lg bg-white overflow-hidden hover:shadow-lg transition-shadow"
-          >
+          <article v-for="post in visiblePosts" :key="post.id"
+            class="border border-gray-200 rounded-lg bg-white overflow-hidden hover:shadow-lg transition-shadow">
             <NuxtLink :to="`${basePath}/blog/${post.documentId || post.id}`" class="block">
               <!-- Featured Image -->
               <div class="w-full h-48 overflow-hidden">
-                <img
-                  :src="post.cover?.url"
-                  :alt="post.title"
-                  class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                >
+                <img :src="post.cover?.url" :alt="post.title"
+                  class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
               </div>
 
               <!-- Content -->
@@ -211,16 +210,13 @@ function excerpt(text?: string | null, n = 180) {
                   <svg class="w-4 h-4 mr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                     <path
                       d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2z"
-                      stroke-width="2"
-                    />
+                      stroke-width="2" />
                   </svg>
                   <span>{{ formatDate(post.date) }}</span>
                 </div>
 
                 <!-- Title -->
-                <h3
-                  class="text-lg font-semibold text-gray-900 mb-2 hover:text-green-700 line-clamp-2"
-                >
+                <h3 class="text-lg font-semibold text-gray-900 mb-2 hover:text-green-700 line-clamp-2">
                   {{ post.title }}
                 </h3>
 
@@ -232,37 +228,21 @@ function excerpt(text?: string | null, n = 180) {
                 <!-- Author(s) -->
                 <div v-if="post.authors && post.authors.length > 0" class="flex items-center gap-2">
                   <div class="flex -space-x-2">
-                    <div
-                      v-for="(author, idx) in post.authors.slice(0, 3)"
-                      :key="idx"
-                      class="w-8 h-8 rounded-full bg-gray-200 border-2 border-white flex items-center justify-center overflow-hidden"
-                    >
-                      <img
-                        v-if="author.avatar?.url"
-                        :src="author.avatar.url"
-                        :alt="author.name"
-                        class="w-full h-full object-cover"
-                      >
-                      <svg
-                        v-else
-                        class="w-4 h-4 text-gray-500"
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                      >
+                    <div v-for="(author, idx) in post.authors.slice(0, 3)" :key="idx"
+                      class="w-8 h-8 rounded-full bg-gray-200 border-2 border-white flex items-center justify-center overflow-hidden">
+                      <img v-if="author.avatar?.url" :src="author.avatar.url" :alt="author.name"
+                        class="w-full h-full object-cover">
+                      <svg v-else class="w-4 h-4 text-gray-500" viewBox="0 0 24 24" fill="currentColor">
                         <path
-                          d="M12 12c2.761 0 5-2.686 5-6s-2.239-6-5-6-5 2.686-5 6 2.239 6 5 6zm0 2c-3.866 0-7 3.134-7 7 0 .552.448 1 1 1h12c.552 0 1-.448 1-1 0-3.866-3.134-7-7-7z"
-                        />
+                          d="M12 12c2.761 0 5-2.686 5-6s-2.239-6-5-6-5 2.686-5 6 2.239 6 5 6zm0 2c-3.866 0-7 3.134-7 7 0 .552.448 1 1 1h12c.552 0 1-.448 1-1 0-3.866-3.134-7-7-7z" />
                       </svg>
                     </div>
                   </div>
                   <div class="text-xs text-gray-600">
                     <span v-if="post.authors.length === 1">{{ post.authors[0]?.name }}</span>
-                    <span v-else-if="post.authors.length === 2"
-                      >{{ post.authors[0]?.name }} & {{ post.authors[1]?.name }}</span
-                    >
-                    <span v-else
-                      >{{ post.authors[0]?.name }} +{{ post.authors.length - 1 }} more</span
-                    >
+                    <span v-else-if="post.authors.length === 2">{{ post.authors[0]?.name }} & {{ post.authors[1]?.name
+                    }}</span>
+                    <span v-else>{{ post.authors[0]?.name }} +{{ post.authors.length - 1 }} more</span>
                   </div>
                 </div>
               </div>
@@ -272,18 +252,11 @@ function excerpt(text?: string | null, n = 180) {
 
         <!-- Pagination -->
         <div v-if="totalPages > 1" class="mt-10 flex items-center justify-center gap-2">
-          <button
-            v-for="i in totalPages"
-            :key="i"
-            :aria-label="`Go to page ${i}`"
-            class="min-w-[32px] h-8 px-3 text-sm rounded border transition-colors"
-            :class="
-              i === page
-                ? 'bg-green-600 text-white border-green-600'
-                : 'bg-white text-gray-800 border-gray-300 hover:border-green-400'
-            "
-            @click="page = i"
-          >
+          <button v-for="i in totalPages" :key="i" :aria-label="`Go to page ${i}`"
+            class="min-w-[32px] h-8 px-3 text-sm rounded border transition-colors" :class="i === page
+              ? 'bg-green-600 text-white border-green-600'
+              : 'bg-white text-gray-800 border-gray-300 hover:border-green-400'
+              " @click="page = i">
             {{ i }}
           </button>
         </div>

@@ -250,7 +250,7 @@ const outreachCarouselItems = computed<CarouselItem[]>(() => {
   return list
     .filter((n) => Boolean(n.cover && n.cover.url))
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-    .slice(0, 3)
+    .slice(0, 2)
     .map((n) => ({
       id: String(n.documentId || n.id),
       title: n.secondaryTitle || n.title,
@@ -266,7 +266,7 @@ const educationCarouselItems = computed<CarouselItem[]>(() => {
   return list
     .filter((e) => Boolean(e.cover && e.cover.url))
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-    .slice(0, 3)
+    .slice(0, 2)
     .map((e) => ({
       id: String(e.documentId || e.id),
       title: e.title,
@@ -341,64 +341,42 @@ const _fellows = ref([
         </h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           <!-- Bangladesh -->
-          <NuxtLink
-            :to="`/projects/${slug}/about/bangladesh`"
-            class="flex flex-col items-center text-center bg-gray-50 rounded-lg p-6 hover:shadow-lg transition-shadow"
-          >
+          <NuxtLink :to="`/projects/${slug}/about/bangladesh`"
+            class="flex flex-col items-center text-center bg-gray-50 rounded-lg p-6 hover:shadow-lg transition-shadow">
             <div class="w-32 h-24 mb-4 flex items-center justify-center">
-              <img
-                src="https://flagcdn.com/w320/bd.png"
-                alt="Bangladesh Flag"
-                class="max-w-full max-h-full object-contain"
-              >
+              <img src="https://flagcdn.com/w320/bd.png" alt="Bangladesh Flag"
+                class="max-w-full max-h-full object-contain">
             </div>
             <h3 class="text-lg font-semibold text-gray-900 mb-2">Bangladesh</h3>
             <p class="text-sm text-gray-600">Independent University, Bangladesh</p>
           </NuxtLink>
 
           <!-- Mozambique -->
-          <NuxtLink
-            :to="`/projects/${slug}/about/mozambique`"
-            class="flex flex-col items-center text-center bg-gray-50 rounded-lg p-6 hover:shadow-lg transition-shadow"
-          >
+          <NuxtLink :to="`/projects/${slug}/about/mozambique`"
+            class="flex flex-col items-center text-center bg-gray-50 rounded-lg p-6 hover:shadow-lg transition-shadow">
             <div class="w-32 h-24 mb-4 flex items-center justify-center">
-              <img
-                src="https://flagcdn.com/w320/mz.png"
-                alt="Mozambique Flag"
-                class="max-w-full max-h-full object-contain"
-              >
+              <img src="https://flagcdn.com/w320/mz.png" alt="Mozambique Flag"
+                class="max-w-full max-h-full object-contain">
             </div>
             <h3 class="text-lg font-semibold text-gray-900 mb-2">Mozambique</h3>
             <p class="text-sm text-gray-600">Eduardo Mondlane University</p>
           </NuxtLink>
 
           <!-- Nepal -->
-          <NuxtLink
-            :to="`/projects/${slug}/about/nepal`"
-            class="flex flex-col items-center text-center bg-gray-50 rounded-lg p-6 hover:shadow-lg transition-shadow"
-          >
+          <NuxtLink :to="`/projects/${slug}/about/nepal`"
+            class="flex flex-col items-center text-center bg-gray-50 rounded-lg p-6 hover:shadow-lg transition-shadow">
             <div class="w-32 h-24 mb-4 flex items-center justify-center">
-              <img
-                src="https://flagcdn.com/w320/np.png"
-                alt="Nepal Flag"
-                class="max-w-full max-h-full object-contain"
-              >
+              <img src="https://flagcdn.com/w320/np.png" alt="Nepal Flag" class="max-w-full max-h-full object-contain">
             </div>
             <h3 class="text-lg font-semibold text-gray-900 mb-2">Nepal</h3>
             <p class="text-sm text-gray-600">Pokhara University</p>
           </NuxtLink>
 
           <!-- Uganda -->
-          <NuxtLink
-            :to="`/projects/${slug}/about/uganda`"
-            class="flex flex-col items-center text-center bg-gray-50 rounded-lg p-6 hover:shadow-lg transition-shadow"
-          >
+          <NuxtLink :to="`/projects/${slug}/about/uganda`"
+            class="flex flex-col items-center text-center bg-gray-50 rounded-lg p-6 hover:shadow-lg transition-shadow">
             <div class="w-32 h-24 mb-4 flex items-center justify-center">
-              <img
-                src="https://flagcdn.com/w320/ug.png"
-                alt="Uganda Flag"
-                class="max-w-full max-h-full object-contain"
-              >
+              <img src="https://flagcdn.com/w320/ug.png" alt="Uganda Flag" class="max-w-full max-h-full object-contain">
             </div>
             <h3 class="text-lg font-semibold text-gray-900 mb-2">Uganda</h3>
             <p class="text-sm text-gray-600">Makerere University</p>
@@ -413,16 +391,10 @@ const _fellows = ref([
         </h2>
         <div class="flex flex-wrap gap-8 items-center justify-center">
           <!-- Norway -->
-          <NuxtLink
-            :to="`/projects/${slug}/about/norway`"
-            class="flex flex-col items-center text-center bg-gray-50 rounded-lg p-6 hover:shadow-lg transition-shadow"
-          >
+          <NuxtLink :to="`/projects/${slug}/about/norway`"
+            class="flex flex-col items-center text-center bg-gray-50 rounded-lg p-6 hover:shadow-lg transition-shadow">
             <div class="w-32 h-24 mb-4 flex items-center justify-center">
-              <img
-                src="https://flagcdn.com/w320/no.png"
-                alt="Norway Flag"
-                class="max-w-full max-h-full object-contain"
-              >
+              <img src="https://flagcdn.com/w320/no.png" alt="Norway Flag" class="max-w-full max-h-full object-contain">
             </div>
             <h3 class="text-lg font-semibold text-gray-900 mb-2">Norway</h3>
             <p class="text-sm text-gray-600">Norwegian University of Life Sciences</p>
@@ -436,25 +408,19 @@ const _fellows = ref([
           Featured Publications
         </h2>
         <div class="space-y-4">
-          <article
-            v-for="p in recent3Publications"
-            :key="p.id"
-            class="border border-gray-200 rounded-md bg-white p-4 md:p-5"
-          >
+          <article v-for="p in recent3Publications" :key="p.id"
+            class="border border-gray-200 rounded-md bg-white p-4 md:p-5">
             <NuxtLink :to="`${basePath}/research/${p.documentId || p.id}`">
               <h3 class="text-base md:text-lg font-semibold text-gray-900 mb-2">{{ p.title }}</h3>
               <div v-if="p.authors_text" class="flex items-start text-sm text-gray-600 mb-3">
-                <img src="~/assets/user.png" alt="Authors" class="w-4 h-4 mx-4 my-1" >
+                <img src="~/assets/user.png" alt="Authors" class="w-4 h-4 mx-4 my-1">
                 <span>{{ p.authors_text }}</span>
               </div>
               <p class="text-sm text-gray-700 mb-3">{{ excerpt(p.abstract) }}</p>
               <div class="flex flex-wrap gap-2">
-                <span
-                  v-for="(tag, idx) in p.tags"
-                  :key="idx"
-                  class="inline-block text-xs px-2 py-1 rounded border border-green-200 text-green-700 bg-green-50"
-                  >{{ tag.tag }}</span
-                >
+                <span v-for="(tag, idx) in p.tags" :key="idx"
+                  class="inline-block text-xs px-2 py-1 rounded border border-green-200 text-green-700 bg-green-50">{{
+                    tag.tag }}</span>
               </div>
             </NuxtLink>
           </article>
@@ -483,17 +449,11 @@ const _fellows = ref([
           Featured News
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <article
-            v-for="n in newsVisible"
-            :key="n.id"
-            class="border border-gray-200 rounded-md bg-white overflow-hidden flex"
-          >
-            <NuxtLink
-              :to="n.to"
-              class="flex flex-1 hover:bg-green-50 transition-colors duration-150"
-            >
+          <article v-for="n in newsVisible" :key="n.id"
+            class="border border-gray-200 rounded-md bg-white overflow-hidden flex">
+            <NuxtLink :to="n.to" class="flex flex-1 hover:bg-green-50 transition-colors duration-150">
               <div class="w-40 h-36 flex-shrink-0">
-                <img :src="n.image" :alt="n.title" class="w-full h-full object-cover" >
+                <img :src="n.image" :alt="n.title" class="w-full h-full object-cover">
               </div>
               <div class="p-4 flex flex-col justify-center">
                 <h3 class="text-[15px] font-semibold text-green-700 mb-1">{{ n.title }}</h3>
@@ -504,17 +464,10 @@ const _fellows = ref([
         </div>
         <!-- News pagination -->
         <div v-if="newsTotal > 1" class="mt-6 flex items-center justify-center gap-2">
-          <button
-            v-for="page in newsTotal"
-            :key="page"
-            class="min-w-[32px] h-7 px-2 text-sm rounded border"
-            :class="
-              page === newsPage
-                ? 'bg-green-600 text-white border-green-600'
-                : 'bg-white text-gray-800 border-gray-300'
-            "
-            @click="newsPage = page"
-          >
+          <button v-for="page in newsTotal" :key="page" class="min-w-[32px] h-7 px-2 text-sm rounded border" :class="page === newsPage
+            ? 'bg-green-600 text-white border-green-600'
+            : 'bg-white text-gray-800 border-gray-300'
+            " @click="newsPage = page">
             {{ page }}
           </button>
         </div>
