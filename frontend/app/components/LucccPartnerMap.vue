@@ -647,6 +647,16 @@ const bindSvg = () => {
   svg.addEventListener('pointerdown', handlePointerDown);
   attachedListeners.push({ element: svg, type: 'pointerdown', handler: handlePointerDown });
 
+  const svgClickHandler: EventListener = (event) => {
+    if (suppressClick) return;
+    const target = event.target as Element;
+    if (!target.closest('.is-interactive')) {
+      closePanel();
+    }
+  };
+  svg.addEventListener('click', svgClickHandler);
+  attachedListeners.push({ element: svg, type: 'click', handler: svgClickHandler });
+
   const rawViewBox = svg.getAttribute('viewBox') ?? svg.getAttribute('viewbox') ?? '0 0 2000 857';
   const parsedViewBox = parseViewBox(rawViewBox);
   if (parsedViewBox) {

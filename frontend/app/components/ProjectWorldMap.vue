@@ -91,9 +91,9 @@ const countries: Country[] = [
 ];
 
 const countryLookup = new Map(countries.map((country) => [country.iso, country]));
-const PRIMARY_VIEW_ISOS = ['BD', 'NP', 'MZ', 'UG'];
-const SUPPLEMENTAL_VIEW_ISOS = ['NO'];
-const DEFAULT_INITIAL_ZOOM_EXP = 3;
+const PRIMARY_VIEW_ISOS = ['BD', 'NP', 'MZ', 'UG', 'NO'];
+const SUPPLEMENTAL_VIEW_ISOS: string[] = [];
+const DEFAULT_INITIAL_ZOOM_EXP = 0;
 
 const selectedCountryId = ref<string | null>(null);
 const hoveredCountryId = ref<string | null>(null);
@@ -137,8 +137,8 @@ const stopAnimation = () => {
 };
 
 const DEFAULT_PADDING = 0.02;
-const SELECTED_PADDING = 0.26;
-const DEFAULT_SCALE = 0.9;
+const SELECTED_PADDING = 0.2;
+const DEFAULT_SCALE = 1.0;
 const SELECTED_SCALE = 2;
 const ZOOM_STEP = 1.35;
 const MIN_ZOOM_EXP = -2;
@@ -625,6 +625,16 @@ const bindSvg = () => {
   svg.addEventListener('pointerdown', handlePointerDown);
   attachedListeners.push({ element: svg, type: 'pointerdown', handler: handlePointerDown });
 
+  const svgClickHandler: EventListener = (event) => {
+    if (suppressClick) return;
+    const target = event.target as Element;
+    if (!target.closest('.is-interactive')) {
+      closePanel();
+    }
+  };
+  svg.addEventListener('click', svgClickHandler);
+  attachedListeners.push({ element: svg, type: 'click', handler: svgClickHandler });
+
   const rawViewBox = svg.getAttribute('viewBox') ?? svg.getAttribute('viewbox') ?? '0 0 2000 857';
   const parsedViewBox = parseViewBox(rawViewBox);
   if (parsedViewBox) {
@@ -638,8 +648,8 @@ const bindSvg = () => {
   svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
   svg.removeAttribute('width');
   svg.removeAttribute('height');
-  svg.style.width = '100%';
-  svg.style.height = 'auto';
+  svg.style.width = '';
+  svg.style.height = '';
 
   countries.forEach((country) => {
     const nodes: Element[] = [];
@@ -788,34 +798,8 @@ watch(selectedCountryId, (iso) => {
 </script>
 
 <template>
-  <section class="relative w-full bg-[#041b18] text-white">
-    <!-- <div class="mx-auto flex w-full max-w-6xl flex-col gap-6 px-6 md:px-12">
-      <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <div>
-          <p class="text-xs uppercase tracking-[0.3em] text-emerald-400">Partner Network</p>
-          <h2 class="mt-2 text-2xl font-display font-semibold md:text-3xl">
-            Interactive Country Map
-          </h2>
-          <p class="mt-2 max-w-2xl text-sm text-emerald-100/80 md:text-base">
-            Explore the COLOCAL partner countries. Select a highlighted region to learn about
-            ongoing collaborations, research highlights, and policy briefs.
-          </p>
-        </div>
-        <div class="flex items-center gap-3 text-xs text-emerald-200 md:text-sm">
-          <span class="flex items-center gap-2">
-            <span class="legend-dot bg-emerald-500/50" />
-            Active partner
-          </span>
-          <span class="flex items-center gap-2">
-            <span class="legend-dot bg-emerald-300" />
-            Selected country
-          </span>
-        </div>
-      </div>
-    </div> -->
-
-    <div class="relative w-full">
-      <div class="map-stage">
+  <div class="relative w-full aspect-[4/3] md:aspect-[2/1] bg-gray-50 rounded-xl overflow-hidden border border-gray-200 shadow-sm">
+    <div class="map-stage h-full">
         <div class="zoom-controls">
           <button type="button" class="zoom-button" :disabled="!canZoomIn" aria-label="Zoom in" @click="zoomIn">
             +
@@ -825,7 +809,7 @@ watch(selectedCountryId, (iso) => {
           </button>
         </div>
         <!-- eslint-disable-next-line vue/no-v-html -->
-        <div ref="svgContainer" class="map-shell" v-html="worldSvgContent" />
+        <div ref="svgContainer" class="map-shell h-full w-full" v-html="worldSvgContent" />
 
         <Transition name="fade">
           <div v-if="selectedCountry" class="panel-layer">
@@ -889,8 +873,7 @@ v-if="$route.params.slug" :to="`/projects/${$route.params.slug}/about/${selected
           </div>
         </Transition>
       </div>
-    </div>
-  </section>
+  </div>
 </template>
 
 <style scoped>
@@ -911,8 +894,8 @@ v-if="$route.params.slug" :to="`/projects/${$route.params.slug}/about/${selected
 .map-shell :deep(svg) {
   display: block;
   width: 100%;
-  height: auto;
-  background: #041b18;
+  height: 100%;
+  background: #f9fafb;
   cursor: grab;
   touch-action: none;
   user-select: none;
@@ -925,9 +908,9 @@ v-if="$route.params.slug" :to="`/projects/${$route.params.slug}/about/${selected
 }
 
 .map-shell :deep(path) {
-  fill: #072c27;
-  stroke: rgba(12, 62, 53, 0.75);
-  stroke-width: 0.4;
+  fill: #e5e7eb;
+  stroke: #ffffff;
+  stroke-width: 0.5;
   transition:
     fill 0.2s ease,
     stroke 0.2s ease,
@@ -937,37 +920,30 @@ v-if="$route.params.slug" :to="`/projects/${$route.params.slug}/about/${selected
 /* Highlighted countries */
 .map-shell :deep(.country-shape) {
   cursor: pointer;
-  fill: rgba(52, 211, 153, 0.55);
-  stroke: rgba(74, 222, 128, 0.9);
+  fill: #16a34a;
+  stroke: #ffffff;
   stroke-width: 0.8;
 }
 
 .map-shell :deep(.country-shape.is-hovered) {
-  fill: rgba(74, 222, 128, 0.85);
+  fill: #15803d;
 }
 
 .map-shell :deep(.country-shape.is-selected) {
-  fill: #6ef3b7;
-  stroke: #bbf7d0;
-  filter: drop-shadow(0 0 12px rgba(110, 243, 183, 0.45));
+  fill: #22c55e;
+  stroke: #16a34a;
+  filter: drop-shadow(0 0 12px rgba(34, 197, 94, 0.45));
 }
 
 .map-shell :deep(.country-shape:focus) {
   outline: none;
-  filter: drop-shadow(0 0 12px rgba(110, 243, 183, 0.45));
-}
-
-.legend-dot {
-  display: inline-block;
-  width: 0.75rem;
-  height: 0.75rem;
-  border-radius: 9999px;
+  filter: drop-shadow(0 0 12px rgba(34, 197, 94, 0.45));
 }
 
 .zoom-controls {
   position: absolute;
-  top: clamp(0.75rem, 3vw, 2rem);
-  left: clamp(0.75rem, 4vw, 2.5rem);
+  top: clamp(0.75rem, 3vw, 1.5rem);
+  left: clamp(0.75rem, 4vw, 1.5rem);
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -979,14 +955,15 @@ v-if="$route.params.slug" :to="`/projects/${$route.params.slug}/about/${selected
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: 0.75rem;
-  background: rgba(4, 27, 24, 0.82);
-  color: #f8fafc;
-  font-size: 1.35rem;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 0.5rem;
+  background: #ffffff;
+  color: #4b5563;
+  font-size: 1.25rem;
   font-weight: 600;
-  border: 1px solid rgba(148, 163, 184, 0.35);
+  border: 1px solid #d1d5db;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   transition:
     background 0.2s ease,
     color 0.2s ease,
@@ -994,8 +971,8 @@ v-if="$route.params.slug" :to="`/projects/${$route.params.slug}/about/${selected
 }
 
 .zoom-button:hover:not(:disabled) {
-  background: rgba(16, 185, 129, 0.9);
-  color: #ffffff;
+  background: #f3f4f6;
+  color: #111827;
   transform: translateY(-1px);
 }
 
@@ -1009,52 +986,56 @@ v-if="$route.params.slug" :to="`/projects/${$route.params.slug}/about/${selected
   display: flex;
   justify-content: flex-start;
   pointer-events: none;
-  padding: clamp(1.75rem, 5vw, 4rem);
-  padding-top: clamp(1rem, 6vh, 4.5rem);
+  padding: clamp(1rem, 5vw, 2rem);
+  padding-top: clamp(1rem, 6vh, 2rem);
 }
 
 .info-panel {
   position: sticky;
-  top: clamp(2rem, 6vh, 4.5rem);
+  top: clamp(1rem, 6vh, 2rem);
   align-self: flex-start;
   max-width: min(22rem, 90vw);
-  margin-left: clamp(0rem, 3vw, 3rem);
-  margin-top: clamp(0rem, 3vh, 1.5rem);
+  margin-left: clamp(0rem, 3vw, 1rem);
+  margin-top: clamp(0rem, 3vh, 0.5rem);
   background: #ffffff;
   color: #111827;
-  border-radius: 1.5rem;
-  box-shadow: 0 20px 45px -15px rgba(6, 78, 59, 0.4);
-  padding: 1.5rem 1.75rem;
+  border-radius: 1rem;
+  box-shadow:
+    0 10px 25px -5px rgba(0, 0, 0, 0.1),
+    0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  padding: 1.25rem 1.5rem;
   pointer-events: auto;
   z-index: 2;
+  border: 1px solid #e5e7eb;
 }
 
 .panel-close {
   position: absolute;
-  top: -1rem;
-  left: -1rem;
+  top: -0.75rem;
+  left: -0.75rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2rem;
-  height: 2rem;
+  width: 1.75rem;
+  height: 1.75rem;
   border-radius: 9999px;
   background: #ffffff;
-  color: #64748b;
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.14);
+  color: #6b7280;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
   transition: color 0.2s ease;
 }
 
 .panel-close:hover {
-  color: #0f172a;
+  color: #111827;
 }
 
 .panel-eyebrow {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: #047857;
+  color: #059669;
   margin-bottom: 0.5rem;
 }
 
@@ -1068,53 +1049,6 @@ v-if="$route.params.slug" :to="`/projects/${$route.params.slug}/about/${selected
   font-size: 0.875rem;
   color: #4b5563;
   margin-bottom: 1rem;
-}
-
-.panel-section {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: #047857;
-}
-
-.panel-chip-row {
-  margin-top: 0.5rem;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.panel-chip {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 9999px;
-  padding: 0.35rem 0.75rem;
-  font-size: 0.75rem;
-  font-weight: 500;
-  line-height: 1;
-  white-space: nowrap;
-}
-
-.panel-chip--primary {
-  background: rgba(16, 185, 129, 0.12);
-  color: #0f766e;
-}
-
-.panel-chip--muted {
-  background: rgba(209, 213, 219, 0.6);
-  color: #374151;
-}
-
-.panel-chip--outline,
-.panel-chip--outline-muted {
-  border: 1px solid rgba(107, 114, 128, 0.35);
-  color: #334155;
-  background: transparent;
-}
-
-.panel-chip--outline {
-  border-color: rgba(16, 185, 129, 0.4);
-  color: #0f766e;
 }
 
 .panel-cta {
@@ -1150,25 +1084,20 @@ v-if="$route.params.slug" :to="`/projects/${$route.params.slug}/about/${selected
 @media (max-width: 768px) {
   .panel-layer {
     position: static;
-    padding: 1.5rem 1.25rem 0;
+    padding: 1.25rem 1rem 0;
   }
 
   .info-panel {
     position: static;
     margin-top: 1.5rem;
     width: 100%;
+    margin-left: 0;
   }
 
   .panel-close {
-    top: -1.25rem;
+    top: -0.75rem;
     left: auto;
-    right: 1.25rem;
-  }
-}
-
-@media (min-width: 768px) {
-  .map-shell {
-    border-radius: 1.5rem;
+    right: -0.75rem;
   }
 }
 </style>
