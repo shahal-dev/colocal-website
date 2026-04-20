@@ -1,13 +1,18 @@
 <template>
   <div v-if="carouselImages.length" class="gallery-carousel">
-    <div class="carousel" role="region" aria-label="Image gallery carousel">
+    <div
+      class="carousel"
+      :class="{ 'carousel--large': props.large }"
+      role="region"
+      aria-label="Image gallery carousel"
+    >
       <transition :name="transitionName" mode="out-in">
         <div :key="`${activeIndex}-${currentSlide}`" class="carousel-slide">
           <img :src="currentSlide" :alt="slideAlt(activeIndex)" class="media" >
         </div>
       </transition>
 
-      <div class="carousel-controls">
+      <div v-if="carouselImages.length > 1" class="carousel-controls">
         <button
           type="button"
           class="control control--prev"
@@ -17,7 +22,7 @@
         <button type="button" class="control control--next" aria-label="Next slide" @click="next" />
       </div>
 
-      <div class="carousel-indicators">
+      <div v-if="carouselImages.length > 1" class="carousel-indicators">
         <div class="indicator-track">
           <button
             v-for="(src, i) in carouselImages"
@@ -44,6 +49,7 @@ import { computed, onBeforeUnmount, onMounted, ref, watch, watchEffect } from 'v
 const props = defineProps<{
   images: Array<string | null | undefined> | null | undefined;
   title?: string | null;
+  large?: boolean;
 }>();
 
 const normalizedImages = computed(() => {
@@ -173,9 +179,16 @@ onBeforeUnmount(() => {
   overflow: hidden;
 }
 
+.carousel--large {
+  height: 26.4rem; /* 22 * 1.2 */
+}
+
 @media (min-width: 768px) {
   .carousel {
     height: 26rem;
+  }
+  .carousel--large {
+    height: 31.2rem; /* 26 * 1.2 */
   }
 }
 
