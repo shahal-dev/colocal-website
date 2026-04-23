@@ -21,7 +21,7 @@ const countries: Country[] = [
     iso: 'AF',
     selectors: ['#AF'],
     name: 'Afghanistan',
-    institutions: ['Faculty of Environment, Kabul University'],
+    institutions: ['Kabul University'],
   },
   {
     iso: 'BD',
@@ -34,7 +34,7 @@ const countries: Country[] = [
     iso: 'BT',
     selectors: ['#BT'],
     name: 'Bhutan',
-    institutions: ['College of Natural Resources, Royal University of Bhutan'],
+    institutions: ['Royal University of Bhutan'],
   },
   {
     iso: 'BF',
@@ -52,7 +52,7 @@ const countries: Country[] = [
     iso: 'ET',
     selectors: ['#ET'],
     name: 'Ethiopia',
-    institutions: ['Climate Science Centre, Addis Ababa University'],
+    institutions: ['Addis Ababa University'],
   },
   { iso: 'GM', selectors: ['#GM'], name: 'The Gambia', institutions: ['University of The Gambia'] },
   { iso: 'LR', selectors: ['#LR'], name: 'Liberia', institutions: ['University of Liberia'] },
@@ -72,15 +72,13 @@ const countries: Country[] = [
     iso: 'NP',
     selectors: ['#NP'],
     name: 'Nepal',
-    institutions: ['School of Environmental Science and Management (SchEMS), Pokhara'],
+    institutions: ['School of Environmental Science and Management (SchEMS)'],
   },
   {
     iso: 'RW',
     selectors: ['#RW'],
     name: 'Rwanda',
-    institutions: [
-      'Center of Excellence in Biodiversity and Natural Resource Management, University of Rwanda',
-    ],
+    institutions: ['University of Rwanda'],
   },
   {
     iso: 'SN',
@@ -92,7 +90,7 @@ const countries: Country[] = [
     iso: 'SD',
     selectors: ['#SD'],
     name: 'Sudan',
-    institutions: ['Institute of Environmental Studies, University of Khartoum'],
+    institutions: ['University of Khartoum'],
   },
   {
     iso: 'TZ',
@@ -104,9 +102,7 @@ const countries: Country[] = [
     iso: 'UG',
     selectors: ['#UG'],
     name: 'Uganda',
-    institutions: [
-      'Makerere University Centre for Climate Change Research and Innovation (MUCCRI), Makerere University',
-    ],
+    institutions: ['Makerere University'],
   },
 ];
 
@@ -1056,21 +1052,34 @@ watch(selectedCountryId, (iso) => {
 
 @media (max-width: 768px) {
   .panel-layer {
-    position: static;
-    padding: 1.25rem 1rem 0;
+    position: absolute;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 0 1rem 1rem 1rem;
+    pointer-events: none;
+    z-index: 10;
   }
 
   .info-panel {
-    position: static;
-    margin-top: 1.5rem;
+    position: relative;
     width: 100%;
-    margin-right: 0;
+    margin: 0 auto;
+    padding: 1rem 1.25rem;
+    pointer-events: auto;
+    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.05);
   }
 
   .panel-close {
     top: -0.75rem;
+    right: -0.5rem;
     left: auto;
-    right: -0.75rem;
+  }
+
+  .panel-title {
+    font-size: 1.125rem;
+    line-height: 1.2;
   }
 }
 </style>
