@@ -91,7 +91,7 @@ const countries: Country[] = [
 ];
 
 const countryLookup = new Map(countries.map((country) => [country.iso, country]));
-const PRIMARY_VIEW_ISOS = ['BD', 'NP', 'MZ', 'UG', 'NO'];
+const PRIMARY_VIEW_ISOS = ['BD', 'NP', 'MZ', 'UG'];
 const SUPPLEMENTAL_VIEW_ISOS: string[] = [];
 const DEFAULT_INITIAL_ZOOM_EXP = 0;
 

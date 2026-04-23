@@ -150,7 +150,7 @@ const { data: authorsRes } = await useAsyncData<{ data: Author[] }>('authors', (
   $fetch('/api/authors')
 );
 const { data: publications } = await useAsyncData<ResearchPublication[]>('publications', () =>
-  $fetch('/api/publications')
+  $fetch('/api/publications', { query: { projectSlug: slug } })
 );
 const { data: newsEvents } = await useAsyncData<NewsEvent[]>('news-events', () =>
   $fetch('/api/news-events')

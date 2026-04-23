@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useRoute } from '#app';
-import type { ResearchPublication, EducationTraining } from '~~/types/content';
+import type { ResearchPublication } from '~~/types/content';
 
 useHead({
   title: 'Resource Hub — LUCCC',
@@ -24,16 +24,10 @@ const route = useRoute();
 const hasChild = computed(() => Boolean(route.params.id));
 
 // Fetch all publications and education/training entries
-const [{ data: publications }, { data: educations }] = await Promise.all([
-  useAsyncData<ResearchPublication[]>(
-    'hub-publications',
-    async () => (await $fetch('/api/publications')) as ResearchPublication[]
-  ),
-  useAsyncData<EducationTraining[]>(
-    'hub-educations',
-    async () => (await $fetch('/api/education-trainings')) as EducationTraining[]
-  ),
-]);
+const { data: publications } = await useAsyncData<ResearchPublication[]>(
+  'hub-publications',
+  async () => (await $fetch('/api/publications')) as ResearchPublication[]
+);
 
 const items = computed<HubItem[]>(() => {
   const pubs = (publications.value ?? []).map<HubItem>((p) => ({
@@ -46,19 +40,7 @@ const items = computed<HubItem[]>(() => {
     tags: p.tags ?? null,
     pubType: p.publication_type?.type ?? null,
   }));
-  console.log(
-    'Pubs title:',
-    pubs.map((p) => p.title)
-  );
-  const edus = (educations.value ?? []).map<HubItem>((e) => ({
-    kind: 'education',
-    id: e.documentId || e.id,
-    date: e.date,
-    title: e.title,
-    summary: e.body || '',
-    eduType: e.type?.type ?? null,
-  }));
-  return [...pubs, ...edus].sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
+  return pubs.sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
 });
 
 const tabs = ['Publications', 'Capacity Building Opportunities', 'Funding Opportunities'];

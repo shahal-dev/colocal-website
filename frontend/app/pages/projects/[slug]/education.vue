@@ -182,11 +182,21 @@ function goToPage(
                     {{ card.title }}
                   </h3>
                   <p class="text-sm text-gray-700 line-clamp-3 mb-4">{{ card.body }}</p>
-                  <div v-if="card.type?.type" class="flex items-center gap-2">
+                  <div
+                    v-if="card.type?.type || card.country?.name"
+                    class="flex items-center gap-2 flex-wrap"
+                  >
                     <span
+                      v-if="card.type?.type"
                       class="inline-block text-xs px-2 py-1 rounded border border-green-200 text-green-700 bg-green-50"
                     >
                       {{ card.type.type }}
+                    </span>
+                    <span
+                      v-if="card.country?.name"
+                      class="inline-block text-xs px-2 py-1 rounded border border-blue-200 text-blue-700 bg-blue-50"
+                    >
+                      {{ card.country.name }}
                     </span>
                   </div>
                 </div>
@@ -235,11 +245,21 @@ function goToPage(
                     {{ card.title }}
                   </h3>
                   <p class="text-sm text-gray-700 line-clamp-3 mb-4">{{ card.body }}</p>
-                  <div v-if="card.type?.type" class="flex items-center gap-2">
+                  <div
+                    v-if="card.type?.type || card.country?.name"
+                    class="flex items-center gap-2 flex-wrap"
+                  >
                     <span
+                      v-if="card.type?.type"
                       class="inline-block text-xs px-2 py-1 rounded border border-green-200 text-green-700 bg-green-50"
                     >
                       {{ card.type.type }}
+                    </span>
+                    <span
+                      v-if="card.country?.name"
+                      class="inline-block text-xs px-2 py-1 rounded border border-blue-200 text-blue-700 bg-blue-50"
+                    >
+                      {{ card.country.name }}
                     </span>
                   </div>
                 </div>
@@ -291,11 +311,21 @@ function goToPage(
                     {{ card.title }}
                   </h3>
                   <p class="text-sm text-gray-700 line-clamp-3 mb-4">{{ card.body }}</p>
-                  <div v-if="card.type?.type" class="flex items-center gap-2">
+                  <div
+                    v-if="card.type?.type || card.country?.name"
+                    class="flex items-center gap-2 flex-wrap"
+                  >
                     <span
+                      v-if="card.type?.type"
                       class="inline-block text-xs px-2 py-1 rounded border border-green-200 text-green-700 bg-green-50"
                     >
                       {{ card.type.type }}
+                    </span>
+                    <span
+                      v-if="card.country?.name"
+                      class="inline-block text-xs px-2 py-1 rounded border border-blue-200 text-blue-700 bg-blue-50"
+                    >
+                      {{ card.country.name }}
                     </span>
                   </div>
                 </div>
@@ -347,11 +377,21 @@ function goToPage(
                     {{ card.title }}
                   </h3>
                   <p class="text-sm text-gray-700 line-clamp-3 mb-4">{{ card.body }}</p>
-                  <div v-if="card.type?.type" class="flex items-center gap-2">
+                  <div
+                    v-if="card.type?.type || card.country?.name"
+                    class="flex items-center gap-2 flex-wrap"
+                  >
                     <span
+                      v-if="card.type?.type"
                       class="inline-block text-xs px-2 py-1 rounded border border-green-200 text-green-700 bg-green-50"
                     >
                       {{ card.type.type }}
+                    </span>
+                    <span
+                      v-if="card.country?.name"
+                      class="inline-block text-xs px-2 py-1 rounded border border-blue-200 text-blue-700 bg-blue-50"
+                    >
+                      {{ card.country.name }}
                     </span>
                   </div>
                 </div>

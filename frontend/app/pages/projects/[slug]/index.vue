@@ -57,11 +57,33 @@ const { data: publications } = await useAsyncData<ResearchPublication[]>(
 );
 
 const recent3Publications = computed(() => {
-  if (!publications.value || !publications.value.length) return [];
-  return publications.value
+  if (!publications.value || !publications.value.length) {
+    return [
+      {
+        id: 'see-more-card',
+        isSeeMore: true,
+        title: 'Explore All Resources',
+        abstract:
+          'Discover more publications, training materials, and research outputs in our comprehensive repository.',
+      },
+    ];
+  }
+
+  const items: (ResearchPublication & { isSeeMore?: boolean })[] = publications.value
     .slice()
     .sort((a, b) => new Date(b.date || 0).getTime() - new Date(a.date || 0).getTime())
-    .slice(0, 3);
+    .slice(0, 2)
+    .map((p) => ({ ...p, isSeeMore: false }));
+
+  items.push({
+    id: 'see-more-card',
+    isSeeMore: true,
+    title: 'Explore All Resources',
+    abstract:
+      'Discover more publications, training materials, and research outputs in our comprehensive repository.',
+  });
+
+  return items;
 });
 
 // // Featured publications (sample data + pagination)
@@ -213,18 +235,20 @@ const newsItems = computed<NewsCard[]>(() => {
 
   return newsCards.length > 0 ? newsCards : fallbackNews;
 });
-const newsPage = ref(1);
-const newsSize = 4;
-const newsTotal = computed(() => Math.max(1, Math.ceil(newsItems.value.length / newsSize)));
-const newsVisible = computed(() => {
-  const start = (newsPage.value - 1) * newsSize;
-  return newsItems.value.slice(start, start + newsSize);
-});
 
-watchEffect(() => {
-  if (newsPage.value > newsTotal.value) {
-    newsPage.value = 1;
-  }
+const homeNewsItems = computed(() => {
+  const items: (NewsCard & { isSeeMore?: boolean })[] = newsItems.value
+    .slice(0, 2)
+    .map((n) => ({ ...n, isSeeMore: false }));
+
+  items.push({
+    id: 'see-more-news',
+    isSeeMore: true,
+    title: 'Explore All News & Events',
+    excerpt: 'Stay updated with the latest activities, workshops, and news from our project.',
+  });
+
+  return items;
 });
 
 const researchCarouselItems = computed<CarouselItem[]>(() => {
@@ -450,46 +474,65 @@ const _fellows = ref([
         <h2 class="text-center text-[24px] md:text-[28px] font-display font-medium mb-6">
           Featured Publications
         </h2>
-        <div class="space-y-4">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           <article
             v-for="p in recent3Publications"
             :key="p.id"
-            class="border border-gray-200 rounded-md bg-white p-4 md:p-5"
+            class="flex flex-col border border-gray-200 rounded-md bg-white p-4 md:p-5 h-full hover:shadow-md transition-shadow"
           >
-            <NuxtLink :to="`${basePath}/research/${p.documentId || p.id}`">
-              <h3 class="text-base md:text-lg font-semibold text-gray-900 mb-2">{{ p.title }}</h3>
+            <NuxtLink
+              v-if="!p.isSeeMore"
+              :to="`${basePath}/research/${p.documentId || p.id}`"
+              class="flex flex-col h-full"
+            >
+              <h3
+                class="text-base md:text-lg font-semibold text-gray-900 mb-2 line-clamp-3 hover:underline"
+              >
+                {{ p.title }}
+              </h3>
               <div v-if="p.authors_text" class="flex items-start text-sm text-gray-600 mb-3">
-                <img src="~/assets/user.png" alt="Authors" class="w-4 h-4 mx-4 my-1" >
-                <span>{{ p.authors_text }}</span>
+                <img
+                  src="~/assets/user.png"
+                  alt="Authors"
+                  class="w-4 h-4 mr-2 mt-0.5 flex-shrink-0"
+                >
+                <span class="line-clamp-2">{{ p.authors_text }}</span>
               </div>
-              <p class="text-sm text-gray-700 mb-3">{{ excerpt(p.abstract) }}</p>
-              <div class="flex flex-wrap gap-2">
+              <p class="text-sm text-gray-700 mb-3 flex-grow">{{ excerpt(p.abstract, 160) }}</p>
+              <div class="flex flex-wrap gap-2 mt-auto">
                 <span
-                  v-for="(tag, idx) in p.tags"
+                  v-for="(tag, idx) in (p.tags || []).slice(0, 3)"
                   :key="idx"
-                  class="inline-block text-xs px-2 py-1 rounded border border-green-200 text-green-700 bg-green-50"
+                  class="inline-block text-[11px] px-2 py-0.5 rounded border border-green-200 text-green-700 bg-green-50 truncate max-w-[120px]"
                   >{{ tag.tag }}</span
                 >
               </div>
             </NuxtLink>
+
+            <NuxtLink
+              v-else
+              :to="`${basePath}/research`"
+              class="flex flex-col h-full items-center justify-center text-center group p-6"
+            >
+              <div
+                class="w-16 h-16 rounded-full bg-green-50 flex items-center justify-center text-green-600 mb-6 group-hover:bg-green-600 group-hover:text-white transition-colors"
+              >
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M14 5l7 7m0 0l-7 7m7-7H3"
+                  />
+                </svg>
+              </div>
+              <h3 class="text-xl font-semibold text-green-800 mb-3 group-hover:underline">
+                {{ p.title }}
+              </h3>
+              <p class="text-sm text-gray-600">{{ p.abstract }}</p>
+            </NuxtLink>
           </article>
         </div>
-        <!-- Publications pagination
-      <div v-if="pubTotal > 1" class="mt-6 flex items-center justify-center gap-2">
-        <button
-          v-for="page in pubTotal"
-          :key="page"
-          class="min-w-[32px] h-7 px-2 text-sm rounded border"
-          :class="
-            page === pubPage
-              ? 'bg-green-600 text-white border-green-600'
-              : 'bg-white text-gray-800 border-gray-300'
-          "
-          @click="pubPage = page"
-        >
-          {{ page }}
-        </button>
-      </div> -->
       </section>
 
       <!-- Featured News -->
@@ -497,41 +540,49 @@ const _fellows = ref([
         <h2 class="text-center text-[24px] md:text-[28px] font-display font-medium mb-6">
           Featured News
         </h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           <article
-            v-for="n in newsVisible"
+            v-for="n in homeNewsItems"
             :key="n.id"
-            class="border border-gray-200 rounded-md bg-white overflow-hidden flex"
+            class="border border-gray-200 rounded-xl bg-white overflow-hidden hover:shadow-md transition-shadow h-full flex flex-col"
           >
-            <NuxtLink
-              :to="n.to"
-              class="flex flex-1 hover:bg-green-50 transition-colors duration-150"
-            >
-              <div class="w-40 h-36 flex-shrink-0">
+            <NuxtLink v-if="!n.isSeeMore" :to="n.to" class="flex flex-col h-full group">
+              <div class="w-full h-48 flex-shrink-0 bg-gray-100">
                 <img :src="n.image" :alt="n.title" class="w-full h-full object-cover" >
               </div>
-              <div class="p-4 flex flex-col justify-center">
-                <h3 class="text-[15px] font-semibold text-green-700 mb-1">{{ n.title }}</h3>
-                <p class="text-sm text-gray-700 line-clamp-2">{{ n.excerpt }}</p>
+              <div class="p-5 flex flex-col justify-center flex-grow">
+                <h3
+                  class="text-[17px] font-semibold text-gray-900 mb-2 group-hover:text-green-700 transition-colors line-clamp-2"
+                >
+                  {{ n.title }}
+                </h3>
+                <p class="text-sm text-gray-600 line-clamp-2">{{ n.excerpt }}</p>
               </div>
             </NuxtLink>
+
+            <NuxtLink
+              v-else
+              :to="`${basePath}/outreach`"
+              class="flex flex-col h-full items-center justify-center text-center group p-6"
+            >
+              <div
+                class="w-16 h-16 rounded-full bg-green-50 flex items-center justify-center text-green-600 mb-6 group-hover:bg-green-600 group-hover:text-white transition-colors"
+              >
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M14 5l7 7m0 0l-7 7m7-7H3"
+                  />
+                </svg>
+              </div>
+              <h3 class="text-xl font-semibold text-green-800 mb-3 group-hover:underline">
+                {{ n.title }}
+              </h3>
+              <p class="text-sm text-gray-600">{{ n.excerpt }}</p>
+            </NuxtLink>
           </article>
-        </div>
-        <!-- News pagination -->
-        <div v-if="newsTotal > 1" class="mt-6 flex items-center justify-center gap-2">
-          <button
-            v-for="page in newsTotal"
-            :key="page"
-            class="min-w-[32px] h-7 px-2 text-sm rounded border"
-            :class="
-              page === newsPage
-                ? 'bg-green-600 text-white border-green-600'
-                : 'bg-white text-gray-800 border-gray-300'
-            "
-            @click="newsPage = page"
-          >
-            {{ page }}
-          </button>
         </div>
       </section>
 
@@ -569,6 +620,14 @@ const _fellows = ref([
 </template>
 
 <style scoped>
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }

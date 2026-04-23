@@ -120,18 +120,23 @@ function excerpt(text?: string | null, n = 220) {
   return t.length > n ? t.slice(0, n) + '…' : t;
 }
 
-// News pagination
-const pageSize = 6;
-const currentPage = ref(1);
-const totalPages = computed(() => Math.max(1, Math.ceil((newsData.value?.length || 0) / pageSize)));
-const visibleNews = computed(() => {
-  const start = (currentPage.value - 1) * pageSize;
-  return (newsData.value || []).slice(start, start + pageSize);
+// News items logic
+const homeNewsItems = computed(() => {
+  const items: (NewsEvent & { isSeeMore?: boolean; body?: string })[] = (newsData.value || [])
+    .slice()
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .slice(0, 2)
+    .map((e) => ({ ...e, isSeeMore: false }));
+
+  items.push({
+    id: 'see-more-news',
+    isSeeMore: true,
+    title: 'Explore All News & Events',
+    body: 'Stay updated with the latest activities, workshops, and news from our consortium.',
+  });
+
+  return items;
 });
-function goToNewsPage(page: number) {
-  if (page < 1 || page > totalPages.value) return;
-  currentPage.value = page;
-}
 </script>
 
 <template>
@@ -304,17 +309,18 @@ function goToNewsPage(page: number) {
         >
           News and Events
         </h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           <article
-            v-for="e in visibleNews"
+            v-for="e in homeNewsItems"
             :key="e.id"
-            class="border border-gray-200 rounded-xl bg-white p-0 overflow-hidden hover:shadow-md transition-shadow"
+            class="border border-gray-200 rounded-xl bg-white overflow-hidden hover:shadow-md transition-shadow h-full flex flex-col"
           >
             <NuxtLink
-              :to="`/projects/${e.project?.slug || 'global'}/outreach/${e.documentId || e.id}`"
-              class="flex flex-col sm:flex-row h-full group"
+              v-if="!e.isSeeMore"
+              :to="`/news-events/${e.documentId || e.id}`"
+              class="flex flex-col h-full group"
             >
-              <div class="w-full sm:w-48 h-48 sm:h-auto flex-shrink-0 bg-gray-100">
+              <div class="w-full h-48 flex-shrink-0 bg-gray-100">
                 <img
                   v-if="e.cover?.url"
                   :src="e.cover.url"
@@ -343,6 +349,30 @@ function goToNewsPage(page: number) {
                 </h3>
                 <p class="text-sm text-gray-600 line-clamp-2">{{ excerpt(e.body, 120) }}</p>
               </div>
+            </NuxtLink>
+
+            <!-- Final "See More" Card -->
+            <NuxtLink
+              v-else
+              to="/news-events"
+              class="flex flex-col h-full items-center justify-center text-center group p-6"
+            >
+              <div
+                class="w-16 h-16 rounded-full bg-green-50 flex items-center justify-center text-green-600 mb-6 group-hover:bg-green-600 group-hover:text-white transition-colors"
+              >
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M14 5l7 7m0 0l-7 7m7-7H3"
+                  />
+                </svg>
+              </div>
+              <h3 class="text-xl font-semibold text-green-800 mb-3 group-hover:underline">
+                {{ e.title }}
+              </h3>
+              <p class="text-sm text-gray-600">{{ e.body }}</p>
             </NuxtLink>
           </article>
         </div>
@@ -373,13 +403,13 @@ function goToNewsPage(page: number) {
           class="bg-gradient-to-br from-green-50 to-green-100/50 rounded-2xl p-8 md:p-10 border border-green-100 shadow-sm"
         >
           <h3 class="text-2xl font-bold text-green-900 mb-8 text-center">Contact Information</h3>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
-            <div class="bg-white/60 p-5 rounded-xl backdrop-blur-sm">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left h-full">
+            <div class="bg-white/60 p-5 rounded-xl backdrop-blur-sm flex flex-col h-full">
               <p class="text-lg font-bold text-green-900 mb-1">Prof. Mizan R. Khan</p>
               <p class="text-sm text-gray-700 mb-3">Programme Director (LUCCC), ICCCAD at IUB.</p>
               <a
                 href="mailto:mizan.khan@icccad.org"
-                class="inline-flex items-center gap-2 text-green-700 hover:text-green-800 hover:underline transition-colors text-sm font-medium"
+                class="inline-flex items-center gap-2 text-green-700 hover:text-green-800 hover:underline transition-colors text-sm font-medium mt-auto"
               >
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
@@ -392,11 +422,11 @@ function goToNewsPage(page: number) {
                 mizan.khan@icccad.org
               </a>
             </div>
-            <div class="bg-white/60 p-5 rounded-xl backdrop-blur-sm">
+            <div class="bg-white/60 p-5 rounded-xl backdrop-blur-sm flex flex-col h-full">
               <p class="text-lg font-bold text-green-900 mb-1">Md Fahad Hossain</p>
               <a
                 href="mailto:fahad.hossain@icccad.org"
-                class="inline-flex items-center gap-2 text-green-700 hover:text-green-800 hover:underline transition-colors text-sm font-medium mt-3"
+                class="inline-flex items-center gap-2 text-green-700 hover:text-green-800 hover:underline transition-colors text-sm font-medium mt-auto"
               >
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
@@ -409,11 +439,11 @@ function goToNewsPage(page: number) {
                 fahad.hossain@icccad.org
               </a>
             </div>
-            <div class="bg-white/60 p-5 rounded-xl backdrop-blur-sm">
+            <div class="bg-white/60 p-5 rounded-xl backdrop-blur-sm flex flex-col h-full">
               <p class="text-lg font-bold text-green-900 mb-1">Fahmid Mohtasin</p>
               <a
                 href="mailto:fahmid.mohtasin@icccad.org"
-                class="inline-flex items-center gap-2 text-green-700 hover:text-green-800 hover:underline transition-colors text-sm font-medium mt-3"
+                class="inline-flex items-center gap-2 text-green-700 hover:text-green-800 hover:underline transition-colors text-sm font-medium mt-auto"
               >
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path

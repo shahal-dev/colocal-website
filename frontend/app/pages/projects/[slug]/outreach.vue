@@ -98,24 +98,59 @@ function goTo(page: number) {
       <!-- News and Events -->
       <section class="w-full max-w-6xl mx-auto px-4 md:px-0 pb-14 mt-8">
         <h2 class="text-[22px] md:text-[26px] font-display font-semibold mb-4">News and Events</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="flex flex-col gap-8">
           <article
             v-for="e in visible"
             :key="e.id"
-            class="border border-gray-200 rounded-md bg-white p-0 overflow-hidden"
+            class="border border-gray-200 rounded-xl bg-white overflow-hidden hover:shadow-lg transition-shadow group"
           >
             <NuxtLink
               :to="`${basePath}/outreach/${e.documentId || e.id}`"
-              class="flex gap-4 items-start p-3 md:p-4 group"
+              class="flex flex-col md:flex-row w-full"
             >
-              <div class="w-36 h-24 flex-shrink-0 rounded overflow-hidden">
-                <img :src="e.cover?.url" :alt="e.title" class="w-full h-full object-cover" >
+              <div
+                class="w-full md:w-2/5 lg:w-1/3 h-56 md:h-auto min-h-[14rem] overflow-hidden bg-gray-100 flex-shrink-0"
+              >
+                <img
+                  v-if="e.cover?.url"
+                  :src="e.cover.url"
+                  :alt="e.title"
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                >
+                <div v-else class="w-full h-full flex items-center justify-center text-gray-400">
+                  <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2-2v12a2 2 0 002 2z"
+                    />
+                  </svg>
+                </div>
               </div>
-              <div>
-                <h3 class="text-[16px] font-semibold text-green-800 mb-1 group-hover:underline">
+              <div class="p-6 md:p-8 flex flex-col justify-center flex-grow">
+                <div v-if="e.date" class="text-sm font-medium text-green-600 mb-2">
+                  {{
+                    new Date(e.date).toLocaleDateString(undefined, {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                    })
+                  }}
+                </div>
+                <h3
+                  class="text-xl md:text-2xl font-semibold text-gray-900 mb-3 group-hover:text-green-700 transition-colors line-clamp-2"
+                >
                   {{ e.title }}
                 </h3>
-                <p class="text-sm text-gray-700 line-clamp-3">{{ excerpt(e.body) }}</p>
+                <p class="text-gray-600 line-clamp-3 md:line-clamp-4">{{ excerpt(e.body, 250) }}</p>
+                <div v-if="e.country?.name" class="flex items-center gap-2 flex-wrap mt-4">
+                  <span
+                    class="inline-block text-xs px-2 py-1 rounded border border-blue-200 text-blue-700 bg-blue-50"
+                  >
+                    {{ e.country.name }}
+                  </span>
+                </div>
               </div>
             </NuxtLink>
           </article>
@@ -143,12 +178,28 @@ function goTo(page: number) {
 </template>
 
 <style scoped>
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
 .line-clamp-3 {
   display: -webkit-box;
   -webkit-line-clamp: 3;
   line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+.md\:line-clamp-4 {
+  @media (min-width: 768px) {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
 }
 .hide-scrollbar::-webkit-scrollbar {
   display: none;

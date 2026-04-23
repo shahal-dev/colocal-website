@@ -17,35 +17,8 @@ const { data: current } = await useAsyncData(
   () => $fetch('/api/news-events', { params: { projectSlug: String(slug), id: String(id) } })
 );
 
-// Fetch all authors with avatars
-const { data: authorsData } = await useAsyncData('all-authors', () =>
-  $fetch('/api/authors', { query: { pageSize: '200' } })
-);
-
-// Merge author avatars into the current item
 const item = computed(() => {
   const currentItem = (current.value && current.value[0]) || null;
-  if (!currentItem) return null;
-
-  const authorsMap = new Map();
-
-  if (authorsData.value?.data) {
-    authorsData.value.data.forEach((author) => {
-      authorsMap.set(author.id, author);
-    });
-  }
-
-  if (currentItem.authors && Array.isArray(currentItem.authors)) {
-    const enrichedAuthors = currentItem.authors.map((author) => {
-      const fullAuthor = authorsMap.get(author.id);
-      if (fullAuthor && fullAuthor.avatar) {
-        return { ...author, avatar: fullAuthor.avatar };
-      }
-      return author;
-    });
-    return { ...currentItem, authors: enrichedAuthors };
-  }
-
   return currentItem;
 });
 
@@ -163,7 +136,7 @@ function formatDate(iso: string) {
               {{ secondaryTitle }}
             </div>
 
-            <!-- Author(s) with avatars -->
+            <!-- Author(s) with initials -->
             <div
               v-if="item.authors && item.authors.length > 0"
               class="flex items-center gap-3 mb-3 py-3 border-y border-gray-200"
@@ -172,20 +145,10 @@ function formatDate(iso: string) {
                 <div
                   v-for="(author, idx) in item.authors.slice(0, 3)"
                   :key="idx"
-                  class="w-12 h-12 rounded-full bg-gray-200 border-2 border-white flex items-center justify-center overflow-hidden"
+                  class="w-12 h-12 rounded-full bg-green-100 text-green-700 font-semibold border-2 border-white flex items-center justify-center overflow-hidden"
                   :title="author.name"
                 >
-                  <img
-                    v-if="author.avatar?.url"
-                    :src="author.avatar.url"
-                    :alt="author.name"
-                    class="w-full h-full object-cover"
-                  >
-                  <svg v-else class="w-6 h-6 text-gray-500" viewBox="0 0 24 24" fill="currentColor">
-                    <path
-                      d="M12 12c2.761 0 5-2.686 5-6s-2.239-6-5-6-5 2.686-5 6 2.239 6 5 6zm0 2c-3.866 0-7 3.134-7 7 0 .552.448 1 1 1h12c.552 0 1-.448 1-1 0-3.866-3.134-7-7-7z"
-                    />
-                  </svg>
+                  {{ author.name ? author.name.charAt(0).toUpperCase() : 'A' }}
                 </div>
               </div>
               <div class="flex flex-col">
@@ -231,32 +194,77 @@ function formatDate(iso: string) {
 
         <!-- Sidebar -->
         <aside class="md:col-span-4">
-          <h3 class="text-lg font-semibold mb-4">More Posts</h3>
-          <div class="space-y-4">
-            <NuxtLink
-              v-for="m in more"
-              :key="m.documentId || m.id"
-              :to="`${basePath}/blog/${m.documentId}`"
-              class="flex gap-3 items-center group"
+          <div class="bg-gray-50 rounded-2xl p-6 md:p-8 border border-gray-100 sticky top-24">
+            <h3
+              class="text-xl font-display font-semibold text-gray-900 mb-6 pb-4 border-b border-gray-200"
             >
-              <div class="w-20 h-14 rounded overflow-hidden flex-shrink-0">
-                <img :src="m.cover?.url" :alt="m.title" class="w-full h-full object-cover" >
-              </div>
-              <div class="min-w-0">
-                <p
-                  class="text-sm text-green-700 group-hover:underline"
-                  style="
-                    display: -webkit-box;
-                    -webkit-line-clamp: 3;
-                    line-clamp: 3;
-                    -webkit-box-orient: vertical;
-                    overflow: hidden;
-                  "
+              More Posts
+            </h3>
+            <div class="space-y-6">
+              <NuxtLink
+                v-for="m in more"
+                :key="m.documentId || m.id"
+                :to="`${basePath}/blog/${m.documentId || m.id}`"
+                class="flex gap-4 items-start group"
+              >
+                <div
+                  class="w-24 h-20 rounded-lg overflow-hidden flex-shrink-0 bg-gray-200 shadow-sm"
                 >
-                  {{ m.title }}
-                </p>
-              </div>
-            </NuxtLink>
+                  <img
+                    v-if="m.cover?.url"
+                    :src="m.cover.url"
+                    :alt="m.title"
+                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  >
+                  <div v-else class="w-full h-full flex items-center justify-center text-gray-400">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2-2v12a2 2 0 002 2z"
+                      />
+                    </svg>
+                  </div>
+                </div>
+                <div class="min-w-0 flex-1">
+                  <h4
+                    class="text-sm font-medium text-gray-900 group-hover:text-green-700 transition-colors leading-tight mb-1"
+                    style="
+                      display: -webkit-box;
+                      -webkit-line-clamp: 2;
+                      line-clamp: 2;
+                      -webkit-box-orient: vertical;
+                      overflow: hidden;
+                    "
+                  >
+                    {{ m.title }}
+                  </h4>
+                  <p v-if="m.date" class="text-xs text-gray-500">{{ formatDate(m.date) }}</p>
+                </div>
+              </NuxtLink>
+            </div>
+            <div class="mt-8 pt-5 border-t border-gray-200">
+              <NuxtLink
+                :to="`${basePath}/blog`"
+                class="text-sm font-semibold text-green-700 hover:text-green-800 flex items-center gap-1.5 group w-fit"
+              >
+                View all posts
+                <svg
+                  class="w-4 h-4 group-hover:translate-x-1 transition-transform"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M14 5l7 7m0 0l-7 7m7-7H3"
+                  />
+                </svg>
+              </NuxtLink>
+            </div>
           </div>
         </aside>
       </div>

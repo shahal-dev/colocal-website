@@ -133,16 +133,12 @@ const primaryLinks = computed(() => {
       { label: 'Home', path: `/projects/${slug}` },
       { label: 'About', path: `/projects/${slug}/about` },
       { label: 'Our Team', path: `/projects/${slug}/team` },
-      { label: 'Research', path: `/projects/${slug}/research` },
-      { label: 'Education', path: `/projects/${slug}/education` },
     ];
   }
   return [
     { label: 'Home', path: '/' },
     { label: 'About', path: '/about' },
     { label: 'Resource Hub', path: '/resource-hub' },
-    { label: 'Projects & Programmes', path: '/projects' },
-    { label: 'Education & Training', path: '/education-training' },
   ];
 });
 
@@ -150,11 +146,17 @@ const secondaryLinks = computed(() => {
   if (isProjectPage.value) {
     const slug = projectSlug.value;
     return [
-      { label: 'Outreach & Resources', path: `/projects/${slug}/outreach` },
+      { label: 'Outreach', path: `/projects/${slug}/outreach` },
       { label: 'Blog', path: `/projects/${slug}/blog` },
+      { label: 'Research', path: `/projects/${slug}/research` },
+      { label: 'Education', path: `/projects/${slug}/education` },
     ];
   }
-  return [{ label: 'News & Events', path: '/news-events' }];
+  return [
+    { label: 'News & Events', path: '/news-events' },
+    { label: 'Projects & Programmes', path: '/projects' },
+    { label: 'Education & Training', path: '/education-training' },
+  ];
 });
 const scrollToTop = () => {
   window.scrollTo({
