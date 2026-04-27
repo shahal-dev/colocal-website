@@ -28,13 +28,13 @@ const item = computed(() => {
 
   const authorsMap = new Map();
   if (authorsData.value?.data) {
-    authorsData.value.data.forEach((author: any) => {
+    (authorsData.value.data as Record<string, unknown>[]).forEach((author) => {
       authorsMap.set(author.id, author);
     });
   }
 
   if (currentItem.authors && Array.isArray(currentItem.authors)) {
-    const enrichedAuthors = currentItem.authors.map((author: any) => {
+    const enrichedAuthors = currentItem.authors.map((author: Record<string, unknown>) => {
       const fullAuthor = authorsMap.get(author.id);
       if (fullAuthor && fullAuthor.avatar) {
         return { ...author, avatar: fullAuthor.avatar };
@@ -137,6 +137,19 @@ function formatDate(iso: string) {
     return iso;
   }
 }
+
+function formatAuthorLine(authors: unknown[]) {
+  if (Array.isArray(authors)) {
+    const names = authors
+      .map((entry) =>
+        typeof entry === 'string' ? entry : (entry as Record<string, unknown>)?.name
+      )
+      .filter((name): name is string => typeof name === 'string' && name.trim().length > 0)
+      .map((name) => name.trim());
+    if (names.length) return names.join(' • ');
+  }
+  return '';
+}
 </script>
 
 <template>
@@ -153,7 +166,7 @@ function formatDate(iso: string) {
               v-else-if="item.cover?.url"
               class="w-full h-[24rem] md:h-[30rem] rounded-lg overflow-hidden mb-5"
             >
-              <img :src="item.cover.url" :alt="item.title" class="w-full h-full object-cover" />
+              <img :src="item.cover.url" :alt="item.title" class="w-full h-full object-cover" >
             </div>
 
             <h1 class="text-2xl md:text-3xl font-display font-semibold mb-2">{{ item.title }}</h1>
@@ -178,7 +191,7 @@ function formatDate(iso: string) {
                     :src="author.avatar.url"
                     :alt="author.name"
                     class="w-full h-full object-cover"
-                  />
+                  >
                   <template v-else>
                     {{ author.name ? author.name.charAt(0).toUpperCase() : 'A' }}
                   </template>
@@ -248,7 +261,7 @@ function formatDate(iso: string) {
                     :src="m.cover.url"
                     :alt="m.title"
                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
+                  >
                   <div v-else class="w-full h-full flex items-center justify-center text-gray-400">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path
@@ -273,7 +286,9 @@ function formatDate(iso: string) {
                   >
                     {{ m.title }}
                   </h4>
-                  <p v-if="m.date" class="text-xs text-gray-500">{{ formatDate(m.date) }}</p>
+                  <p v-if="m.authors" class="text-xs text-gray-500">
+                    {{ formatAuthorLine(m.authors) }}
+                  </p>
                 </div>
               </NuxtLink>
             </div>

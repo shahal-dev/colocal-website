@@ -24,7 +24,7 @@ useHead({
             src="http://www.icccad.net/wp-content/uploads/2017/03/Selected-LUCCC-logo-min.png"
             alt="LUCCC Logo"
             class="h-24 object-contain shrink-0 mb-2"
-          />
+          >
           <p class="text-gray-700 leading-relaxed text-lg">
             The Least Developed Countries (LDCs) Universities Consortium on Climate Change (LUCCC)
             is a South-South long-term capacity-building platform comprised of 17 universities as

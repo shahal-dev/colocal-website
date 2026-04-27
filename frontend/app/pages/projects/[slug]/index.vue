@@ -56,8 +56,16 @@ const { data: publications } = await useAsyncData<ResearchPublication[]>(
   }
 );
 
-const recent3Publications = computed(() => {
-  if (!publications.value || !publications.value.length) {
+const recentPublications = computed(() => {
+  if (!publications.value || !publications.value.length) return [];
+  return publications.value
+    .slice()
+    .sort((a, b) => new Date(b.date || 0).getTime() - new Date(a.date || 0).getTime())
+    .slice(0, 8);
+});
+
+const pubItems = computed(() => {
+  if (!recentPublications.value.length) {
     return [
       {
         id: 'see-more-card',
@@ -69,11 +77,9 @@ const recent3Publications = computed(() => {
     ];
   }
 
-  const items: (ResearchPublication & { isSeeMore?: boolean })[] = publications.value
-    .slice()
-    .sort((a, b) => new Date(b.date || 0).getTime() - new Date(a.date || 0).getTime())
-    .slice(0, 2)
-    .map((p) => ({ ...p, isSeeMore: false }));
+  const items: (ResearchPublication & { isSeeMore?: boolean })[] = recentPublications.value.map(
+    (p) => ({ ...p, isSeeMore: false })
+  );
 
   items.push({
     id: 'see-more-card',
@@ -85,6 +91,18 @@ const recent3Publications = computed(() => {
 
   return items;
 });
+
+const pubPageSize = 3;
+const currentPubPage = ref(1);
+const totalPubPages = computed(() => Math.max(1, Math.ceil(pubItems.value.length / pubPageSize)));
+const visiblePubs = computed(() => {
+  const start = (currentPubPage.value - 1) * pubPageSize;
+  return pubItems.value.slice(start, start + pubPageSize);
+});
+function goToPubPage(page: number) {
+  if (page < 1 || page > totalPubPages.value) return;
+  currentPubPage.value = page;
+}
 
 // // Featured publications (sample data + pagination)
 // const publications = ref([
@@ -238,7 +256,7 @@ const newsItems = computed<NewsCard[]>(() => {
 
 const homeNewsItems = computed(() => {
   const items: (NewsCard & { isSeeMore?: boolean })[] = newsItems.value
-    .slice(0, 2)
+    .slice(0, 8)
     .map((n) => ({ ...n, isSeeMore: false }));
 
   items.push({
@@ -246,10 +264,26 @@ const homeNewsItems = computed(() => {
     isSeeMore: true,
     title: 'Explore All News & Events',
     excerpt: 'Stay updated with the latest activities, workshops, and news from our project.',
+    image: '',
+    to: '',
   });
 
   return items;
 });
+
+const newsPageSize = 3;
+const currentNewsPage = ref(1);
+const totalNewsPages = computed(() =>
+  Math.max(1, Math.ceil(homeNewsItems.value.length / newsPageSize))
+);
+const visibleNews = computed(() => {
+  const start = (currentNewsPage.value - 1) * newsPageSize;
+  return homeNewsItems.value.slice(start, start + newsPageSize);
+});
+function goToNewsPage(page: number) {
+  if (page < 1 || page > totalNewsPages.value) return;
+  currentNewsPage.value = page;
+}
 
 const researchCarouselItems = computed<CarouselItem[]>(() => {
   const list = Array.isArray(publications.value) ? publications.value : [];
@@ -389,7 +423,7 @@ const _fellows = ref([
                 src="https://flagcdn.com/w320/bd.png"
                 alt="Bangladesh Flag"
                 class="max-w-full max-h-full object-contain"
-              />
+              >
             </div>
             <h3 class="text-lg font-semibold text-gray-900 mb-2">Bangladesh</h3>
             <p class="text-sm text-gray-600">Independent University, Bangladesh</p>
@@ -405,7 +439,7 @@ const _fellows = ref([
                 src="https://flagcdn.com/w320/mz.png"
                 alt="Mozambique Flag"
                 class="max-w-full max-h-full object-contain"
-              />
+              >
             </div>
             <h3 class="text-lg font-semibold text-gray-900 mb-2">Mozambique</h3>
             <p class="text-sm text-gray-600">Eduardo Mondlane University</p>
@@ -421,7 +455,7 @@ const _fellows = ref([
                 src="https://flagcdn.com/w320/np.png"
                 alt="Nepal Flag"
                 class="max-w-full max-h-full object-contain"
-              />
+              >
             </div>
             <h3 class="text-lg font-semibold text-gray-900 mb-2">Nepal</h3>
             <p class="text-sm text-gray-600">Pokhara University</p>
@@ -437,7 +471,7 @@ const _fellows = ref([
                 src="https://flagcdn.com/w320/ug.png"
                 alt="Uganda Flag"
                 class="max-w-full max-h-full object-contain"
-              />
+              >
             </div>
             <h3 class="text-lg font-semibold text-gray-900 mb-2">Uganda</h3>
             <p class="text-sm text-gray-600">Makerere University</p>
@@ -461,7 +495,7 @@ const _fellows = ref([
                 src="https://flagcdn.com/w320/no.png"
                 alt="Norway Flag"
                 class="max-w-full max-h-full object-contain"
-              />
+              >
             </div>
             <h3 class="text-lg font-semibold text-gray-900 mb-2">Norway</h3>
             <p class="text-sm text-gray-600">Norwegian University of Life Sciences</p>
@@ -476,7 +510,7 @@ const _fellows = ref([
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           <article
-            v-for="p in recent3Publications"
+            v-for="p in visiblePubs"
             :key="p.id"
             class="flex flex-col border border-gray-200 rounded-md bg-white p-4 md:p-5 h-full hover:shadow-md transition-shadow"
           >
@@ -495,7 +529,7 @@ const _fellows = ref([
                   src="~/assets/user.png"
                   alt="Authors"
                   class="w-4 h-4 mr-2 mt-0.5 flex-shrink-0"
-                />
+                >
                 <span class="line-clamp-2">{{ p.authors_text }}</span>
               </div>
               <p class="text-sm text-gray-700 mb-3 flex-grow">{{ excerpt(p.abstract, 160) }}</p>
@@ -533,6 +567,24 @@ const _fellows = ref([
             </NuxtLink>
           </article>
         </div>
+
+        <!-- Pagination for Publications -->
+        <div v-if="totalPubPages > 1" class="mt-12 flex items-center justify-center gap-2">
+          <button
+            v-for="page in totalPubPages"
+            :key="'pub-' + page"
+            :aria-current="page === currentPubPage ? 'true' : 'false'"
+            class="min-w-[36px] h-9 px-3 text-sm font-medium rounded-md border transition-colors"
+            :class="
+              page === currentPubPage
+                ? 'bg-green-600 text-white border-green-600 shadow-sm'
+                : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+            "
+            @click="goToPubPage(page)"
+          >
+            {{ page }}
+          </button>
+        </div>
       </section>
 
       <!-- Featured News -->
@@ -542,13 +594,13 @@ const _fellows = ref([
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           <article
-            v-for="n in homeNewsItems"
+            v-for="n in visibleNews"
             :key="n.id"
             class="border border-gray-200 rounded-xl bg-white overflow-hidden hover:shadow-md transition-shadow h-full flex flex-col"
           >
             <NuxtLink v-if="!n.isSeeMore" :to="n.to" class="flex flex-col h-full group">
               <div class="w-full h-48 flex-shrink-0 bg-gray-100">
-                <img :src="n.image" :alt="n.title" class="w-full h-full object-cover" />
+                <img :src="n.image" :alt="n.title" class="w-full h-full object-cover" >
               </div>
               <div class="p-5 flex flex-col justify-center flex-grow">
                 <h3
@@ -584,6 +636,24 @@ const _fellows = ref([
             </NuxtLink>
           </article>
         </div>
+
+        <!-- Pagination for News -->
+        <div v-if="totalNewsPages > 1" class="mt-12 flex items-center justify-center gap-2">
+          <button
+            v-for="page in totalNewsPages"
+            :key="'news-' + page"
+            :aria-current="page === currentNewsPage ? 'true' : 'false'"
+            class="min-w-[36px] h-9 px-3 text-sm font-medium rounded-md border transition-colors"
+            :class="
+              page === currentNewsPage
+                ? 'bg-green-600 text-white border-green-600 shadow-sm'
+                : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+            "
+            @click="goToNewsPage(page)"
+          >
+            {{ page }}
+          </button>
+        </div>
       </section>
 
       <!-- Our Fellows -->
@@ -612,7 +682,7 @@ const _fellows = ref([
         </div>
       </section> -->
 
-      <section class="w-full mt-12">
+      <section class="w-full max-w-6xl mx-auto my-12">
         <ProjectWorldMap />
       </section>
     </template>

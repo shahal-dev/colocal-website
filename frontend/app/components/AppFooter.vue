@@ -4,7 +4,7 @@
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 items-start">
         <!-- Left Column - Logo and Contact Info -->
         <div v-if="showLogo" class="flex items-start space-x-4 md:space-x-6">
-          <img src="~/assets/logos/luccc-footer.png" alt="LUCCC Logo" class="h-16 w-auto" />
+          <img src="~/assets/logos/luccc-footer.png" alt="LUCCC Logo" class="h-16 w-auto">
 
           <!-- <div class="text-gray-300 flex flex-col justify-start space-y-2 text-sm">
             <a href="tel:+8801813444112" class="hover:underline">+(880) 1813444112</a>
@@ -12,11 +12,7 @@
           </div> -->
         </div>
         <div v-else class="flex items-start space-x-4 md:space-x-6">
-          <img
-            src="~/assets/logos/colocal-black-footer.svg"
-            alt="CoLocal Logo"
-            class="h-20 w-auto"
-          />
+          <img src="~/assets/logos/colocal-black-footer.svg" alt="CoLocal Logo" class="h-20 w-auto">
 
           <!-- <div class="text-gray-300 flex flex-col justify-start space-y-2 text-sm">
             <a href="tel:+8801813444112" class="hover:underline">+(880) 1813444112</a>
@@ -25,19 +21,14 @@
         </div>
 
         <!-- Middle + Right Columns -->
-        <div
-          class="col-span-2 flex flex-col md:flex-row md:items-start md:justify-between space-y-6 md:space-y-0"
-        >
+        <div class="col-span-2 flex flex-col md:flex-row md:items-start md:justify-between space-y-6 md:space-y-0">
           <div class="flex-1 flex flex-col sm:flex-row sm:space-x-8 md:space-x-12">
             <!-- Primary Links -->
             <nav class="mb-2 sm:mb-0">
               <h3 class="sr-only">Primary links</h3>
               <ul class="space-y-2 text-sm font-semibold">
                 <li v-for="link in primaryLinks" :key="link.path">
-                  <NuxtLink
-                    :to="link.path"
-                    class="block text-gray-300 hover:text-white transition-colors"
-                  >
+                  <NuxtLink :to="link.path" class="block text-gray-300 hover:text-white transition-colors">
                     {{ link.label }}
                   </NuxtLink>
                 </li>
@@ -49,10 +40,7 @@
               <h3 class="sr-only">Secondary links</h3>
               <ul class="space-y-2 text-sm font-semibold">
                 <li v-for="link in secondaryLinks" :key="link.path">
-                  <NuxtLink
-                    :to="link.path"
-                    class="block text-gray-300 hover:text-white transition-colors"
-                  >
+                  <NuxtLink :to="link.path" class="block text-gray-300 hover:text-white transition-colors">
                     {{ link.label }}
                   </NuxtLink>
                 </li>
@@ -65,16 +53,9 @@
             <!-- shown on md+ -->
             <button
               class="hidden md:inline-flex w-12 h-12 bg-green-500 hover:bg-green-600 rounded-full items-center justify-center transition-colors shadow-lg"
-              aria-label="Scroll to top"
-              @click="scrollToTop"
-            >
+              aria-label="Scroll to top" @click="scrollToTop">
               <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M5 15l7-7 7 7"
-                />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
               </svg>
             </button>
 
@@ -82,21 +63,9 @@
             <div class="md:hidden flex justify-center w-full mt-2">
               <button
                 class="w-10 h-10 bg-green-500 hover:bg-green-600 rounded-full flex items-center justify-center transition-colors shadow-lg"
-                aria-label="Scroll to top"
-                @click="scrollToTop"
-              >
-                <svg
-                  class="w-5 h-5 text-white"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M5 15l7-7 7 7"
-                  />
+                aria-label="Scroll to top" @click="scrollToTop">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
                 </svg>
               </button>
             </div>
@@ -147,9 +116,9 @@ const secondaryLinks = computed(() => {
     const slug = projectSlug.value;
     return [
       { label: 'Outreach', path: `/projects/${slug}/outreach` },
-      { label: 'Blog', path: `/projects/${slug}/blog` },
-      { label: 'Research', path: `/projects/${slug}/research` },
-      { label: 'Education', path: `/projects/${slug}/education` },
+      { label: 'COLOCAL Blog', path: `/projects/${slug}/blog` },
+      { label: 'Research & Publications', path: `/projects/${slug}/research` },
+      { label: 'Education & Training', path: `/projects/${slug}/education` },
     ];
   }
   return [
