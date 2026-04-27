@@ -287,7 +287,7 @@ useHead({
                 :src="member.avatar.url"
                 :alt="member.name"
                 class="w-full h-full object-cover"
-              >
+              />
               <div
                 v-else
                 class="w-full h-full bg-green-100 flex items-center justify-center text-green-600 text-2xl font-bold"
@@ -382,7 +382,7 @@ useHead({
                   :src="e.cover.url"
                   :alt="e.title"
                   class="w-full h-full object-cover"
-                >
+                />
                 <div v-else class="w-full h-full flex items-center justify-center text-gray-400">
                   <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
@@ -433,7 +433,7 @@ useHead({
                   :src="e.cover.url"
                   :alt="e.title"
                   class="w-full h-full object-cover"
-                >
+                />
                 <div v-else class="w-full h-full flex items-center justify-center text-gray-400">
                   <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path

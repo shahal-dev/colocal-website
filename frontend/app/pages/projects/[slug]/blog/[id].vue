@@ -17,8 +17,33 @@ const { data: current } = await useAsyncData(
   () => $fetch('/api/news-events', { params: { projectSlug: String(slug), id: String(id) } })
 );
 
+// Fetch all authors with avatars
+const { data: authorsData } = await useAsyncData('all-authors', () =>
+  $fetch('/api/authors', { query: { pageSize: '200' } })
+);
+
 const item = computed(() => {
   const currentItem = (current.value && current.value[0]) || null;
+  if (!currentItem) return null;
+
+  const authorsMap = new Map();
+  if (authorsData.value?.data) {
+    authorsData.value.data.forEach((author: any) => {
+      authorsMap.set(author.id, author);
+    });
+  }
+
+  if (currentItem.authors && Array.isArray(currentItem.authors)) {
+    const enrichedAuthors = currentItem.authors.map((author: any) => {
+      const fullAuthor = authorsMap.get(author.id);
+      if (fullAuthor && fullAuthor.avatar) {
+        return { ...author, avatar: fullAuthor.avatar };
+      }
+      return author;
+    });
+    return { ...currentItem, authors: enrichedAuthors };
+  }
+
   return currentItem;
 });
 
@@ -128,7 +153,7 @@ function formatDate(iso: string) {
               v-else-if="item.cover?.url"
               class="w-full h-[24rem] md:h-[30rem] rounded-lg overflow-hidden mb-5"
             >
-              <img :src="item.cover.url" :alt="item.title" class="w-full h-full object-cover" >
+              <img :src="item.cover.url" :alt="item.title" class="w-full h-full object-cover" />
             </div>
 
             <h1 class="text-2xl md:text-3xl font-display font-semibold mb-2">{{ item.title }}</h1>
@@ -148,7 +173,15 @@ function formatDate(iso: string) {
                   class="w-12 h-12 rounded-full bg-green-100 text-green-700 font-semibold border-2 border-white flex items-center justify-center overflow-hidden"
                   :title="author.name"
                 >
-                  {{ author.name ? author.name.charAt(0).toUpperCase() : 'A' }}
+                  <img
+                    v-if="author.avatar?.url"
+                    :src="author.avatar.url"
+                    :alt="author.name"
+                    class="w-full h-full object-cover"
+                  />
+                  <template v-else>
+                    {{ author.name ? author.name.charAt(0).toUpperCase() : 'A' }}
+                  </template>
                 </div>
               </div>
               <div class="flex flex-col">
@@ -215,7 +248,7 @@ function formatDate(iso: string) {
                     :src="m.cover.url"
                     :alt="m.title"
                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  >
+                  />
                   <div v-else class="w-full h-full flex items-center justify-center text-gray-400">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path

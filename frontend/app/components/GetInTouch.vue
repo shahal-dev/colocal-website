@@ -133,18 +133,18 @@ defineProps<{ phone?: string; email?: string; address?: string }>();
             placeholder="Name*"
             class="w-full p-3 border border-gray-200 bg-white rounded"
             required
-          >
+          />
           <input
             type="email"
             placeholder="Email*"
             class="w-full p-3 border border-gray-200 bg-white rounded"
             required
-          >
+          />
           <input
             type="tel"
             placeholder="Phone Number"
             class="w-full p-3 border border-gray-200 bg-white rounded"
-          >
+          />
           <textarea
             placeholder="Message"
             rows="4"
