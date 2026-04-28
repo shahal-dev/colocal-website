@@ -36,12 +36,6 @@ type CarouselItem = {
   slug: string;
 };
 
-function excerpt(text?: string | null, n = 140) {
-  if (!text) return '';
-  const t = String(text);
-  return t.length > n ? t.slice(0, n) + '…' : t;
-}
-
 const carouselItems = computed<CarouselItem[]>(() => {
   const list = Array.isArray(items.value) ? items.value : [];
   return list
@@ -181,7 +175,7 @@ function goToPage(
                   <h3 class="text-[15px] font-semibold text-green-800 mb-1">
                     {{ card.title }}
                   </h3>
-                  <p class="text-sm text-gray-700 line-clamp-3 mb-4">{{ card.body }}</p>
+                  <p class="text-sm text-gray-700 line-clamp-3 mb-4">{{ excerpt(card.body) }}</p>
                   <div
                     v-if="card.type?.type || card.country?.name"
                     class="flex items-center gap-2 flex-wrap"
@@ -244,7 +238,7 @@ function goToPage(
                   <h3 class="text-[15px] font-semibold text-green-800 mb-1">
                     {{ card.title }}
                   </h3>
-                  <p class="text-sm text-gray-700 line-clamp-3 mb-4">{{ card.body }}</p>
+                  <p class="text-sm text-gray-700 line-clamp-3 mb-4">{{ excerpt(card.body) }}</p>
                   <div
                     v-if="card.type?.type || card.country?.name"
                     class="flex items-center gap-2 flex-wrap"
@@ -310,7 +304,7 @@ function goToPage(
                   <h3 class="text-[15px] font-semibold text-green-800 mb-1">
                     {{ card.title }}
                   </h3>
-                  <p class="text-sm text-gray-700 line-clamp-3 mb-4">{{ card.body }}</p>
+                  <p class="text-sm text-gray-700 line-clamp-3 mb-4">{{ excerpt(card.body) }}</p>
                   <div
                     v-if="card.type?.type || card.country?.name"
                     class="flex items-center gap-2 flex-wrap"
@@ -376,7 +370,7 @@ function goToPage(
                   <h3 class="text-[15px] font-semibold text-green-800 mb-1">
                     {{ card.title }}
                   </h3>
-                  <p class="text-sm text-gray-700 line-clamp-3 mb-4">{{ card.body }}</p>
+                  <p class="text-sm text-gray-700 line-clamp-3 mb-4">{{ excerpt(card.body) }}</p>
                   <div
                     v-if="card.type?.type || card.country?.name"
                     class="flex items-center gap-2 flex-wrap"

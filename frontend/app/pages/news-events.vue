@@ -41,12 +41,6 @@ function goTo(p: number) {
 watch(totalPages, (next) => {
   if (page.value > next) page.value = next;
 });
-
-function excerpt(text?: string | null, n = 180) {
-  if (!text) return '';
-  const t = String(text);
-  return t.length > n ? t.slice(0, n) + '…' : t;
-}
 </script>
 
 <template>
@@ -79,7 +73,7 @@ function excerpt(text?: string | null, n = 180) {
             </div>
             <div class="p-4">
               <h3 class="text-[16px] font-semibold text-green-800 mb-1">{{ e.title }}</h3>
-              <p class="text-sm text-gray-700 line-clamp-3">{{ excerpt(e.body) }}</p>
+              <p class="text-sm text-gray-700 line-clamp-3">{{ excerpt(e.body, 180) }}</p>
             </div>
           </NuxtLink>
         </div>
@@ -118,7 +112,7 @@ function excerpt(text?: string | null, n = 180) {
               </div>
               <div class="p-4">
                 <h3 class="text-[16px] font-semibold text-green-800 mb-1">{{ e.title }}</h3>
-                <p class="text-sm text-gray-700 line-clamp-3">{{ excerpt(e.body) }}</p>
+                <p class="text-sm text-gray-700 line-clamp-3">{{ excerpt(e.body, 180) }}</p>
               </div>
             </NuxtLink>
           </div>

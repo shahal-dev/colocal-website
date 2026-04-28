@@ -24,12 +24,6 @@ const { data: newsData } = await useAsyncData(
 );
 const newsEvents = computed(() => (newsData.value ?? []).filter((n) => !n.blog));
 
-function excerpt(text?: string | null, n = 220) {
-  if (!text) return '';
-  const t = String(text);
-  return t.length > n ? t.slice(0, n) + '…' : t;
-}
-
 // Carousel items for outreach
 type CarouselItem = {
   id: string;
@@ -106,18 +100,21 @@ function goTo(page: number) {
           >
             <NuxtLink
               :to="`${basePath}/outreach/${e.documentId || e.id}`"
-              class="flex flex-col md:flex-row w-full"
+              class="flex flex-col md:flex-row w-full h-full"
             >
               <div
-                class="w-full md:w-2/5 lg:w-1/3 h-56 md:h-auto min-h-[14rem] overflow-hidden bg-gray-100 flex-shrink-0"
+                class="w-full md:w-2/5 lg:w-1/3 min-h-[14rem] overflow-hidden bg-gray-100 flex-shrink-0 relative"
               >
                 <img
                   v-if="e.cover?.url"
                   :src="e.cover.url"
                   :alt="e.title"
-                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 >
-                <div v-else class="w-full h-full flex items-center justify-center text-gray-400">
+                <div
+                  v-else
+                  class="absolute inset-0 w-full h-full flex items-center justify-center text-gray-400"
+                >
                   <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
                       stroke-linecap="round"
@@ -185,6 +182,7 @@ function goTo(page: number) {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
 .line-clamp-3 {
   display: -webkit-box;
   -webkit-line-clamp: 3;
@@ -192,6 +190,7 @@ function goTo(page: number) {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
 .md\:line-clamp-4 {
   @media (min-width: 768px) {
     display: -webkit-box;
@@ -201,9 +200,11 @@ function goTo(page: number) {
     overflow: hidden;
   }
 }
+
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
 .hide-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;

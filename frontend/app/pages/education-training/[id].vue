@@ -84,6 +84,13 @@ const authorLine = computed(() => {
   return '';
 });
 
+const formattedBody = computed(() => {
+  if (typeof item.value?.body !== 'string') return item.value?.body || '';
+  // Convert newlines to standard Markdown soft breaks (two spaces followed by a newline)
+  // or explicitly use HTML break tags if Markdown ignores the spaces.
+  return item.value.body.replace(/\n/g, '  \n');
+});
+
 const { data: moreList } = await useAsyncData('education-trainings:all', () =>
   $fetch('/api/education-trainings')
 );
@@ -140,7 +147,7 @@ function formatDate(iso) {
               </svg>
               <span>{{ formatDate(item.date) }}</span>
             </div>
-            <MDC :value="item.body" class="mdc-body prose max-w-none text-gray-800 space-y-6" />
+            <MDC :value="formattedBody" class="mdc-body prose max-w-none text-gray-800 space-y-6" />
           </div>
         </div>
 

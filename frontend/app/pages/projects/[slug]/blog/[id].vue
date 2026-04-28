@@ -47,6 +47,12 @@ const item = computed(() => {
   return currentItem;
 });
 
+const formattedBody = computed(() => {
+  if (typeof item.value?.body !== 'string') return item.value?.body || '';
+  return item.value.body.replace(/([^\r\n])\r?\n(?!\r?\n)/g, '$1  \n');
+});
+
+console.log(item.value?.body);
 useHead({
   title: item.value?.title
     ? `${item.value.title} — COLOCAL Blog`
@@ -234,7 +240,7 @@ function formatAuthorLine(authors: unknown[]) {
               </svg>
               <span>{{ formatDate(item.date) }}</span>
             </div>
-            <MDC :value="item.body" class="mdc-body prose max-w-none text-gray-800 space-y-6" />
+            <MDC :value="formattedBody" class="mdc-body prose max-w-none text-gray-800 space-y-6" />
           </div>
         </div>
 

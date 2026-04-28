@@ -48,6 +48,10 @@ body {
   text-align: justify;
 }
 
+:deep(.mdc-body p) {
+  white-space: pre-wrap;
+}
+
 .navbar-item {
   @apply rounded-xl py-2 px-3 hover:bg-gray-100 text-base;
 }

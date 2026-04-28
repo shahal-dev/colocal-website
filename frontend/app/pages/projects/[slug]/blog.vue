@@ -92,12 +92,6 @@ function formatDate(iso: string) {
     return iso;
   }
 }
-
-function excerpt(text?: string | null, n = 180) {
-  if (!text) return '';
-  const t = String(text);
-  return t.length > n ? t.slice(0, n) + '…' : t;
-}
 </script>
 
 <template>
@@ -311,7 +305,7 @@ function excerpt(text?: string | null, n = 180) {
               <h3 class="text-[16px] font-semibold text-green-800 mb-1 hover:underline">
                 {{ e.title }}
               </h3>
-              <p class="text-sm text-gray-700 line-clamp-3">{{ e.body }}</p>
+              <p class="text-sm text-gray-700 line-clamp-3">{{ excerpt(e.body) }}</p>
             </div>
           </NuxtLink>
         </article>

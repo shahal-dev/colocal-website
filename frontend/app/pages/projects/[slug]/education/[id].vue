@@ -28,6 +28,8 @@ const { data: current } = await useAsyncData(
 );
 const item = computed(() => (current.value && current.value[0]) || null);
 
+console.log(item?.value?.body);
+
 useHead({
   title: item.value?.title
     ? `${item.value.title} — ${projectName.value} Education & Training`
@@ -105,6 +107,12 @@ const authorLine = computed(() => {
   }
 
   return '';
+});
+
+const formattedBody = computed(() => {
+  if (typeof item.value?.body !== 'string') return item.value?.body || '';
+  // Convert newlines to standard Markdown soft breaks (two spaces followed by a newline)
+  return item.value.body.replace(/\n/g, '  \n');
 });
 
 const { data: moreList } = await useAsyncData(
@@ -189,7 +197,7 @@ function formatDate(iso: string) {
               </svg>
               <span>{{ formatDate(item.date) }}</span>
             </div>
-            <MDC :value="item.body" class="mdc-body prose max-w-none text-gray-800 space-y-6" />
+            <MDC :value="formattedBody" class="mdc-body prose max-w-none text-gray-800 space-y-6" />
           </div>
         </div>
 
@@ -288,8 +296,13 @@ function formatDate(iso: string) {
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
 .hide-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+:deep(.mdc-body p) {
+  white-space: pre-wrap;
 }
 </style>

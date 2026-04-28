@@ -41,12 +41,6 @@ function goTo(p: number) {
   if (p < 1 || p > totalPages.value) return;
   page.value = p;
 }
-
-function excerpt(text?: string | null, n = 200) {
-  if (!text) return '';
-  const t = String(text);
-  return t.length > n ? t.slice(0, n) + '…' : t;
-}
 </script>
 
 <template>
@@ -99,7 +93,7 @@ function excerpt(text?: string | null, n = 200) {
               <h3 class="text-[15px] font-semibold text-green-800 mb-1">
                 {{ card.title }}
               </h3>
-              <p class="text-sm text-gray-700 line-clamp-3 mb-4">{{ excerpt(card.body) }}</p>
+              <p class="text-sm text-gray-700 line-clamp-3 mb-4">{{ excerpt(card.body, 200) }}</p>
               <div v-if="card.type?.type" class="flex items-center gap-2">
                 <span
                   class="inline-block text-xs px-2 py-1 rounded border border-green-200 text-green-700 bg-green-50"

@@ -302,7 +302,10 @@ function onTouchEnd() {
                   : 'Abstract'
               }}
             </h2>
-            <MDC :value="item.abstract" class="prose max-w-none text-gray-800 space-y-6" />
+            <MDC
+              :value="item.abstract"
+              class="prose max-w-none text-gray-800 space-y-6 text-justify"
+            />
 
             <div v-if="item.file" class="mt-6">
               <a

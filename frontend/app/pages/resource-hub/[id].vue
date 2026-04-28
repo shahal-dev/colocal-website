@@ -207,7 +207,10 @@ function onTouchEnd() {
                     : 'Abstract'
                 }}
               </h2>
-              <MDC :value="item.abstract" class="prose max-w-none text-gray-800 space-y-6" />
+              <MDC
+                :value="item.abstract"
+                class="prose max-w-none text-gray-800 space-y-6 text-justify"
+              />
 
               <div v-if="item.file" class="mt-6">
                 <a
@@ -292,7 +295,7 @@ function onTouchEnd() {
                 <span>{{ new Date(item.date).toLocaleDateString() }}</span>
                 <span v-if="item.type?.type">• {{ item.type.type }}</span>
               </div>
-              <div class="prose max-w-none text-gray-800 space-y-6">
+              <div class="prose max-w-none text-gray-800 space-y-6 text-justify">
                 <p v-for="(para, idx) in (item.body || '').split('\n\n')" :key="idx">{{ para }}</p>
               </div>
             </template>
