@@ -52,6 +52,7 @@ export type RawPublicationAttributes = {
   secondary_title?: string | null;
   abstract: string;
   date: string;
+  string_date?: string | null;
   authors_text?: string | null; // optional text field for author names
   tags?: RawTagComponent[] | null;
   url: string;
@@ -125,6 +126,7 @@ export type FlatPublication = {
   secondary_title?: string | null;
   abstract: string;
   date: string;
+  string_date?: string | null;
   URL?: string; // original field name may be URL in Strapi
   url?: string; // or lower-case in some setups
   authors_text?: string | null; // optional text field for author names

@@ -398,6 +398,7 @@ function mapPublication(
     title: a.title,
     abstract: a.abstract,
     date: a.date, // ISO string
+    string_date: a.string_date ?? null,
     authors: mapAuthors(baseUrl, a.authors) ?? [],
     tags: mapTags(a.tags),
     url: a.url,

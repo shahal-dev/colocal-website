@@ -407,45 +407,6 @@ export interface ApiAboutAbout extends Struct.SingleTypeSchema {
   };
 }
 
-export interface ApiArticleArticle extends Struct.CollectionTypeSchema {
-  collectionName: 'articles';
-  info: {
-    description: 'Create your blog content';
-    displayName: 'Article';
-    pluralName: 'articles';
-    singularName: 'article';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    blocks: Schema.Attribute.DynamicZone<
-      ['shared.media', 'shared.quote', 'shared.rich-text', 'shared.slider']
-    >;
-    category: Schema.Attribute.Relation<'manyToOne', 'api::category.category'>;
-    cover: Schema.Attribute.Media<'images' | 'files' | 'videos'>;
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    description: Schema.Attribute.Text &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 80;
-      }>;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::article.article'
-    > &
-      Schema.Attribute.Private;
-    publishedAt: Schema.Attribute.DateTime;
-    slug: Schema.Attribute.UID<'title'>;
-    title: Schema.Attribute.String;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-  };
-}
-
 export interface ApiAuthorAuthor extends Struct.CollectionTypeSchema {
   collectionName: 'authors';
   info: {
@@ -490,38 +451,6 @@ export interface ApiAuthorAuthor extends Struct.CollectionTypeSchema {
   };
 }
 
-export interface ApiCategoryCategory extends Struct.CollectionTypeSchema {
-  collectionName: 'categories';
-  info: {
-    description: 'Organize your content into categories';
-    displayName: 'Category';
-    pluralName: 'categories';
-    singularName: 'category';
-  };
-  options: {
-    draftAndPublish: false;
-  };
-  attributes: {
-    articles: Schema.Attribute.Relation<'oneToMany', 'api::article.article'>;
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    description: Schema.Attribute.Text;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::category.category'
-    > &
-      Schema.Attribute.Private;
-    name: Schema.Attribute.String;
-    publishedAt: Schema.Attribute.DateTime;
-    slug: Schema.Attribute.UID;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-  };
-}
-
 export interface ApiEducationTrainingEducationTraining
   extends Struct.CollectionTypeSchema {
   collectionName: 'education_trainings';
@@ -535,6 +464,7 @@ export interface ApiEducationTrainingEducationTraining
   };
   attributes: {
     body: Schema.Attribute.RichText & Schema.Attribute.Required;
+    country: Schema.Attribute.Component<'shared.country', false>;
     cover: Schema.Attribute.Media<'images' | 'videos'> &
       Schema.Attribute.Required;
     createdAt: Schema.Attribute.DateTime;
@@ -654,6 +584,7 @@ export interface ApiNewsEventNewsEvent extends Struct.CollectionTypeSchema {
     authors: Schema.Attribute.Relation<'oneToMany', 'api::author.author'>;
     blog: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     body: Schema.Attribute.RichText & Schema.Attribute.Required;
+    country: Schema.Attribute.Component<'shared.country', false>;
     cover: Schema.Attribute.Media<'images' | 'videos'> &
       Schema.Attribute.Required;
     createdAt: Schema.Attribute.DateTime;
@@ -661,9 +592,6 @@ export interface ApiNewsEventNewsEvent extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     date: Schema.Attribute.Date & Schema.Attribute.Required;
     images: Schema.Attribute.Media<'images', true>;
-    lla: Schema.Attribute.Boolean &
-      Schema.Attribute.Required &
-      Schema.Attribute.DefaultTo<false>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -780,6 +708,7 @@ export interface ApiResearchPublicationResearchPublication
       Schema.Attribute.Required;
     publishedAt: Schema.Attribute.DateTime;
     secondary_title: Schema.Attribute.String;
+    string_date: Schema.Attribute.String;
     tags: Schema.Attribute.Component<'shared.tag', true>;
     theme: Schema.Attribute.Component<'shared.theme', false>;
     title: Schema.Attribute.String & Schema.Attribute.Required;
@@ -787,44 +716,6 @@ export interface ApiResearchPublicationResearchPublication
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     URL: Schema.Attribute.String & Schema.Attribute.Required;
-  };
-}
-
-export interface ApiResourceResource extends Struct.CollectionTypeSchema {
-  collectionName: 'resources';
-  info: {
-    displayName: 'Resource';
-    pluralName: 'resources';
-    singularName: 'resource';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  pluginOptions: {
-    i18n: {
-      localized: true;
-    };
-  };
-  attributes: {
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    locale: Schema.Attribute.String;
-    localizations: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::resource.resource'
-    >;
-    publishedAt: Schema.Attribute.DateTime;
-    Title: Schema.Attribute.String &
-      Schema.Attribute.Required &
-      Schema.Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true;
-        };
-      }>;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
   };
 }
 
@@ -1365,16 +1256,13 @@ declare module '@strapi/strapi' {
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
       'api::about.about': ApiAboutAbout;
-      'api::article.article': ApiArticleArticle;
       'api::author.author': ApiAuthorAuthor;
-      'api::category.category': ApiCategoryCategory;
       'api::education-training.education-training': ApiEducationTrainingEducationTraining;
       'api::global.global': ApiGlobalGlobal;
       'api::home.home': ApiHomeHome;
       'api::news-event.news-event': ApiNewsEventNewsEvent;
       'api::project.project': ApiProjectProject;
       'api::research-publication.research-publication': ApiResearchPublicationResearchPublication;
-      'api::resource.resource': ApiResourceResource;
       'api::team.team': ApiTeamTeam;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;

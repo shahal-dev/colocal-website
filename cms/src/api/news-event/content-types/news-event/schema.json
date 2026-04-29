@@ -26,16 +26,14 @@
       "type": "media",
       "multiple": false,
       "required": true,
-      "allowedTypes": ["images", "videos"]
+      "allowedTypes": [
+        "images",
+        "videos"
+      ]
     },
     "body": {
       "type": "richtext",
       "required": true
-    },
-    "lla": {
-      "type": "boolean",
-      "required": true,
-      "default": false
     },
     "projects": {
       "type": "relation",
@@ -46,11 +44,16 @@
     "images": {
       "type": "media",
       "multiple": true,
-      "allowedTypes": ["images"]
+      "allowedTypes": [
+        "images"
+      ]
     },
     "section": {
       "type": "enumeration",
-      "enum": ["policy dialogue", "seminar and conference"]
+      "enum": [
+        "policy dialogue",
+        "seminar and conference"
+      ]
     },
     "blog": {
       "type": "boolean",

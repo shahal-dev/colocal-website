@@ -83,6 +83,7 @@ export interface ResearchPublication {
   secondaryTitle?: string | null;
   abstract: string; // required (RichText Markdown stored as string)
   date: string; // required (Date as ISO string)
+  string_date?: string | null; // optional string representation of date
   authors_text?: string | null; // optional text field for author names
   tags: Tag[] | null; // optional repeatable component → can be null
   url: string; // required
