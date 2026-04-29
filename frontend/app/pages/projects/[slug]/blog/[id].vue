@@ -172,7 +172,7 @@ function formatAuthorLine(authors: unknown[]) {
               v-else-if="item.cover?.url"
               class="w-full h-[24rem] md:h-[30rem] rounded-lg overflow-hidden mb-5"
             >
-              <img :src="item.cover.url" :alt="item.title" class="w-full h-full object-cover" >
+              <img :src="item.cover.url" :alt="item.title" class="w-full h-full object-cover" />
             </div>
 
             <h1 class="text-2xl md:text-3xl font-display font-semibold mb-2">{{ item.title }}</h1>
@@ -197,7 +197,7 @@ function formatAuthorLine(authors: unknown[]) {
                     :src="author.avatar.url"
                     :alt="author.name"
                     class="w-full h-full object-cover"
-                  >
+                  />
                   <template v-else>
                     {{ author.name ? author.name.charAt(0).toUpperCase() : 'A' }}
                   </template>
@@ -240,7 +240,10 @@ function formatAuthorLine(authors: unknown[]) {
               </svg>
               <span>{{ formatDate(item.date) }}</span>
             </div>
-            <MDC :value="formattedBody" class="mdc-body prose max-w-none text-gray-800 space-y-6" />
+            <MDC
+              :value="formattedBody"
+              class="mdc-body prose text-justify max-w-none text-gray-800 space-y-6"
+            />
           </div>
         </div>
 
@@ -267,7 +270,7 @@ function formatAuthorLine(authors: unknown[]) {
                     :src="m.cover.url"
                     :alt="m.title"
                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  >
+                  />
                   <div v-else class="w-full h-full flex items-center justify-center text-gray-400">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path

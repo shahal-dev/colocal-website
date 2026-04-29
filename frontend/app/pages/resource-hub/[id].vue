@@ -21,6 +21,11 @@ const education = computed(() => (eduData.value && eduData.value[0]) || null);
 // Fallback resolution: if neither returned, item is null
 const item = computed(() => publication.value || education.value || null);
 
+const formattedBody = computed(() => {
+  if (typeof item.value?.body !== 'string') return item.value?.body || '';
+  return item.value.body.replace(/([^\r\n])\r?\n(?!\r?\n)/g, '$1  \n');
+});
+
 useHead(
   computed(() => ({
     title: item.value?.title ? `${item.value.title} — Resource Hub` : 'Resource Hub',
@@ -144,7 +149,7 @@ function onTouchEnd() {
                   @mouseup.prevent="onTouchEnd"
                 >
                   <div v-for="(src, i) in images" :key="i" class="flex-none w-full h-full">
-                    <img :src="src" :alt="item.title" class="w-full h-full object-cover" >
+                    <img :src="src" :alt="item.title" class="w-full h-full object-cover" />
                   </div>
                 </div>
 
@@ -176,7 +181,7 @@ function onTouchEnd() {
                   :src="item.imageCover?.url"
                   :alt="item.title"
                   class="w-full h-full object-cover"
-                >
+                />
               </div>
               <h1 class="text-2xl md:text-3xl font-display font-semibold mb-2">{{ item.title }}</h1>
               <div v-if="item.secondaryTitle" class="text-lg text-gray-700 font-display mb-2">
@@ -244,7 +249,7 @@ function onTouchEnd() {
                   @mouseup.prevent="onTouchEnd"
                 >
                   <div v-for="(src, i) in images" :key="i" class="flex-none w-full h-full">
-                    <img :src="src" :alt="item.title" class="w-full h-full object-cover" >
+                    <img :src="src" :alt="item.title" class="w-full h-full object-cover" />
                   </div>
                 </div>
 
@@ -279,7 +284,7 @@ function onTouchEnd() {
                   :src="item.imageCover?.url"
                   :alt="item.title"
                   class="w-full h-full object-cover"
-                >
+                />
               </div>
               <h1 class="text-2xl md:text-3xl font-display font-semibold mb-2">{{ item.title }}</h1>
               <div v-if="item.secondaryTitle" class="text-lg text-gray-700 font-medium mb-2">
@@ -295,9 +300,10 @@ function onTouchEnd() {
                 <span>{{ new Date(item.date).toLocaleDateString() }}</span>
                 <span v-if="item.type?.type">• {{ item.type.type }}</span>
               </div>
-              <div class="prose max-w-none text-gray-800 space-y-6 text-justify">
-                <p v-for="(para, idx) in (item.body || '').split('\n\n')" :key="idx">{{ para }}</p>
-              </div>
+              <MDC
+                :value="formattedBody"
+                class="mdc-body prose max-w-none text-gray-800 space-y-6 text-justify"
+              />
             </template>
           </div>
         </div>
@@ -333,7 +339,7 @@ function onTouchEnd() {
                 class="flex gap-3 items-center group"
               >
                 <div class="w-20 h-14 rounded overflow-hidden flex-shrink-0">
-                  <img :src="m.cover?.url" :alt="m.title" class="w-full h-full object-cover" >
+                  <img :src="m.cover?.url" :alt="m.title" class="w-full h-full object-cover" />
                 </div>
                 <div class="min-w-0">
                   <p class="text-sm text-green-700 group-hover:underline truncate">{{ m.title }}</p>

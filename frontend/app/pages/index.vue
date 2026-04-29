@@ -125,7 +125,7 @@ const homeNewsItems = computed(() => {
   const items: (NewsEvent & { isSeeMore?: boolean; body?: string })[] = (newsData.value || [])
     .slice()
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-    .slice(0, 2)
+    .slice(0, 8)
     .map((e) => ({ ...e, isSeeMore: false }));
 
   items.push({
@@ -137,6 +137,20 @@ const homeNewsItems = computed(() => {
 
   return items;
 });
+
+const newsPageSize = 3;
+const currentNewsPage = ref(1);
+const totalNewsPages = computed(() =>
+  Math.max(1, Math.ceil(homeNewsItems.value.length / newsPageSize))
+);
+const visibleNews = computed(() => {
+  const start = (currentNewsPage.value - 1) * newsPageSize;
+  return homeNewsItems.value.slice(start, start + newsPageSize);
+});
+function goToNewsPage(page: number) {
+  if (page < 1 || page > totalNewsPages.value) return;
+  currentNewsPage.value = page;
+}
 </script>
 
 <template>
@@ -311,7 +325,7 @@ const homeNewsItems = computed(() => {
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           <article
-            v-for="e in homeNewsItems"
+            v-for="e in visibleNews"
             :key="e.id"
             class="border border-gray-200 rounded-xl bg-white overflow-hidden hover:shadow-md transition-shadow h-full flex flex-col"
           >
@@ -377,14 +391,14 @@ const homeNewsItems = computed(() => {
           </article>
         </div>
         <!-- Pagination -->
-        <div v-if="totalPages > 1" class="mt-12 flex items-center justify-center gap-2">
+        <div v-if="totalNewsPages > 1" class="mt-12 flex items-center justify-center gap-2">
           <button
-            v-for="page in totalPages"
+            v-for="page in totalNewsPages"
             :key="page"
-            :aria-current="page === currentPage ? 'true' : 'false'"
+            :aria-current="page === currentNewsPage ? 'true' : 'false'"
             class="min-w-[36px] h-9 px-3 text-sm font-medium rounded-md border transition-colors"
             :class="
-              page === currentPage
+              page === currentNewsPage
                 ? 'bg-green-600 text-white border-green-600 shadow-sm'
                 : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
             "

@@ -62,6 +62,11 @@ const images = computed(() => {
   return arr;
 });
 
+const formattedAbstract = computed(() => {
+  if (typeof item.value?.abstract !== 'string') return item.value?.abstract || '';
+  return item.value.abstract.replace(/([^\r\n])\r?\n(?!\r?\n)/g, '$1  \n');
+});
+
 const { data: moreList, status: moreStatus } = await useAsyncData(
   () => `publications-more:${slug}`,
   () => $fetch('/api/publications', { params: { projectSlug: String(slug) } })
@@ -231,7 +236,7 @@ function onTouchEnd() {
                 @mouseup.prevent="onTouchEnd"
               >
                 <div v-for="(src, i) in images" :key="i" class="flex-none w-full h-full">
-                  <img :src="src" :alt="item.title" class="w-full h-full object-cover" >
+                  <img :src="src" :alt="item.title" class="w-full h-full object-cover" />
                 </div>
               </div>
 
@@ -264,7 +269,7 @@ function onTouchEnd() {
                 :src="item.imageCover?.url"
                 :alt="item.title"
                 class="w-full h-full object-cover"
-              >
+              />
             </div>
 
             <div v-if="item.secondaryTitle" class="text-lg text-gray-700 font-display mb-2">
@@ -303,8 +308,8 @@ function onTouchEnd() {
               }}
             </h2>
             <MDC
-              :value="item.abstract"
-              class="prose max-w-none text-gray-800 space-y-6 text-justify"
+              :value="formattedAbstract"
+              class="mdc-body prose text-justify max-w-none text-gray-800 space-y-6"
             />
 
             <div v-if="item.file" class="mt-6">
@@ -353,6 +358,18 @@ function onTouchEnd() {
 </template>
 
 <style scoped>
+:deep(.mdc-body a) {
+  color: rgb(4 120 87);
+  font-weight: 500;
+  text-decoration: none;
+  transition: text-decoration-color 0.15s ease;
+}
+
+:deep(.mdc-body a:hover),
+:deep(.mdc-body a:focus-visible) {
+  text-decoration: underline;
+}
+
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }

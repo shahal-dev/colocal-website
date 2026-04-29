@@ -111,8 +111,7 @@ const authorLine = computed(() => {
 
 const formattedBody = computed(() => {
   if (typeof item.value?.body !== 'string') return item.value?.body || '';
-  // Convert newlines to standard Markdown soft breaks (two spaces followed by a newline)
-  return item.value.body.replace(/\n/g, '  \n');
+  return item.value.body.replace(/([^\r\n])\r?\n(?!\r?\n)/g, '$1  \n');
 });
 
 const { data: moreList } = await useAsyncData(
@@ -178,7 +177,7 @@ function formatDate(iso: string) {
               v-else-if="coverUrl"
               class="w-full h-[24rem] md:h-[30rem] rounded-lg overflow-hidden mb-5"
             >
-              <img :src="coverUrl" :alt="item.title" class="w-full h-full object-cover" >
+              <img :src="coverUrl" :alt="item.title" class="w-full h-full object-cover" />
             </div>
 
             <h1 class="text-2xl md:text-3xl font-display font-semibold mb-2">{{ item.title }}</h1>
@@ -197,7 +196,10 @@ function formatDate(iso: string) {
               </svg>
               <span>{{ formatDate(item.date) }}</span>
             </div>
-            <MDC :value="formattedBody" class="mdc-body prose max-w-none text-gray-800 space-y-6" />
+            <MDC
+              :value="formattedBody"
+              class="mdc-body prose text-justify max-w-none text-gray-800 space-y-6"
+            />
           </div>
         </div>
 
@@ -223,7 +225,7 @@ function formatDate(iso: string) {
                     :src="m.cover.url"
                     :alt="m.title"
                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  >
+                  />
                   <div v-else class="w-full h-full flex items-center justify-center text-gray-400">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path
@@ -300,9 +302,5 @@ function formatDate(iso: string) {
 .hide-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
-}
-
-:deep(.mdc-body p) {
-  white-space: pre-wrap;
 }
 </style>
