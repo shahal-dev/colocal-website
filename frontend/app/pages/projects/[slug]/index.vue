@@ -402,7 +402,7 @@ const _fellows = ref([
         <h2 class="text-[22px] md:text-[26px] font-display font-semibold mb-3">
           {{ project?.longTitle }}
         </h2>
-        <div v-if="project?.longDescription" class="space-y-4 text-gray-700 leading-relaxed">
+        <div v-if="project?.longDescription" class="space-y-4 text-gray-700 text-justify leading-relaxed">
           <MDC :value="project?.longDescription" class="prose max-w-none text-gray-800 space-y-6" />
         </div>
       </section>
@@ -414,64 +414,42 @@ const _fellows = ref([
         </h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           <!-- Bangladesh -->
-          <NuxtLink
-            :to="`/projects/${slug}/about/bangladesh`"
-            class="flex flex-col items-center text-center bg-gray-50 rounded-lg p-6 hover:shadow-lg transition-shadow"
-          >
+          <NuxtLink :to="`/projects/${slug}/about/bangladesh`"
+            class="flex flex-col items-center text-center bg-gray-50 rounded-lg p-6 hover:shadow-lg transition-shadow">
             <div class="w-32 h-24 mb-4 flex items-center justify-center">
-              <img
-                src="https://flagcdn.com/w320/bd.png"
-                alt="Bangladesh Flag"
-                class="max-w-full max-h-full object-contain"
-              >
+              <img src="https://flagcdn.com/w320/bd.png" alt="Bangladesh Flag"
+                class="max-w-full max-h-full object-contain">
             </div>
             <h3 class="text-lg font-semibold text-gray-900 mb-2">Bangladesh</h3>
             <p class="text-sm text-gray-600">Independent University, Bangladesh</p>
           </NuxtLink>
 
           <!-- Mozambique -->
-          <NuxtLink
-            :to="`/projects/${slug}/about/mozambique`"
-            class="flex flex-col items-center text-center bg-gray-50 rounded-lg p-6 hover:shadow-lg transition-shadow"
-          >
+          <NuxtLink :to="`/projects/${slug}/about/mozambique`"
+            class="flex flex-col items-center text-center bg-gray-50 rounded-lg p-6 hover:shadow-lg transition-shadow">
             <div class="w-32 h-24 mb-4 flex items-center justify-center">
-              <img
-                src="https://flagcdn.com/w320/mz.png"
-                alt="Mozambique Flag"
-                class="max-w-full max-h-full object-contain"
-              >
+              <img src="https://flagcdn.com/w320/mz.png" alt="Mozambique Flag"
+                class="max-w-full max-h-full object-contain">
             </div>
             <h3 class="text-lg font-semibold text-gray-900 mb-2">Mozambique</h3>
             <p class="text-sm text-gray-600">Eduardo Mondlane University</p>
           </NuxtLink>
 
           <!-- Nepal -->
-          <NuxtLink
-            :to="`/projects/${slug}/about/nepal`"
-            class="flex flex-col items-center text-center bg-gray-50 rounded-lg p-6 hover:shadow-lg transition-shadow"
-          >
+          <NuxtLink :to="`/projects/${slug}/about/nepal`"
+            class="flex flex-col items-center text-center bg-gray-50 rounded-lg p-6 hover:shadow-lg transition-shadow">
             <div class="w-32 h-24 mb-4 flex items-center justify-center">
-              <img
-                src="https://flagcdn.com/w320/np.png"
-                alt="Nepal Flag"
-                class="max-w-full max-h-full object-contain"
-              >
+              <img src="https://flagcdn.com/w320/np.png" alt="Nepal Flag" class="max-w-full max-h-full object-contain">
             </div>
             <h3 class="text-lg font-semibold text-gray-900 mb-2">Nepal</h3>
             <p class="text-sm text-gray-600">Pokhara University</p>
           </NuxtLink>
 
           <!-- Uganda -->
-          <NuxtLink
-            :to="`/projects/${slug}/about/uganda`"
-            class="flex flex-col items-center text-center bg-gray-50 rounded-lg p-6 hover:shadow-lg transition-shadow"
-          >
+          <NuxtLink :to="`/projects/${slug}/about/uganda`"
+            class="flex flex-col items-center text-center bg-gray-50 rounded-lg p-6 hover:shadow-lg transition-shadow">
             <div class="w-32 h-24 mb-4 flex items-center justify-center">
-              <img
-                src="https://flagcdn.com/w320/ug.png"
-                alt="Uganda Flag"
-                class="max-w-full max-h-full object-contain"
-              >
+              <img src="https://flagcdn.com/w320/ug.png" alt="Uganda Flag" class="max-w-full max-h-full object-contain">
             </div>
             <h3 class="text-lg font-semibold text-gray-900 mb-2">Uganda</h3>
             <p class="text-sm text-gray-600">Makerere University</p>
@@ -486,16 +464,10 @@ const _fellows = ref([
         </h2>
         <div class="flex flex-wrap gap-8 items-center justify-center">
           <!-- Norway -->
-          <NuxtLink
-            :to="`/projects/${slug}/about/norway`"
-            class="flex flex-col items-center text-center bg-gray-50 rounded-lg p-6 hover:shadow-lg transition-shadow"
-          >
+          <NuxtLink :to="`/projects/${slug}/about/norway`"
+            class="flex flex-col items-center text-center bg-gray-50 rounded-lg p-6 hover:shadow-lg transition-shadow">
             <div class="w-32 h-24 mb-4 flex items-center justify-center">
-              <img
-                src="https://flagcdn.com/w320/no.png"
-                alt="Norway Flag"
-                class="max-w-full max-h-full object-contain"
-              >
+              <img src="https://flagcdn.com/w320/no.png" alt="Norway Flag" class="max-w-full max-h-full object-contain">
             </div>
             <h3 class="text-lg font-semibold text-gray-900 mb-2">Norway</h3>
             <p class="text-sm text-gray-600">Norwegian University of Life Sciences</p>
@@ -509,55 +481,31 @@ const _fellows = ref([
           Featured Publications
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <article
-            v-for="p in visiblePubs"
-            :key="p.id"
-            class="flex flex-col border border-gray-200 rounded-md bg-white p-4 md:p-5 h-full hover:shadow-md transition-shadow"
-          >
-            <NuxtLink
-              v-if="!p.isSeeMore"
-              :to="`${basePath}/research/${p.documentId || p.id}`"
-              class="flex flex-col h-full"
-            >
-              <h3
-                class="text-base md:text-lg font-semibold text-gray-900 mb-2 line-clamp-3 hover:underline"
-              >
+          <article v-for="p in visiblePubs" :key="p.id"
+            class="flex flex-col border border-gray-200 rounded-md bg-white p-4 md:p-5 h-full hover:shadow-md transition-shadow">
+            <NuxtLink v-if="!p.isSeeMore" :to="`${basePath}/research/${p.documentId || p.id}`"
+              class="flex flex-col h-full">
+              <h3 class="text-base md:text-lg font-semibold text-gray-900 mb-2 line-clamp-3 hover:underline">
                 {{ p.title }}
               </h3>
               <div v-if="p.authors_text" class="flex items-start text-sm text-gray-600 mb-3">
-                <img
-                  src="~/assets/user.png"
-                  alt="Authors"
-                  class="w-4 h-4 mr-2 mt-0.5 flex-shrink-0"
-                >
+                <img src="~/assets/user.png" alt="Authors" class="w-4 h-4 mr-2 mt-0.5 flex-shrink-0">
                 <span class="line-clamp-2">{{ p.authors_text }}</span>
               </div>
               <p class="text-sm text-gray-700 mb-3 flex-grow">{{ excerpt(p.abstract, 160) }}</p>
               <div class="flex flex-wrap gap-2 mt-auto">
-                <span
-                  v-for="(tag, idx) in (p.tags || []).slice(0, 3)"
-                  :key="idx"
-                  class="inline-block text-[11px] px-2 py-0.5 rounded border border-green-200 text-green-700 bg-green-50 truncate max-w-[120px]"
-                  >{{ tag.tag }}</span
-                >
+                <span v-for="(tag, idx) in (p.tags || []).slice(0, 3)" :key="idx"
+                  class="inline-block text-[11px] px-2 py-0.5 rounded border border-green-200 text-green-700 bg-green-50 truncate max-w-[120px]">{{
+                    tag.tag }}</span>
               </div>
             </NuxtLink>
 
-            <NuxtLink
-              v-else
-              :to="`${basePath}/research`"
-              class="flex flex-col h-full items-center justify-center text-center group p-6"
-            >
+            <NuxtLink v-else :to="`${basePath}/research`"
+              class="flex flex-col h-full items-center justify-center text-center group p-6">
               <div
-                class="w-16 h-16 rounded-full bg-green-50 flex items-center justify-center text-green-600 mb-6 group-hover:bg-green-600 group-hover:text-white transition-colors"
-              >
+                class="w-16 h-16 rounded-full bg-green-50 flex items-center justify-center text-green-600 mb-6 group-hover:bg-green-600 group-hover:text-white transition-colors">
                 <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M14 5l7 7m0 0l-7 7m7-7H3"
-                  />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                 </svg>
               </div>
               <h3 class="text-xl font-semibold text-green-800 mb-3 group-hover:underline">
@@ -570,18 +518,12 @@ const _fellows = ref([
 
         <!-- Pagination for Publications -->
         <div v-if="totalPubPages > 1" class="mt-12 flex items-center justify-center gap-2">
-          <button
-            v-for="page in totalPubPages"
-            :key="'pub-' + page"
+          <button v-for="page in totalPubPages" :key="'pub-' + page"
             :aria-current="page === currentPubPage ? 'true' : 'false'"
-            class="min-w-[36px] h-9 px-3 text-sm font-medium rounded-md border transition-colors"
-            :class="
-              page === currentPubPage
-                ? 'bg-green-600 text-white border-green-600 shadow-sm'
-                : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
-            "
-            @click="goToPubPage(page)"
-          >
+            class="min-w-[36px] h-9 px-3 text-sm font-medium rounded-md border transition-colors" :class="page === currentPubPage
+              ? 'bg-green-600 text-white border-green-600 shadow-sm'
+              : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+              " @click="goToPubPage(page)">
             {{ page }}
           </button>
         </div>
@@ -593,40 +535,27 @@ const _fellows = ref([
           Featured News
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <article
-            v-for="n in visibleNews"
-            :key="n.id"
-            class="border border-gray-200 rounded-xl bg-white overflow-hidden hover:shadow-md transition-shadow h-full flex flex-col"
-          >
+          <article v-for="n in visibleNews" :key="n.id"
+            class="border border-gray-200 rounded-xl bg-white overflow-hidden hover:shadow-md transition-shadow h-full flex flex-col">
             <NuxtLink v-if="!n.isSeeMore" :to="n.to" class="flex flex-col h-full group">
               <div class="w-full h-48 flex-shrink-0 bg-gray-100">
-                <img :src="n.image" :alt="n.title" class="w-full h-full object-cover" >
+                <img :src="n.image" :alt="n.title" class="w-full h-full object-cover">
               </div>
               <div class="p-5 flex flex-col justify-center flex-grow">
                 <h3
-                  class="text-[17px] font-semibold text-gray-900 mb-2 group-hover:text-green-700 transition-colors line-clamp-2"
-                >
+                  class="text-[17px] font-semibold text-gray-900 mb-2 group-hover:text-green-700 transition-colors line-clamp-2">
                   {{ n.title }}
                 </h3>
                 <p class="text-sm text-gray-600 line-clamp-2">{{ n.excerpt }}</p>
               </div>
             </NuxtLink>
 
-            <NuxtLink
-              v-else
-              :to="`${basePath}/outreach`"
-              class="flex flex-col h-full items-center justify-center text-center group p-6"
-            >
+            <NuxtLink v-else :to="`${basePath}/outreach`"
+              class="flex flex-col h-full items-center justify-center text-center group p-6">
               <div
-                class="w-16 h-16 rounded-full bg-green-50 flex items-center justify-center text-green-600 mb-6 group-hover:bg-green-600 group-hover:text-white transition-colors"
-              >
+                class="w-16 h-16 rounded-full bg-green-50 flex items-center justify-center text-green-600 mb-6 group-hover:bg-green-600 group-hover:text-white transition-colors">
                 <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M14 5l7 7m0 0l-7 7m7-7H3"
-                  />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                 </svg>
               </div>
               <h3 class="text-xl font-semibold text-green-800 mb-3 group-hover:underline">
@@ -639,18 +568,12 @@ const _fellows = ref([
 
         <!-- Pagination for News -->
         <div v-if="totalNewsPages > 1" class="mt-12 flex items-center justify-center gap-2">
-          <button
-            v-for="page in totalNewsPages"
-            :key="'news-' + page"
+          <button v-for="page in totalNewsPages" :key="'news-' + page"
             :aria-current="page === currentNewsPage ? 'true' : 'false'"
-            class="min-w-[36px] h-9 px-3 text-sm font-medium rounded-md border transition-colors"
-            :class="
-              page === currentNewsPage
-                ? 'bg-green-600 text-white border-green-600 shadow-sm'
-                : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
-            "
-            @click="goToNewsPage(page)"
-          >
+            class="min-w-[36px] h-9 px-3 text-sm font-medium rounded-md border transition-colors" :class="page === currentNewsPage
+              ? 'bg-green-600 text-white border-green-600 shadow-sm'
+              : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+              " @click="goToNewsPage(page)">
             {{ page }}
           </button>
         </div>

@@ -159,14 +159,12 @@ function goToNewsPage(page: number) {
     <AboutUsSection :title="'About'" />
 
     <!-- Objectives -->
-    <section class="w-full bg-white py-16">
+    <section class="w-full bg-white py-16 text-justify">
       <div class="max-w-6xl mx-auto px-4 md:px-0">
         <h3 class="text-[22px] md:text-[26px] font-display font-semibold mb-6 text-green-700">
           Objectives
         </h3>
-        <ul
-          class="list-disc pl-6 space-y-4 text-gray-700 leading-relaxed marker:text-green-600 text-lg"
-        >
+        <ul class="list-disc pl-6 space-y-4 text-gray-700 leading-relaxed marker:text-green-600 text-lg">
           <li>
             To foster a South-South collaborative network for promoting education and skills,
             research capacity and developing multi-dimensional expertise in climate change.
@@ -212,39 +210,25 @@ function goToNewsPage(page: number) {
     <!-- Featured Publications -->
     <section class="w-full bg-white py-16">
       <div class="max-w-6xl mx-auto px-4 md:px-0">
-        <h2
-          class="text-center text-[28px] md:text-[32px] font-display font-semibold mb-10 text-gray-900"
-        >
+        <h2 class="text-center text-[28px] md:text-[32px] font-display font-semibold mb-10 text-gray-900">
           Featured Publications
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <article
-            v-for="p in visiblePubs"
-            :key="p.id"
-            class="flex flex-col border border-gray-200 rounded-xl bg-white p-6 hover:shadow-md transition-shadow h-full"
-          >
-            <NuxtLink
-              v-if="!p.isSeeMore"
-              :to="`/resource-hub/${p.documentId || p.id}`"
-              class="flex flex-col h-full"
-            >
-              <h3
-                class="text-lg md:text-xl font-semibold text-green-800 mb-3 line-clamp-3 hover:underline"
-              >
+          <article v-for="p in visiblePubs" :key="p.id"
+            class="flex flex-col border border-gray-200 rounded-xl bg-white p-6 hover:shadow-md transition-shadow h-full">
+            <NuxtLink v-if="!p.isSeeMore" :to="`/resource-hub/${p.documentId || p.id}`" class="flex flex-col h-full">
+              <h3 class="text-lg md:text-xl font-semibold text-green-800 mb-3 line-clamp-3 hover:underline">
                 {{ p.title }}
               </h3>
               <p class="text-sm text-gray-600 mb-4 flex-grow">{{ excerpt(p.abstract, 160) }}</p>
 
               <div class="mt-auto pt-4 border-t border-gray-100">
-                <div
-                  class="flex items-center justify-between mb-3 text-xs text-gray-500 font-medium"
-                >
+                <div class="flex items-center justify-between mb-3 text-xs text-gray-500 font-medium">
                   <span v-if="p.date" class="flex items-center gap-1">
                     <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                       <path
                         d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2z"
-                        stroke-width="2"
-                      />
+                        stroke-width="2" />
                     </svg>
                     {{
                       new Date(p.date).toLocaleDateString(undefined, {
@@ -258,11 +242,8 @@ function goToNewsPage(page: number) {
                   }}</span>
                 </div>
                 <div class="flex flex-wrap gap-1.5">
-                  <span
-                    v-for="(tag, idx) in (p.tags || []).slice(0, 3)"
-                    :key="idx"
-                    class="inline-block text-[11px] px-2 py-0.5 rounded-full border border-green-200 text-green-700 bg-green-50/50 truncate max-w-[120px]"
-                  >
+                  <span v-for="(tag, idx) in (p.tags || []).slice(0, 3)" :key="idx"
+                    class="inline-block text-[11px] px-2 py-0.5 rounded-full border border-green-200 text-green-700 bg-green-50/50 truncate max-w-[120px]">
                     {{ tag.tag }}
                   </span>
                 </div>
@@ -270,21 +251,12 @@ function goToNewsPage(page: number) {
             </NuxtLink>
 
             <!-- Final "See More" Card -->
-            <NuxtLink
-              v-else
-              to="/resource-hub"
-              class="flex flex-col h-full items-center justify-center text-center group"
-            >
+            <NuxtLink v-else to="/resource-hub"
+              class="flex flex-col h-full items-center justify-center text-center group">
               <div
-                class="w-16 h-16 rounded-full bg-green-50 flex items-center justify-center text-green-600 mb-6 group-hover:bg-green-600 group-hover:text-white transition-colors"
-              >
+                class="w-16 h-16 rounded-full bg-green-50 flex items-center justify-center text-green-600 mb-6 group-hover:bg-green-600 group-hover:text-white transition-colors">
                 <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M14 5l7 7m0 0l-7 7m7-7H3"
-                  />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                 </svg>
               </div>
               <h3 class="text-xl font-semibold text-green-800 mb-3 group-hover:underline">
@@ -297,18 +269,12 @@ function goToNewsPage(page: number) {
 
         <!-- Pagination for Publications -->
         <div v-if="totalPubPages > 1" class="mt-12 flex items-center justify-center gap-2">
-          <button
-            v-for="page in totalPubPages"
-            :key="'pub-' + page"
+          <button v-for="page in totalPubPages" :key="'pub-' + page"
             :aria-current="page === currentPubPage ? 'true' : 'false'"
-            class="min-w-[36px] h-9 px-3 text-sm font-medium rounded-md border transition-colors"
-            :class="
-              page === currentPubPage
-                ? 'bg-green-600 text-white border-green-600 shadow-sm'
-                : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
-            "
-            @click="goToPubPage(page)"
-          >
+            class="min-w-[36px] h-9 px-3 text-sm font-medium rounded-md border transition-colors" :class="page === currentPubPage
+              ? 'bg-green-600 text-white border-green-600 shadow-sm'
+              : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+              " @click="goToPubPage(page)">
             {{ page }}
           </button>
         </div>
@@ -318,37 +284,20 @@ function goToNewsPage(page: number) {
     <!-- News and Events -->
     <section class="w-full bg-green-50/30 py-16 border-t border-gray-100">
       <div class="max-w-6xl mx-auto px-4 md:px-0">
-        <h2
-          class="text-center text-[28px] md:text-[32px] font-display font-semibold mb-10 text-gray-900"
-        >
+        <h2 class="text-center text-[28px] md:text-[32px] font-display font-semibold mb-10 text-gray-900">
           News and Events
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <article
-            v-for="e in visibleNews"
-            :key="e.id"
-            class="border border-gray-200 rounded-xl bg-white overflow-hidden hover:shadow-md transition-shadow h-full flex flex-col"
-          >
-            <NuxtLink
-              v-if="!e.isSeeMore"
-              :to="`/news-events/${e.documentId || e.id}`"
-              class="flex flex-col h-full group"
-            >
+          <article v-for="e in visibleNews" :key="e.id"
+            class="border border-gray-200 rounded-xl bg-white overflow-hidden hover:shadow-md transition-shadow h-full flex flex-col">
+            <NuxtLink v-if="!e.isSeeMore" :to="`/news-events/${e.documentId || e.id}`"
+              class="flex flex-col h-full group">
               <div class="w-full h-48 flex-shrink-0 bg-gray-100">
-                <img
-                  v-if="e.cover?.url"
-                  :src="e.cover.url"
-                  :alt="e.title"
-                  class="w-full h-full object-cover"
-                >
+                <img v-if="e.cover?.url" :src="e.cover.url" :alt="e.title" class="w-full h-full object-cover">
                 <div v-else class="w-full h-full flex items-center justify-center text-gray-400">
                   <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2-2v12a2 2 0 002 2z"
-                    />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2-2v12a2 2 0 002 2z" />
                   </svg>
                 </div>
               </div>
@@ -357,8 +306,7 @@ function goToNewsPage(page: number) {
                   {{ e.date ? new Date(e.date).toLocaleDateString() : 'News' }}
                 </div>
                 <h3
-                  class="text-[17px] font-semibold text-gray-900 mb-2 group-hover:text-green-700 transition-colors line-clamp-2"
-                >
+                  class="text-[17px] font-semibold text-gray-900 mb-2 group-hover:text-green-700 transition-colors line-clamp-2">
                   {{ e.title }}
                 </h3>
                 <p class="text-sm text-gray-600 line-clamp-2">{{ excerpt(e.body, 120) }}</p>
@@ -366,21 +314,12 @@ function goToNewsPage(page: number) {
             </NuxtLink>
 
             <!-- Final "See More" Card -->
-            <NuxtLink
-              v-else
-              to="/news-events"
-              class="flex flex-col h-full items-center justify-center text-center group p-6"
-            >
+            <NuxtLink v-else to="/news-events"
+              class="flex flex-col h-full items-center justify-center text-center group p-6">
               <div
-                class="w-16 h-16 rounded-full bg-green-50 flex items-center justify-center text-green-600 mb-6 group-hover:bg-green-600 group-hover:text-white transition-colors"
-              >
+                class="w-16 h-16 rounded-full bg-green-50 flex items-center justify-center text-green-600 mb-6 group-hover:bg-green-600 group-hover:text-white transition-colors">
                 <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M14 5l7 7m0 0l-7 7m7-7H3"
-                  />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                 </svg>
               </div>
               <h3 class="text-xl font-semibold text-green-800 mb-3 group-hover:underline">
@@ -392,18 +331,11 @@ function goToNewsPage(page: number) {
         </div>
         <!-- Pagination -->
         <div v-if="totalNewsPages > 1" class="mt-12 flex items-center justify-center gap-2">
-          <button
-            v-for="page in totalNewsPages"
-            :key="page"
-            :aria-current="page === currentNewsPage ? 'true' : 'false'"
-            class="min-w-[36px] h-9 px-3 text-sm font-medium rounded-md border transition-colors"
-            :class="
-              page === currentNewsPage
-                ? 'bg-green-600 text-white border-green-600 shadow-sm'
-                : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
-            "
-            @click="goToNewsPage(page)"
-          >
+          <button v-for="page in totalNewsPages" :key="page" :aria-current="page === currentNewsPage ? 'true' : 'false'"
+            class="min-w-[36px] h-9 px-3 text-sm font-medium rounded-md border transition-colors" :class="page === currentNewsPage
+              ? 'bg-green-600 text-white border-green-600 shadow-sm'
+              : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+              " @click="goToNewsPage(page)">
             {{ page }}
           </button>
         </div>
@@ -414,58 +346,39 @@ function goToNewsPage(page: number) {
     <section class="w-full bg-white py-16">
       <div class="max-w-6xl mx-auto px-4 md:px-0">
         <div
-          class="bg-gradient-to-br from-green-50 to-green-100/50 rounded-2xl p-8 md:p-10 border border-green-100 shadow-sm"
-        >
+          class="bg-gradient-to-br from-green-50 to-green-100/50 rounded-2xl p-8 md:p-10 border border-green-100 shadow-sm">
           <h3 class="text-2xl font-bold text-green-900 mb-8 text-center">Contact Information</h3>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left h-full">
             <div class="bg-white/60 p-5 rounded-xl backdrop-blur-sm flex flex-col h-full">
               <p class="text-lg font-bold text-green-900 mb-1">Prof. Mizan R. Khan</p>
               <p class="text-sm text-gray-700 mb-3">Programme Director (LUCCC), ICCCAD at IUB.</p>
-              <a
-                href="mailto:mizan.khan@icccad.org"
-                class="inline-flex items-center gap-2 text-green-700 hover:text-green-800 hover:underline transition-colors text-sm font-medium mt-auto"
-              >
+              <a href="mailto:mizan.khan@icccad.org"
+                class="inline-flex items-center gap-2 text-green-700 hover:text-green-800 hover:underline transition-colors text-sm font-medium mt-auto">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                  />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
                 mizan.khan@icccad.org
               </a>
             </div>
             <div class="bg-white/60 p-5 rounded-xl backdrop-blur-sm flex flex-col h-full">
               <p class="text-lg font-bold text-green-900 mb-1">Md Fahad Hossain</p>
-              <a
-                href="mailto:fahad.hossain@icccad.org"
-                class="inline-flex items-center gap-2 text-green-700 hover:text-green-800 hover:underline transition-colors text-sm font-medium mt-auto"
-              >
+              <a href="mailto:fahad.hossain@icccad.org"
+                class="inline-flex items-center gap-2 text-green-700 hover:text-green-800 hover:underline transition-colors text-sm font-medium mt-auto">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                  />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
                 fahad.hossain@icccad.org
               </a>
             </div>
             <div class="bg-white/60 p-5 rounded-xl backdrop-blur-sm flex flex-col h-full">
               <p class="text-lg font-bold text-green-900 mb-1">Fahmid Mohtasin</p>
-              <a
-                href="mailto:fahmid.mohtasin@icccad.org"
-                class="inline-flex items-center gap-2 text-green-700 hover:text-green-800 hover:underline transition-colors text-sm font-medium mt-auto"
-              >
+              <a href="mailto:fahmid.mohtasin@icccad.org"
+                class="inline-flex items-center gap-2 text-green-700 hover:text-green-800 hover:underline transition-colors text-sm font-medium mt-auto">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                  />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
                 fahmid.mohtasin@icccad.org
               </a>
