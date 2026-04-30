@@ -35,6 +35,11 @@
       "type": "richtext",
       "required": true
     },
+    "lla": {
+      "type": "boolean",
+      "required": true,
+      "default": false
+    },
     "projects": {
       "type": "relation",
       "relation": "manyToMany",
@@ -64,11 +69,6 @@
       "relation": "oneToMany",
       "target": "api::author.author",
       "mappedBy": "news_event"
-    },
-    "country": {
-      "type": "component",
-      "component": "shared.country",
-      "repeatable": false
     }
   }
 }
