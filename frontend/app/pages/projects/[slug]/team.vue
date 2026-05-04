@@ -80,28 +80,45 @@ function mapMedia(m: unknown): StrapiMedia | null {
 
 // Fetch Team single (about, cover, lead)
 type TeamSingle = { about?: string; cover?: unknown; lead?: unknown };
-const { data: teamSingle, error: teamError } = await useAsyncData<TeamSingle>(
+const { data: teamSingle, error: teamError } = await useAsyncData<TeamSingle | null>(
   `team-single-${slug.value}`,
   async () => {
-    const res: unknown = await $fetch(`${strapiUrl}/api/team`, {
-      headers,
-      query: {
-        'populate[0]': 'cover',
-        'populate[1]': 'lead',
-        'populate[2]': 'lead.avatar',
-      },
-    });
-    const r = isRecord(res) ? (res as Record<string, unknown>) : {};
-    const d = ('data' in r ? (r.data as unknown) : res) as unknown;
-    if (isRecord(d) && 'attributes' in d && isRecord((d as Record<string, unknown>).attributes)) {
-      return (d as Record<string, unknown>).attributes as TeamSingle;
+    try {
+      const res: unknown = await $fetch(`${strapiUrl}/api/team`, {
+        headers,
+        query: {
+          'populate[0]': 'cover',
+          'populate[1]': 'lead',
+          'populate[2]': 'lead.avatar',
+        },
+      });
+      const r = isRecord(res) ? (res as Record<string, unknown>) : {};
+      const d = ('data' in r ? (r.data as unknown) : res) as unknown;
+      if (
+        isRecord(d) &&
+        'attributes' in d &&
+        isRecord((d as Record<string, unknown>).attributes)
+      ) {
+        return (d as Record<string, unknown>).attributes as TeamSingle;
+      }
+      return d as TeamSingle;
+    } catch (e: unknown) {
+      // Strapi returns 404 for missing/unpublished single types; skip silently on project pages.
+      const status =
+        typeof e === 'object' && e !== null && 'status' in e ? (e as { status?: unknown }).status : undefined;
+      if (status === 404) return null;
+      throw e;
     }
-    return d as TeamSingle;
   }
 );
 
 if (teamError?.value) {
-  console.error('Failed to fetch Team single:', teamError.value);
+  const status = (teamError.value as unknown as { status?: number } | null)?.status;
+  if (status === 404) {
+    console.warn('Team single not found (404); skipping on project team page.');
+  } else {
+    console.error('Failed to fetch Team single:', teamError.value);
+  }
 }
 
 // Fetch team members using our new API endpoint
