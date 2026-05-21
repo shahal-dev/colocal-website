@@ -25,6 +25,10 @@ export default defineNuxtConfig({
         { name: 'robots', content: 'index, follow' },
         { name: 'author', content: 'COLOCAL / LUCCC' },
         { name: 'theme-color', content: '#15803d' },
+        {
+          name: 'google-site-verification',
+          content: 'E4C8VPjbSKp-J314PbO-sggawNXkZPBmxJlrB828WmY',
+        },
 
         { property: 'og:site_name', content: 'COLOCAL — LUCCC' },
         {
@@ -74,7 +78,7 @@ export default defineNuxtConfig({
     preset: 'vercel',
     prerender: {
       crawlLinks: true,
-      routes: ['/'],
+      routes: ['/', '/sitemap.xml'],
       failOnError: false,
     },
   },
