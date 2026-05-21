@@ -25,7 +25,7 @@ useHead({
             alt="LUCCC Logo"
             class="h-24 object-contain shrink-0 mb-2"
           />
-          <p class="text-gray-700 leading-relaxed text-lg">
+          <p class="text-gray-700 leading-relaxed text-lg text-justify">
             The Least Developed Countries (LDCs) Universities Consortium on Climate Change (LUCCC)
             is a South-South long-term capacity-building platform comprised of 17 universities as
             founding members from the LDCs at the moment. Under this network of universities,
@@ -58,7 +58,7 @@ useHead({
         <h3 class="text-[22px] md:text-[26px] font-display font-semibold mb-6 text-green-700">
           Background
         </h3>
-        <div class="space-y-4 text-gray-700 leading-relaxed text-lg">
+        <div class="space-y-4 text-gray-700 leading-relaxed text-lg text-justify">
           <p>
             At COP21 in Paris the parties to the conference witnessed a discussion, perhaps for the
             first time, on the issue of capacity building that led them to ponder over UNFCCC’s role
@@ -128,7 +128,7 @@ useHead({
         <h3 class="text-[22px] md:text-[26px] font-display font-semibold mb-6 text-green-700">
           LUCCC Partners
         </h3>
-        <p class="text-gray-700 text-lg leading-relaxed mb-10 max-w-3xl">
+        <p class="text-gray-700 text-lg leading-relaxed mb-10 max-w-3xl text-justify">
           The Consortium is managed at the moment by the International Centre for Climate Change and
           Development (ICCCAD) at Independent University, Bangladesh (IUB) in Dhaka. A Governing
           Board as well as an Executive Committee will be formed soon to collectively run LUCCC.

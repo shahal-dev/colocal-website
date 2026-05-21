@@ -269,7 +269,7 @@ useHead({
         </p>
 
         <div
-          class="space-y-6 text-[16px] md:text-[17px] text-gray-700 leading-relaxed whitespace-pre-wrap"
+          class="space-y-6 text-[16px] md:text-[17px] text-gray-700 leading-relaxed whitespace-pre-wrap text-justify"
         >
           {{ countryData.description }}
         </div>

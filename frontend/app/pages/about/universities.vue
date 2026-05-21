@@ -67,7 +67,7 @@ const universities = [
 
     <section class="w-full max-w-4xl mx-auto px-4 md:px-0 py-10">
       <h1 class="text-[28px] md:text-[32px] font-display font-medium mb-3">List of Universities</h1>
-      <p class="text-gray-700 text-sm md:text-base mb-6">
+      <p class="text-gray-700 text-sm md:text-base mb-6 text-justify">
         The Consortium is managed at the moment by the International Centre for Climate Change and
         Development (ICCCAD) at Independent University, Bangladesh (IUB) in Dhaka. A Governing Board
         as well as an Executive Committee will be formed soon to collectively run LUCCC.
