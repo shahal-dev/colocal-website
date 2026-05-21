@@ -3,25 +3,39 @@ import { ref, computed } from 'vue';
 import type { NewsEvent, Project, ResearchPublication } from '../../types/content';
 
 useHead({
-  title: 'COLOCAL — Co-creating Knowledge for Local Climate Adaptation',
+  title: 'COLOCAL — Co-creating Knowledge for Local Climate Adaptation | LUCCC',
   meta: [
     {
       name: 'description',
       content:
-        'COLOCAL builds capacity in Global South universities for education and research on locally led climate change adaptation in Bangladesh, Mozambique, Nepal, and Uganda. A NORHED-II programme contributing to the LUCCC consortium.',
+        'COLOCAL co-creates knowledge for locally led adaptation (LLA) to climate change with Global South universities in Bangladesh, Mozambique, Nepal, Uganda and Norway. A NORHED-II programme advancing the LUCCC consortium of LDC universities through joint research, PhD and Masters training, and South-South collaboration.',
+    },
+    {
+      name: 'keywords',
+      content:
+        'COLOCAL, LUCCC, locally led adaptation, LLA, climate change adaptation, climate adaptation research, climate change education, Global South universities, LDC universities, Least Developed Countries Universities Consortium on Climate Change, South-South collaboration, climate capacity building, NORHED-II, NORAD, ICCCAD, IUB, Bangladesh, Mozambique, Nepal, Uganda, Norway, disaster management, pastoral adaptation, community resilience, climate policy',
     },
     {
       property: 'og:title',
-      content: 'COLOCAL: Climate Adaptation Knowledge',
+      content: 'COLOCAL — Co-creating Knowledge for Local Climate Adaptation | LUCCC',
     },
     {
       property: 'og:description',
       content:
-        'Empowering universities in the Global South to lead climate change adaptation research and education.',
+        'COLOCAL co-creates knowledge with Global South universities in Bangladesh, Mozambique, Nepal, Uganda and Norway for locally led adaptation (LLA) to climate change — a NORHED-II programme advancing the LUCCC consortium of LDC universities.',
     },
     { property: 'og:url', content: 'https://www.luccc.org/' },
     { property: 'og:type', content: 'website' },
     { name: 'twitter:card', content: 'summary_large_image' },
+    {
+      name: 'twitter:title',
+      content: 'COLOCAL — Co-creating Knowledge for Local Climate Adaptation | LUCCC',
+    },
+    {
+      name: 'twitter:description',
+      content:
+        'Locally led adaptation (LLA) to climate change with Global South universities in Bangladesh, Mozambique, Nepal, Uganda and Norway. A NORHED-II programme advancing the LUCCC consortium.',
+    },
   ],
   link: [{ rel: 'canonical', href: 'https://www.luccc.org/' }],
 });
