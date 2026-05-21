@@ -799,7 +799,7 @@ watch(selectedCountryId, (iso) => {
 
 <template>
   <div
-    class="relative w-full aspect-[4/3] md:aspect-[2/1] bg-gray-50 rounded-xl overflow-hidden border border-gray-200 shadow-sm"
+    class="relative w-full aspect-square md:aspect-[2/1] bg-gray-50 rounded-xl overflow-hidden border border-gray-200 shadow-sm"
   >
     <div class="map-stage h-full">
       <div class="zoom-controls">
@@ -827,6 +827,7 @@ watch(selectedCountryId, (iso) => {
 
       <Transition name="fade">
         <div v-if="selectedCountry" class="panel-layer">
+          <div class="panel-backdrop" aria-hidden="true" @click="closePanel" />
           <div class="info-panel" role="dialog" :aria-label="selectedCountry.name">
             <button type="button" class="panel-close" @click="closePanel">
               <span class="sr-only">Close</span>
@@ -1012,6 +1013,10 @@ watch(selectedCountryId, (iso) => {
   padding-top: clamp(1rem, 6vh, 2rem);
 }
 
+.panel-backdrop {
+  display: none;
+}
+
 .info-panel {
   position: sticky;
   top: clamp(1rem, 6vh, 2rem);
@@ -1104,22 +1109,42 @@ watch(selectedCountryId, (iso) => {
 }
 
 @media (max-width: 768px) {
+  .panel-backdrop {
+    display: block;
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.45);
+    pointer-events: auto;
+    z-index: 1;
+  }
+
   .panel-layer {
-    position: static;
-    padding: 1.25rem 1rem 0;
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: stretch;
+    padding: 0;
+    pointer-events: none;
+    z-index: 10;
   }
 
   .info-panel {
-    position: static;
-    margin-top: 1.5rem;
+    position: relative;
     width: 100%;
-    margin-left: 0;
+    max-width: none;
+    margin: 0;
+    padding: 1.25rem 1.25rem 1.5rem;
+    border-radius: 1rem 1rem 0 0;
+    pointer-events: auto;
+    z-index: 2;
+    box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.18);
   }
 
   .panel-close {
-    top: -0.75rem;
+    top: 0.5rem;
     left: auto;
-    right: -0.75rem;
+    right: 0.5rem;
   }
 }
 </style>
