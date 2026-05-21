@@ -128,11 +128,6 @@ const visiblePages = computed(() => {
   return pages;
 });
 
-function excerpt(text?: string | null, n = 260) {
-  if (!text) return '';
-  const t = String(text);
-  return t.length > n ? t.slice(0, n) + '…' : t;
-}
 </script>
 
 <template>
@@ -223,7 +218,7 @@ function excerpt(text?: string | null, n = 260) {
                 <span>{{ item.authors_text }}</span>
               </div>
 
-              <p class="text-sm text-gray-700 mb-3">{{ excerpt(item.summary) }}</p>
+              <p class="text-sm text-gray-700 mb-3">{{ excerpt(item.summary, 260) }}</p>
               <div
                 v-if="item.kind === 'publication' && item.tags?.length"
                 class="flex flex-wrap gap-2"

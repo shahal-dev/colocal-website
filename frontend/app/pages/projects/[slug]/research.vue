@@ -15,12 +15,6 @@ useHead({
     : 'Research & Publications — LUCCC',
 });
 
-function excerpt(text?: string | null, n = 180) {
-  if (!text) return '';
-  const t = String(text);
-  return t.length > n ? t.slice(0, n) + '…' : t;
-}
-
 // Use shared project navbar
 const basePath = computed(() => `/projects/${slug}`);
 const hasChild = computed(() => Boolean(route.params.id));

@@ -15,12 +15,6 @@ import researchPlaceholder from '~/assets/research-placeholder.jpg';
 const route = useRoute();
 const slug = route.params.slug;
 
-function excerpt(text?: string | null, n = 180) {
-  if (!text) return '';
-  const t = String(text);
-  return t.length > n ? t.slice(0, n) + '…' : t;
-}
-
 // Fetch the specific project by slug from our Nuxt server endpoint
 const { data: project, error: _projectError } = await useAsyncData<Project | null>(
   () => `project-${slug}`,

@@ -28,8 +28,7 @@ const countries: Country[] = [
     selectors: ['#BD'],
     name: 'Bangladesh',
     headline: 'Highlights from Bangladesh',
-    description:
-      'Independent University, Bangladesh is acting as an implementing partner of the COLOCAL project.',
+    description: 'ICCCAD-IUB is acting as a Global South partner of the COLOCAL project.',
     research: ['Resilient Livelihoods Study', 'Community Climate Adaptation'],
     researchMore: 1,
     policyBriefs: ['River Basin Policy Brief', 'Coastal Management Insights'],
@@ -41,8 +40,7 @@ const countries: Country[] = [
     selectors: ['#NP'],
     name: 'Nepal',
     headline: 'Highlights from Nepal',
-    description:
-      'Pokhara University is collaborating on mountain ecosystem research and policy engagement.',
+    description: 'PU-SchESM is acting as a Global South partner of the COLOCAL project.',
     research: ['Himalayan Climate Assessment', 'Mountain Community Resilience'],
     researchMore: 2,
     policyBriefs: ['Water Security Roadmap', 'Adaptive Agriculture Brief'],
@@ -55,7 +53,7 @@ const countries: Country[] = [
     name: 'Mozambique',
     headline: 'Highlights from Mozambique',
     description:
-      'Eduardo Mondlane University is acting as an implementing partner of the COLOCAL project.',
+      'Eduardo Mondlane University is acting as a Global South partner of the COLOCAL project.',
     research: ['Coastal Resilience Portfolio', 'Mangrove Restoration Study'],
     researchMore: 2,
     policyBriefs: ['Delta Adaptation Policy', 'Risk Reduction Guideline'],
@@ -67,8 +65,7 @@ const countries: Country[] = [
     selectors: ['#UG'],
     name: 'Uganda',
     headline: 'Highlights from Uganda',
-    description:
-      'Makerere University leads research on community adaptation and climate policy integration.',
+    description: 'Makerere University is acting as a Global South partner of the COLOCAL project.',
     research: ['Lake Victoria Adaptation', 'Climate Services Hub'],
     researchMore: 1,
     policyBriefs: ['Resilience Financing Brief', 'Agroforestry Policy Note'],
@@ -80,8 +77,7 @@ const countries: Country[] = [
     selectors: ['.Norway'],
     name: 'Norway',
     headline: 'Highlights from Norway',
-    description:
-      'The Norwegian University of Life Sciences provides north-south research leadership.',
+    description: 'NMBU is acting as a Global North partner of the COLOCAL project.',
     research: ['Arctic Partnerships Review', 'Blue Economy Collaboration'],
     researchMore: 1,
     policyBriefs: ['Nordic Climate Cooperation', 'Sustainable Fisheries Brief'],

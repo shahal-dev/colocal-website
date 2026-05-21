@@ -148,12 +148,6 @@ function goToPubPage(page: number) {
   currentPubPage.value = page;
 }
 
-function excerpt(text?: string | null, n = 220) {
-  if (!text) return '';
-  const t = String(text);
-  return t.length > n ? t.slice(0, n) + '…' : t;
-}
-
 // News items logic
 const homeNewsItems = computed(() => {
   const items: (NewsEvent & { isSeeMore?: boolean; body?: string })[] = (newsData.value || [])
