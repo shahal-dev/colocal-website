@@ -862,7 +862,7 @@ watch(selectedCountryId, (iso) => {
             </button>
 
             <p class="panel-eyebrow">{{ selectedCountry.name }}</p>
-            <div class="space-y-4">
+            <div class="space-y-4 hidden md:block">
               <div v-for="(inst, i) in selectedCountry.institutions" :key="i" class="flex flex-col">
                 <h3 class="panel-title text-green-700 font-bold text-xl">{{ inst }}</h3>
               </div>
@@ -1070,22 +1070,22 @@ watch(selectedCountryId, (iso) => {
     inset: 0;
     display: flex;
     align-items: flex-end;
-    justify-content: stretch;
-    padding: 0;
+    justify-content: flex-start;
+    padding: 0 0 0.5rem 0.5rem;
     pointer-events: none;
     z-index: 10;
   }
 
   .info-panel {
     position: relative;
-    width: 100%;
+    width: 66%;
     max-width: none;
     margin: 0;
-    padding: 1.25rem 1.25rem 1.5rem;
-    border-radius: 1rem 1rem 0 0;
+    padding: 1rem 1.25rem 1.25rem;
+    border-radius: 0.75rem;
     pointer-events: auto;
     z-index: 2;
-    box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.18);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
   }
 
   .panel-close {
