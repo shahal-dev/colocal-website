@@ -3,7 +3,27 @@ import { ref, computed } from 'vue';
 import type { NewsEvent, Project, ResearchPublication } from '../../types/content';
 
 useHead({
-  title: 'LUCCC - Least Developed Countries Universities Consortium on Climate Change',
+  title: 'COLOCAL — Co-creating Knowledge for Local Climate Adaptation',
+  meta: [
+    {
+      name: 'description',
+      content:
+        'COLOCAL builds capacity in Global South universities for education and research on locally led climate change adaptation in Bangladesh, Mozambique, Nepal, and Uganda. A NORHED-II programme contributing to the LUCCC consortium.',
+    },
+    {
+      property: 'og:title',
+      content: 'COLOCAL: Climate Adaptation Knowledge',
+    },
+    {
+      property: 'og:description',
+      content:
+        'Empowering universities in the Global South to lead climate change adaptation research and education.',
+    },
+    { property: 'og:url', content: 'https://www.luccc.org/' },
+    { property: 'og:type', content: 'website' },
+    { name: 'twitter:card', content: 'summary_large_image' },
+  ],
+  link: [{ rel: 'canonical', href: 'https://www.luccc.org/' }],
 });
 const config = useRuntimeConfig();
 
@@ -156,6 +176,94 @@ function goToNewsPage(page: number) {
 <template>
   <div class="flex flex-col items-center w-full justify-center">
     <HomeProjectCarousel :projects="projects || []" />
+
+    <!-- COLOCAL intro (primary on-page SEO content) -->
+    <section class="w-full bg-white py-16" aria-labelledby="colocal-heading">
+      <div class="max-w-6xl mx-auto px-4 md:px-0">
+        <h1
+          id="colocal-heading"
+          class="text-[28px] md:text-[36px] font-display font-semibold text-green-800 mb-6 leading-tight"
+        >
+          Co-creating knowledge for local adaptation to climate change (COLOCAL)
+        </h1>
+        <p class="text-lg text-gray-700 leading-relaxed mb-6 max-w-4xl">
+          COLOCAL is a NORHED-II funded programme contributing to the goals of the
+          <strong
+            >Least Developed Countries Universities Consortium on Climate Change (LUCCC)</strong
+          >. The project builds capacity in Global South universities for education and research on
+          <strong>locally led adaptation (LLA)</strong> to climate change, through collaborative
+          learning, joint curricula, and community-based research.
+        </p>
+        <p class="text-lg text-gray-700 leading-relaxed mb-10 max-w-4xl">
+          Partner universities in <strong>Bangladesh, Mozambique, Nepal, Uganda</strong> and
+          <strong>Norway</strong> work together on climate change adaptation research, PhD and
+          Masters training, disaster management, pastoral adaptation, and South-South collaboration
+          for community resilience.
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <article class="border border-gray-200 rounded-xl bg-white p-6">
+            <h2 class="text-xl font-semibold text-green-700 mb-2">About COLOCAL</h2>
+            <p class="text-gray-700 leading-relaxed">
+              COLOCAL focuses on Global South university capacity building so that local
+              institutions lead climate change adaptation research relevant to their own
+              communities, ecosystems, and policy contexts.
+            </p>
+          </article>
+
+          <article class="border border-gray-200 rounded-xl bg-white p-6">
+            <h2 class="text-xl font-semibold text-green-700 mb-2">Our Partners</h2>
+            <p class="text-gray-700 leading-relaxed">
+              Universities in Bangladesh, Mozambique, Nepal, Uganda and Norway collaborate on joint
+              research and education, anchored in the LUCCC consortium of Least Developed Countries
+              universities.
+            </p>
+          </article>
+
+          <article class="border border-gray-200 rounded-xl bg-white p-6">
+            <h2 class="text-xl font-semibold text-green-700 mb-2">Education &amp; Training</h2>
+            <p class="text-gray-700 leading-relaxed">
+              We revise existing courses and develop new curricula on locally led adaptation, and
+              recruit PhD and Masters students whose research advances climate change adaptation
+              knowledge in the Global South.
+            </p>
+            <NuxtLink
+              to="/education-training"
+              class="inline-block mt-3 text-green-700 hover:underline font-medium"
+              >Explore education &amp; training →</NuxtLink
+            >
+          </article>
+
+          <article class="border border-gray-200 rounded-xl bg-white p-6">
+            <h2 class="text-xl font-semibold text-green-700 mb-2">Research &amp; Publications</h2>
+            <p class="text-gray-700 leading-relaxed">
+              Researchers publish on disaster management, pastoral adaptation, agriculture, water
+              resources, and other priority climate adaptation themes from each partner country.
+            </p>
+            <NuxtLink
+              to="/resource-hub"
+              class="inline-block mt-3 text-green-700 hover:underline font-medium"
+              >Browse research &amp; publications →</NuxtLink
+            >
+          </article>
+
+          <article class="border border-gray-200 rounded-xl bg-white p-6 md:col-span-2">
+            <h2 class="text-xl font-semibold text-green-700 mb-2">Outreach &amp; Blog</h2>
+            <p class="text-gray-700 leading-relaxed">
+              COLOCAL fosters South-South collaboration and community-based learning through
+              workshops, dialogues, and outreach with policymakers and frontline communities. Read
+              the latest news, events and blog posts from the consortium below.
+            </p>
+            <NuxtLink
+              to="/news-events"
+              class="inline-block mt-3 text-green-700 hover:underline font-medium"
+              >Read the latest news &amp; events →</NuxtLink
+            >
+          </article>
+        </div>
+      </div>
+    </section>
+
     <AboutUsSection :title="'About'" />
 
     <!-- Objectives -->
@@ -340,7 +448,7 @@ function goToNewsPage(page: number) {
                   :src="e.cover.url"
                   :alt="e.title"
                   class="w-full h-full object-cover"
-                >
+                />
                 <div v-else class="w-full h-full flex items-center justify-center text-gray-400">
                   <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path

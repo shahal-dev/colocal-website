@@ -156,7 +156,7 @@ function isActiveType(tab: string) {
             type="text"
             placeholder="Search for Publications"
             class="w-full border rounded-md pl-4 pr-10 py-3 outline-none focus:border-green-600"
-          >
+          />
           <span class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">
             <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <circle cx="11" cy="11" r="7" stroke-width="2" />
@@ -241,7 +241,7 @@ function isActiveType(tab: string) {
                   src="~/assets/user.png"
                   alt="Authors"
                   class="w-4 h-4 mr-2 mt-0.5 flex-shrink-0"
-                >
+                />
                 <span class="line-clamp-2">{{ p.authors_text }}</span>
               </div>
               <p class="text-sm text-gray-700 mb-3">{{ excerpt(p.abstract, 300) }}</p>

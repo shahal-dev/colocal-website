@@ -110,7 +110,7 @@ function goTo(page: number) {
                   :src="e.cover.url"
                   :alt="e.title"
                   class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                >
+                />
                 <div
                   v-else
                   class="absolute inset-0 w-full h-full flex items-center justify-center text-gray-400"

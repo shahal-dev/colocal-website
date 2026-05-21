@@ -133,7 +133,7 @@ const pageWindow = computed(() => {
             type="text"
             placeholder="Search for a project/programme"
             class="w-full border rounded-md pl-4 pr-10 py-3 outline-none focus:border-green-600 text-sm"
-          >
+          />
           <span class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">
             <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <circle cx="11" cy="11" r="7" stroke-width="2" />
@@ -155,7 +155,7 @@ const pageWindow = computed(() => {
                 :src="card.cover?.formats?.large?.url || card.cover?.url || ''"
                 :alt="card.shortTitle"
                 class="w-full h-full object-cover"
-              >
+              />
             </div>
             <div class="p-4 flex-1 flex flex-col justify-between">
               <div>

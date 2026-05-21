@@ -204,7 +204,7 @@ function formatDate(iso: string) {
                   :src="post.cover?.url"
                   :alt="post.title"
                   class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                >
+                />
               </div>
 
               <!-- Content -->
@@ -246,7 +246,7 @@ function formatDate(iso: string) {
                         :src="author.avatar.url"
                         :alt="author.name"
                         class="w-full h-full object-cover"
-                      >
+                      />
                       <span v-else>{{
                         author.name ? author.name.charAt(0).toUpperCase() : 'U'
                       }}</span>

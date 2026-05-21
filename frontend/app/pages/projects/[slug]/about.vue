@@ -95,7 +95,7 @@ const _basePath = computed(() => `/projects/${slug}`);
                   src="https://flagcdn.com/w320/bd.png"
                   alt="Bangladesh Flag"
                   class="max-w-full max-h-full object-contain"
-                >
+                />
               </div>
               <h3 class="text-lg font-semibold text-gray-900 mb-1">Bangladesh</h3>
               <p class="text-sm text-gray-600">Independent University, Bangladesh</p>
@@ -111,7 +111,7 @@ const _basePath = computed(() => `/projects/${slug}`);
                   src="https://flagcdn.com/w320/mz.png"
                   alt="Mozambique Flag"
                   class="max-w-full max-h-full object-contain"
-                >
+                />
               </div>
               <h3 class="text-lg font-semibold text-gray-900 mb-1">Mozambique</h3>
               <p class="text-sm text-gray-600">Eduardo Mondlane University</p>
@@ -127,7 +127,7 @@ const _basePath = computed(() => `/projects/${slug}`);
                   src="https://flagcdn.com/w320/np.png"
                   alt="Nepal Flag"
                   class="max-w-full max-h-full object-contain"
-                >
+                />
               </div>
               <h3 class="text-lg font-semibold text-gray-900 mb-1">Nepal</h3>
               <p class="text-sm text-gray-600">Pokhara University</p>
@@ -143,7 +143,7 @@ const _basePath = computed(() => `/projects/${slug}`);
                   src="https://flagcdn.com/w320/ug.png"
                   alt="Uganda Flag"
                   class="max-w-full max-h-full object-contain"
-                >
+                />
               </div>
               <h3 class="text-lg font-semibold text-gray-900 mb-1">Uganda</h3>
               <p class="text-sm text-gray-600">Makerere University</p>
@@ -169,7 +169,7 @@ const _basePath = computed(() => `/projects/${slug}`);
                   src="https://flagcdn.com/w320/no.png"
                   alt="Norway Flag"
                   class="max-w-full max-h-full object-contain"
-                >
+                />
               </div>
               <h3 class="text-lg font-semibold text-gray-900 mb-1">Norway</h3>
               <p class="text-sm text-gray-600">Norwegian University of Life Sciences</p>

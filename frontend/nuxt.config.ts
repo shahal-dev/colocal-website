@@ -4,6 +4,63 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
   css: ['~/assets/css/main.css'],
+  app: {
+    head: {
+      htmlAttrs: { lang: 'en' },
+      title: 'COLOCAL — Co-creating Knowledge for Local Climate Adaptation',
+      titleTemplate: '%s',
+      meta: [
+        { charset: 'utf-8' },
+        { name: 'viewport', content: 'width=device-width, initial-scale=1.0' },
+        {
+          name: 'description',
+          content:
+            'COLOCAL builds capacity in Global South universities for education and research on locally led climate change adaptation in Bangladesh, Mozambique, Nepal, and Uganda.',
+        },
+        {
+          name: 'keywords',
+          content:
+            'COLOCAL, locally led adaptation, LLA, climate change adaptation research, Global South university capacity building, LUCCC, Least Developed Countries Universities Consortium on Climate Change, South-South collaboration, NORHED-II, NORAD, Bangladesh, Mozambique, Nepal, Uganda, Norway',
+        },
+        { name: 'robots', content: 'index, follow' },
+        { name: 'author', content: 'COLOCAL / LUCCC' },
+        { name: 'theme-color', content: '#15803d' },
+
+        { property: 'og:site_name', content: 'COLOCAL — LUCCC' },
+        {
+          property: 'og:title',
+          content: 'COLOCAL: Climate Adaptation Knowledge',
+        },
+        {
+          property: 'og:description',
+          content:
+            'Empowering universities in the Global South to lead climate change adaptation research and education.',
+        },
+        { property: 'og:url', content: 'https://www.luccc.org/' },
+        { property: 'og:type', content: 'website' },
+        { property: 'og:locale', content: 'en_US' },
+        { property: 'og:image', content: 'https://www.luccc.org/favicon.png' },
+        { property: 'og:image:alt', content: 'COLOCAL logo' },
+
+        { name: 'twitter:card', content: 'summary_large_image' },
+        {
+          name: 'twitter:title',
+          content: 'COLOCAL: Climate Adaptation Knowledge',
+        },
+        {
+          name: 'twitter:description',
+          content:
+            'Empowering universities in the Global South to lead climate change adaptation research and education.',
+        },
+        { name: 'twitter:image', content: 'https://www.luccc.org/favicon.png' },
+      ],
+      link: [
+        { rel: 'icon', type: 'image/png', href: '/favicon.png' },
+        { rel: 'shortcut icon', href: '/favicon.ico' },
+        { rel: 'canonical', href: 'https://www.luccc.org/' },
+      ],
+    },
+  },
   vite: {
     plugins: [tailwindcss()],
   },

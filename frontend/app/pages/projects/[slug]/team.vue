@@ -94,18 +94,16 @@ const { data: teamSingle, error: teamError } = await useAsyncData<TeamSingle | n
       });
       const r = isRecord(res) ? (res as Record<string, unknown>) : {};
       const d = ('data' in r ? (r.data as unknown) : res) as unknown;
-      if (
-        isRecord(d) &&
-        'attributes' in d &&
-        isRecord((d as Record<string, unknown>).attributes)
-      ) {
+      if (isRecord(d) && 'attributes' in d && isRecord((d as Record<string, unknown>).attributes)) {
         return (d as Record<string, unknown>).attributes as TeamSingle;
       }
       return d as TeamSingle;
     } catch (e: unknown) {
       // Strapi returns 404 for missing/unpublished single types; skip silently on project pages.
       const status =
-        typeof e === 'object' && e !== null && 'status' in e ? (e as { status?: unknown }).status : undefined;
+        typeof e === 'object' && e !== null && 'status' in e
+          ? (e as { status?: unknown }).status
+          : undefined;
       if (status === 404) return null;
       throw e;
     }
@@ -219,7 +217,7 @@ function selectCountry(index: number) {
               :src="coverMedia?.url"
               alt="Team"
               class="w-full h-56 sm:h-72 md:h-96 object-cover rounded"
-            >
+            />
           </template>
           <template v-else>
             <div
@@ -229,7 +227,7 @@ function selectCountry(index: number) {
                 src="~/assets/images/colocal-about.jpeg"
                 alt="CoLocal Logo"
                 class="w-auto object-contain"
-              >
+              />
             </div>
           </template>
         </div>
@@ -258,7 +256,7 @@ function selectCountry(index: number) {
                   :src="countryData.flagUrl"
                   :alt="`${countryData.displayName} Flag`"
                   class="max-w-full max-h-full object-contain"
-                >
+                />
               </div>
               <span class="text-sm font-semibold text-gray-700">
                 {{ countryData.displayName }}
@@ -290,13 +288,13 @@ function selectCountry(index: number) {
                     :src="admin.avatar?.url"
                     :alt="admin.name"
                     class="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full object-cover mb-3"
-                  >
+                  />
                 </template>
                 <template v-else>
                   <div
                     class="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full bg-gray-200 flex items-center justify-center mb-3 text-gray-500"
                   >
-                    <img src="~/assets/user.png" alt="Authors" class="w-8 h-8 mr-1" >
+                    <img src="~/assets/user.png" alt="Authors" class="w-8 h-8 mr-1" />
                   </div>
                 </template>
                 <p class="m-0 font-medium text-gray-900 text-sm sm:text-base">{{ admin.name }}</p>
@@ -322,13 +320,13 @@ function selectCountry(index: number) {
                     :src="fellow.avatar?.url"
                     :alt="fellow.name"
                     class="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full object-cover mb-3"
-                  >
+                  />
                 </template>
                 <template v-else>
                   <div
                     class="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full bg-gray-200 flex items-center justify-center mb-3 text-gray-500"
                   >
-                    <img src="~/assets/user.png" alt="Authors" class="w-8 h-8 mr-1" >
+                    <img src="~/assets/user.png" alt="Authors" class="w-8 h-8 mr-1" />
                   </div>
                 </template>
                 <p class="m-0 font-medium text-gray-900 text-sm sm:text-base">

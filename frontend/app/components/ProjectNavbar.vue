@@ -82,7 +82,7 @@ const isActive = (to: string) => {
         :to="basePath"
         class="flex items-center shrink-0 mr-2 md:mr-16 px-1 py-0.5 h-6"
       >
-        <img src="~/assets/logos/COLOCAL-Logo.png" alt="CoLocal logo" class="h-12 w-auto" >
+        <img src="~/assets/logos/COLOCAL-Logo.png" alt="CoLocal logo" class="h-12 w-auto" />
       </NuxtLink>
       <div class="flex items-center md:mx-auto">
         <!-- Home link -->

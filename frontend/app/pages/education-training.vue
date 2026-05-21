@@ -69,7 +69,7 @@ function goTo(p: number) {
             type="text"
             placeholder="Search education or training"
             class="w-full border rounded-md pl-4 pr-10 py-3 outline-none focus:border-green-600"
-          >
+          />
           <span class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">
             <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <circle cx="11" cy="11" r="7" stroke-width="2" />
@@ -87,7 +87,7 @@ function goTo(p: number) {
             class="border border-gray-200 rounded-md overflow-hidden bg-white hover:shadow transition-shadow"
           >
             <div class="h-44 w-full overflow-hidden">
-              <img :src="card.cover?.url" :alt="card.title" class="w-full h-full object-cover" >
+              <img :src="card.cover?.url" :alt="card.title" class="w-full h-full object-cover" />
             </div>
             <div class="p-4">
               <h3 class="text-[15px] font-semibold text-green-800 mb-1">

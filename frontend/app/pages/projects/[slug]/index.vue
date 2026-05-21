@@ -423,7 +423,7 @@ const _fellows = ref([
                 src="https://flagcdn.com/w320/bd.png"
                 alt="Bangladesh Flag"
                 class="max-w-full max-h-full object-contain"
-              >
+              />
             </div>
             <h3 class="text-lg font-semibold text-gray-900 mb-2">Bangladesh</h3>
             <p class="text-sm text-gray-600">Independent University, Bangladesh</p>
@@ -439,7 +439,7 @@ const _fellows = ref([
                 src="https://flagcdn.com/w320/mz.png"
                 alt="Mozambique Flag"
                 class="max-w-full max-h-full object-contain"
-              >
+              />
             </div>
             <h3 class="text-lg font-semibold text-gray-900 mb-2">Mozambique</h3>
             <p class="text-sm text-gray-600">Eduardo Mondlane University</p>
@@ -455,7 +455,7 @@ const _fellows = ref([
                 src="https://flagcdn.com/w320/np.png"
                 alt="Nepal Flag"
                 class="max-w-full max-h-full object-contain"
-              >
+              />
             </div>
             <h3 class="text-lg font-semibold text-gray-900 mb-2">Nepal</h3>
             <p class="text-sm text-gray-600">Pokhara University</p>
@@ -471,7 +471,7 @@ const _fellows = ref([
                 src="https://flagcdn.com/w320/ug.png"
                 alt="Uganda Flag"
                 class="max-w-full max-h-full object-contain"
-              >
+              />
             </div>
             <h3 class="text-lg font-semibold text-gray-900 mb-2">Uganda</h3>
             <p class="text-sm text-gray-600">Makerere University</p>
@@ -495,7 +495,7 @@ const _fellows = ref([
                 src="https://flagcdn.com/w320/no.png"
                 alt="Norway Flag"
                 class="max-w-full max-h-full object-contain"
-              >
+              />
             </div>
             <h3 class="text-lg font-semibold text-gray-900 mb-2">Norway</h3>
             <p class="text-sm text-gray-600">Norwegian University of Life Sciences</p>
@@ -529,7 +529,7 @@ const _fellows = ref([
                   src="~/assets/user.png"
                   alt="Authors"
                   class="w-4 h-4 mr-2 mt-0.5 flex-shrink-0"
-                >
+                />
                 <span class="line-clamp-2">{{ p.authors_text }}</span>
               </div>
               <p class="text-sm text-gray-700 mb-3 flex-grow">{{ excerpt(p.abstract, 160) }}</p>
@@ -600,7 +600,7 @@ const _fellows = ref([
           >
             <NuxtLink v-if="!n.isSeeMore" :to="n.to" class="flex flex-col h-full group">
               <div class="w-full h-48 flex-shrink-0 bg-gray-100">
-                <img :src="n.image" :alt="n.title" class="w-full h-full object-cover" >
+                <img :src="n.image" :alt="n.title" class="w-full h-full object-cover" />
               </div>
               <div class="p-5 flex flex-col justify-center flex-grow">
                 <h3
