@@ -3,8 +3,8 @@ import { ref, computed } from 'vue';
 import type { NewsEvent, Project, ResearchPublication } from '../../types/content';
 
 useHead({
-  title: 'COLOCAL — Co-creating Knowledge for Local Climate Adaptation | LUCCC',
-  meta: [
+  title: 'COLOCAL — Co-creating Knowledge for Local Climate Adaptation',
+    meta: [
     {
       name: 'description',
       content:
@@ -186,7 +186,7 @@ function goToNewsPage(page: number) {
     <HomeProjectCarousel :projects="projects || []" />
 
     <!-- COLOCAL intro (primary on-page SEO content) -->
-    <section class="w-full bg-white py-16" aria-labelledby="colocal-heading">
+    <!-- <section class="w-full bg-white py-16" aria-labelledby="colocal-heading">
       <div class="max-w-6xl mx-auto px-4 md:px-0">
         <h1
           id="colocal-heading"
@@ -270,7 +270,7 @@ function goToNewsPage(page: number) {
           </article>
         </div>
       </div>
-    </section>
+    </section> -->
 
     <AboutUsSection :title="'About'" />
 
