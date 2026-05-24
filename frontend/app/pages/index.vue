@@ -3,12 +3,12 @@ import { ref, computed } from 'vue';
 import type { NewsEvent, Project, ResearchPublication } from '../../types/content';
 
 useHead({
-  title: 'COLOCAL — Co-creating Knowledge for Local Climate Adaptation',
+  title: 'LUCCC - Least Developed Countries Universities Consortium on Climate Change',
     meta: [
     {
       name: 'description',
       content:
-        'COLOCAL co-creates knowledge for locally led adaptation (LLA) to climate change with Global South universities in Bangladesh, Mozambique, Nepal, Uganda and Norway. A NORHED-II programme advancing the LUCCC consortium of LDC universities through joint research, PhD and Masters training, and South-South collaboration.',
+        'LUCCC is a NORHED-II programme advancing the LUCCC consortium of LDC universities through joint research, PhD and Masters training, and South-South collaboration.',
     },
     {
       name: 'keywords',
