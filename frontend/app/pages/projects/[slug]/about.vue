@@ -158,7 +158,7 @@ const _basePath = computed(() => `/projects/${slug}`);
           >
             North Partner
           </h2>
-          <div class="flex flex-wrap gap-8 items-center justify-center md:justify-start">
+          <div class="flex flex-wrap gap-8 items-center justify-center">
             <!-- Norway -->
             <NuxtLink
               :to="`/projects/${slug}/about/norway`"
