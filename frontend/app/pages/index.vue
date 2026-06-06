@@ -470,7 +470,7 @@ function goToNewsPage(page: number) {
               </div>
               <div class="p-5 flex flex-col justify-center flex-grow">
                 <div class="text-xs text-green-600 font-medium mb-2">
-                  {{ e.date ? new Date(e.date).toLocaleDateString() : 'News' }}
+                  {{ e.date ? new Date(e.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) : 'News' }}
                 </div>
                 <h3
                   class="text-[17px] font-semibold text-gray-900 mb-2 group-hover:text-green-700 transition-colors line-clamp-2"

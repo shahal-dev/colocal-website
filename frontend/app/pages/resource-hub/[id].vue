@@ -297,7 +297,7 @@ function onTouchEnd() {
                     stroke-width="2"
                   />
                 </svg>
-                <span>{{ new Date(item.date).toLocaleDateString() }}</span>
+                <span>{{ new Date(item.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) }}</span>
                 <span v-if="item.type?.type">• {{ item.type.type }}</span>
               </div>
               <MDC

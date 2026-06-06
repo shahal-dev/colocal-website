@@ -83,10 +83,10 @@ const visiblePosts = computed(() => {
 
 function formatDate(iso: string) {
   try {
-    return new Date(iso).toLocaleDateString(undefined, {
-      year: 'numeric',
-      month: 'long',
+    return new Date(iso).toLocaleDateString('en-GB', {
       day: 'numeric',
+      month: 'long',
+      year: 'numeric',
     });
   } catch {
     return iso;

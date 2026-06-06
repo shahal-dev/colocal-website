@@ -15,10 +15,10 @@ const newsItems = computed<NewsItem[]>(() => {
     id: p.id,
     title: p.title,
     date: p.date
-      ? new Date(p.date).toLocaleDateString(undefined, {
-          year: 'numeric',
-          month: 'short',
+      ? new Date(p.date).toLocaleDateString('en-GB', {
           day: 'numeric',
+          month: 'long',
+          year: 'numeric',
         })
       : '',
     image: p.cover?.formats?.medium?.url || p.cover?.url || '',
@@ -54,7 +54,7 @@ const newsItems = computed<NewsItem[]>(() => {
               :src="item.image"
               :alt="item.title"
               class="w-20 h-20 sm:w-24 sm:h-24 md:w-[102px] md:h-[102px] object-cover rounded flex-shrink-0"
-            />
+            >
           </template>
           <template v-else>
             <div

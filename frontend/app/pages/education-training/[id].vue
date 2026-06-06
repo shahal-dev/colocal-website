@@ -98,9 +98,9 @@ const more = computed(() =>
 
 function formatDate(iso) {
   try {
-    return new Date(iso).toLocaleDateString(undefined, {
-      day: '2-digit',
-      month: '2-digit',
+    return new Date(iso).toLocaleDateString('en-GB', {
+      day: 'numeric',
+      month: 'long',
       year: 'numeric',
     });
   } catch {

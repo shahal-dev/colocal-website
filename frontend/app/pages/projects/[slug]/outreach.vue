@@ -110,7 +110,7 @@ function goTo(page: number) {
                   :src="e.cover.url"
                   :alt="e.title"
                   class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                />
+                >
                 <div
                   v-else
                   class="absolute inset-0 w-full h-full flex items-center justify-center text-gray-400"
@@ -128,10 +128,10 @@ function goTo(page: number) {
               <div class="p-6 md:p-8 flex flex-col justify-center flex-grow">
                 <div v-if="e.date" class="text-sm font-medium text-green-600 mb-2">
                   {{
-                    new Date(e.date).toLocaleDateString(undefined, {
-                      year: 'numeric',
-                      month: 'long',
+                    new Date(e.date).toLocaleDateString('en-GB', {
                       day: 'numeric',
+                      month: 'long',
+                      year: 'numeric',
                     })
                   }}
                 </div>
