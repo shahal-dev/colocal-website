@@ -98,6 +98,20 @@ const formattedBody = computed(() => {
   if (typeof item.value?.body !== 'string') return item.value?.body || '';
   return item.value.body.replace(/([^\r\n])\r?\n(?!\r?\n)/g, '$1  \n');
 });
+
+const youtubeEmbedUrl = computed(() => {
+  const url = item.value?.youtubeUrl;
+  if (!url) return null;
+  try {
+    const u = new URL(url);
+    let id = '';
+    if (u.hostname === 'youtu.be') id = u.pathname.slice(1);
+    else id = u.searchParams.get('v') || u.pathname.split('/').pop() || '';
+    return id ? `https://www.youtube.com/embed/${id}` : null;
+  } catch {
+    return null;
+  }
+});
 </script>
 
 <template>
@@ -140,6 +154,15 @@ const formattedBody = computed(() => {
               :value="formattedBody"
               class="mdc-body prose max-w-none text-gray-800 space-y-6 text-justify"
             />
+            <div v-if="youtubeEmbedUrl" class="mt-6 aspect-video">
+              <iframe
+                :src="youtubeEmbedUrl"
+                class="w-full h-full rounded-lg"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen
+                frameborder="0"
+              />
+            </div>
           </div>
         </div>
 

@@ -180,6 +180,7 @@ function mapNewsEvent(
     body: a.body,
     section: a.section ?? null,
     lla: !!a.lla,
+    youtubeUrl: a.youtubeUrl ?? null,
     projects: null,
     country: mapCountry(a.country),
   };
@@ -217,6 +218,7 @@ function mapFlatNewsEvents(baseUrl: string, list?: _FlatNewsEvent[] | null): New
       body: e.body,
       section: e.section ?? null,
       lla: !!e.lla,
+      youtubeUrl: e.youtubeUrl ?? null,
       blog: e.blog,
       authors: mapFlatAuthors(baseUrl, e.authors ?? null),
       projects: null,

@@ -128,6 +128,7 @@ export interface EducationTraining {
   type?: Education | null; // optional component
   section: 'module development' | 'short course' | 'training workshop' | null; // optional section
   lla: boolean; // required
+  youtubeUrl?: string | null;
   project?: Project | null; // optional relation (many-to-one to Project)
   country?: Country | null; // optional component
 }
@@ -143,6 +144,7 @@ export interface NewsEvent {
   body: string; // required (RichText Markdown stored as string)
   section: 'policy dialogue' | 'seminar and conference' | null; // optional section
   lla: boolean; // required
+  youtubeUrl?: string | null;
   blog?: boolean; // optional flag for blog posts
   authors?: Author[] | null; // optional relation (one-to-many to Author)
   projects?: Project[] | null; // optional relation (many-to-many to Project)

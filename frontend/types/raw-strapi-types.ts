@@ -174,6 +174,7 @@ export type _RawEducationTrainingAttributes = {
   type?: RawEducationComponent | null;
   section?: 'module development' | 'short course' | 'training workshop' | null;
   lla: boolean;
+  youtubeUrl?: string | null;
   country?: RawCountryComponent | null;
 };
 
@@ -189,6 +190,7 @@ export type _FlatEducationTraining = {
   type?: RawEducationComponent | null;
   section?: 'module development' | 'short course' | 'training workshop' | null;
   lla: boolean;
+  youtubeUrl?: string | null;
   country?: RawCountryComponent | null;
 };
 
@@ -201,6 +203,7 @@ export type _RawNewsEventAttributes = {
   body: string;
   section?: 'policy dialogue' | 'seminar and conference' | null;
   lla: boolean;
+  youtubeUrl?: string | null;
   blog?: boolean;
   authors?: RawRelationMany<RawAuthorAttributes>;
   country?: RawCountryComponent | null;
@@ -217,6 +220,7 @@ export type _FlatNewsEvent = {
   body: string;
   section?: 'policy dialogue' | 'seminar and conference' | null;
   lla: boolean;
+  youtubeUrl?: string | null;
   blog?: boolean;
   authors?: FlatAuthor[] | null;
   country?: RawCountryComponent | null;

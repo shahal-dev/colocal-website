@@ -191,6 +191,7 @@ function mapEducationTraining(
     type: mapEducation(a.type ?? null) ?? undefined,
     section: a.section ?? null,
     lla: !!a.lla,
+    youtubeUrl: a.youtubeUrl ?? null,
     project: null,
     country: mapCountry(a.country),
   };
@@ -214,6 +215,7 @@ function mapFlatEducationTrainings(
       type: mapEducation(e.type ?? null) ?? undefined,
       section: e.section ?? null,
       lla: !!e.lla,
+      youtubeUrl: e.youtubeUrl ?? null,
       project: null,
       country: mapCountry(e.country ?? null),
     })

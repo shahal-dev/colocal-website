@@ -1,14 +1,36 @@
-node_modules
-.env
-.cache
-dist
-build
-.strapi
-.nuxt
+# Dependencies
+node_modules/
 
+# Environment
+.env
+.env.*
+
+# Package manager caches
+.cache/
+
+# Build outputs
+dist/
+build/
+.output/
+.nuxt/
+
+# Strapi
+.strapi/
 
 # Vercel
-.vercel
+.vercel/
 
-# Nuxt build outputs
-.output
+# Claude Code
+.claude/
+CLAUDE.local.md
+
+# AI tooling
+.headroom/
+graphify-out/
+
+# Editor
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db

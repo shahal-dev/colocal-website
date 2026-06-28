@@ -68,6 +68,9 @@
         "short course",
         "training workshop"
       ]
+    },
+    "youtubeUrl": {
+      "type": "string"
     }
   }
 }
