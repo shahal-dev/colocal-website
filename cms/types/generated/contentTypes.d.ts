@@ -565,6 +565,7 @@ export interface ApiEducationTrainingEducationTraining
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    youtubeUrl: Schema.Attribute.String;
   };
 }
 
@@ -680,6 +681,7 @@ export interface ApiNewsEventNewsEvent extends Struct.CollectionTypeSchema {
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    youtubeUrl: Schema.Attribute.String;
   };
 }
 

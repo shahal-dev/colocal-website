@@ -18,37 +18,29 @@
         >
           <div v-if="currentSlide && currentSlide.image" class="relative w-full h-full">
             <!-- Blurred background image to fill blank spaces -->
-            <picture class="absolute inset-0 w-full h-full">
-              <source
-                v-if="currentSlide.srcset"
-                :srcset="currentSlide.srcset"
-                sizes="(min-width: 768px) 720px, 100vw"
-              />
-              <img
-                :src="currentSlide.image"
-                :alt="currentSlide.alt || 'Feature image'"
-                class="w-full h-full object-cover blur-md scale-110 opacity-80"
-                loading="lazy"
-                decoding="async"
-                aria-hidden="true"
-              />
-            </picture>
+            <NuxtImg
+              :src="currentSlide.image"
+              :alt="currentSlide.alt || 'Feature image'"
+              sizes="100vw md:720px"
+              format="webp"
+              quality="35"
+              class="absolute inset-0 w-full h-full object-cover blur-md scale-110 opacity-80"
+              loading="lazy"
+              decoding="async"
+              aria-hidden="true"
+            />
 
             <!-- Main image with object-contain -->
-            <picture class="relative z-10 w-full h-full">
-              <source
-                v-if="currentSlide.srcset"
-                :srcset="currentSlide.srcset"
-                sizes="(min-width: 768px) 720px, 100vw"
-              />
-              <img
-                :src="currentSlide.image"
-                :alt="currentSlide.alt || 'Feature image'"
-                class="w-full h-full object-contain"
-                loading="lazy"
-                decoding="async"
-              />
-            </picture>
+            <NuxtImg
+              :src="currentSlide.image"
+              :alt="currentSlide.alt || 'Feature image'"
+              sizes="100vw md:720px"
+              format="webp"
+              quality="82"
+              class="relative z-10 w-full h-full object-contain"
+              loading="lazy"
+              decoding="async"
+            />
           </div>
         </div>
 
@@ -172,7 +164,6 @@ type Slide = {
   title: string;
   subtitle: string;
   image: string;
-  srcset?: string;
   alt: string;
   to: string;
   cta: string;
@@ -185,16 +176,11 @@ function resolveCover(cover: ResearchOutreachCarouselItem['cover'], title: strin
   if (typeof cover === 'string') {
     return { image: cover, alt: `${title} cover image` };
   }
-  const formats = cover.formats || {};
-  const srcCandidates: string[] = [];
-  if (formats.small?.url) srcCandidates.push(`${formats.small.url} 480w`);
-  if (formats.medium?.url) srcCandidates.push(`${formats.medium.url} 768w`);
-  if (formats.large?.url) srcCandidates.push(`${formats.large.url} 1024w`);
-  if (cover.url) srcCandidates.push(`${cover.url} 1200w`);
-  const srcset = srcCandidates.length ? srcCandidates.join(', ') : undefined;
-  const image = formats.large?.url || formats.medium?.url || formats.small?.url || cover.url || '';
+  // Use the full-resolution original and let @nuxt/image (IPX) generate
+  // correctly-sized WebP variants. Avoids upscaling Strapi's downscaled formats.
+  const image = cover.url || cover.formats?.large?.url || '';
   const alt = cover.alternativeText || `${title} cover image`;
-  return { image, srcset, alt };
+  return { image, alt };
 }
 
 const isClient = import.meta.client;
@@ -202,12 +188,11 @@ const isClient = import.meta.client;
 const slides = computed<Slide[]>(() => {
   if (!Array.isArray(props.items) || props.items.length === 0) return [];
   return props.items.map((item) => {
-    const { image, srcset, alt } = resolveCover(item.cover, item.title);
+    const { image, alt } = resolveCover(item.cover, item.title);
     return {
       title: item.title,
       subtitle: item.description,
       image,
-      srcset,
       alt,
       to: `${item.slug}/${item.type}/${item.id}`,
       cta: item.type === 'research' ? 'View Full Article' : 'View Full Article',

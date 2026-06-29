@@ -10,7 +10,8 @@ import type {
 } from '~~/types/content';
 import img1 from '~/assets/images/carousel-1.png';
 import img2 from '~/assets/images/carousel-2.png';
-import researchPlaceholder from '~/assets/research-placeholder.jpg';
+// Served from public/ so @nuxt/image (IPX) can resolve & optimize it.
+const researchPlaceholder = '/research-placeholder.jpg';
 
 const route = useRoute();
 const slug = route.params.slug;

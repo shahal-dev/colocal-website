@@ -69,7 +69,15 @@ watch(totalPages, (next) => {
             class="border border-gray-200 rounded-md bg-white overflow-hidden hover:shadow transition-shadow"
           >
             <div class="w-full h-40 overflow-hidden">
-              <img :src="e.cover?.url" :alt="e.title" class="w-full h-full object-cover" />
+              <NuxtImg
+                :src="e.cover?.url"
+                :alt="e.title"
+                sizes="100vw sm:50vw lg:380px"
+                format="webp"
+                quality="80"
+                loading="lazy"
+                class="w-full h-full object-cover"
+              />
             </div>
             <div class="p-4">
               <h3 class="text-[16px] font-semibold text-green-800 mb-1">{{ e.title }}</h3>
@@ -108,7 +116,15 @@ watch(totalPages, (next) => {
               class="border border-gray-200 rounded-md bg-white overflow-hidden hover:shadow transition-shadow"
             >
               <div class="w-full h-40 overflow-hidden">
-                <img :src="e.cover?.url" :alt="e.title" class="w-full h-full object-cover" />
+                <NuxtImg
+                :src="e.cover?.url"
+                :alt="e.title"
+                sizes="100vw sm:50vw lg:380px"
+                format="webp"
+                quality="80"
+                loading="lazy"
+                class="w-full h-full object-cover"
+              />
               </div>
               <div class="p-4">
                 <h3 class="text-[16px] font-semibold text-green-800 mb-1">{{ e.title }}</h3>

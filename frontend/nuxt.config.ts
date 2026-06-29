@@ -71,6 +71,24 @@ export default defineNuxtConfig({
 
   modules: ['@nuxt/fonts', '@nuxt/icon', '@nuxt/image', '@nuxt/eslint', '@nuxtjs/mdc'],
 
+  // @nuxt/image: allow IPX to optimize images served from the Strapi backend.
+  // Strapi Cloud serves the API from `<id>.strapiapp.com` but uploaded media
+  // from a separate `<id>.media.strapiapp.com` CDN host — both must be
+  // whitelisted or @nuxt/image silently passes the original through unoptimized.
+  image: {
+    domains: (() => {
+      let host = 'localhost';
+      try {
+        host = new URL(process.env.NUXT_STRAPI_URL || 'http://localhost:1337').hostname;
+      } catch {
+        host = 'localhost';
+      }
+      // Derive the `.media.` CDN host (no-op for hosts without a subdomain, e.g. localhost).
+      const mediaHost = host.replace(/^([^.]+)\./, '$1.media.');
+      return Array.from(new Set([host, mediaHost]));
+    })(),
+  },
+
   // Static site generation
   ssr: true,
 

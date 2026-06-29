@@ -165,9 +165,13 @@ function goToPage(
             >
               <NuxtLink :to="`${basePath}/education/${card.documentId || card.id}`" class="block">
                 <div class="h-44 w-full overflow-hidden">
-                  <img
+                  <NuxtImg
                     :src="card.cover?.url"
                     :alt="card.title"
+                    sizes="100vw sm:50vw lg:380px"
+                    format="webp"
+                    quality="80"
+                    loading="lazy"
                     class="w-full h-full object-cover"
                   />
                 </div>
@@ -228,9 +232,13 @@ function goToPage(
             >
               <NuxtLink :to="`${basePath}/education/${card.documentId || card.id}`" class="block">
                 <div class="h-44 w-full overflow-hidden">
-                  <img
+                  <NuxtImg
                     :src="card.cover?.url"
                     :alt="card.title"
+                    sizes="100vw sm:50vw lg:380px"
+                    format="webp"
+                    quality="80"
+                    loading="lazy"
                     class="w-full h-full object-cover"
                   />
                 </div>
@@ -294,9 +302,13 @@ function goToPage(
             >
               <NuxtLink :to="`${basePath}/education/${card.documentId || card.id}`" class="block">
                 <div class="h-44 w-full overflow-hidden">
-                  <img
+                  <NuxtImg
                     :src="card.cover?.url"
                     :alt="card.title"
+                    sizes="100vw sm:50vw lg:380px"
+                    format="webp"
+                    quality="100"
+                    loading="lazy"
                     class="w-full h-full object-cover"
                   />
                 </div>
@@ -360,9 +372,13 @@ function goToPage(
             >
               <NuxtLink :to="`${basePath}/education/${card.documentId || card.id}`" class="block">
                 <div class="h-44 w-full overflow-hidden">
-                  <img
+                  <NuxtImg
                     :src="card.cover?.url"
                     :alt="card.title"
+                    sizes="100vw sm:50vw lg:380px"
+                    format="webp"
+                    quality="80"
+                    loading="lazy"
                     class="w-full h-full object-cover"
                   />
                 </div>

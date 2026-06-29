@@ -21,7 +21,7 @@ const newsItems = computed<NewsItem[]>(() => {
           year: 'numeric',
         })
       : '',
-    image: p.cover?.formats?.medium?.url || p.cover?.url || '',
+    image: p.cover?.url || p.cover?.formats?.large?.url || '',
   }));
 });
 </script>
@@ -50,11 +50,15 @@ const newsItems = computed<NewsItem[]>(() => {
       >
         <article v-for="item in newsItems" :key="item.id" class="flex items-start gap-4 sm:gap-5">
           <template v-if="item.image">
-            <img
+            <NuxtImg
               :src="item.image"
               :alt="item.title"
+              sizes="80px sm:96px md:102px"
+              format="webp"
+              quality="80"
+              loading="lazy"
               class="w-20 h-20 sm:w-24 sm:h-24 md:w-[102px] md:h-[102px] object-cover rounded flex-shrink-0"
-            >
+            />
           </template>
           <template v-else>
             <div
