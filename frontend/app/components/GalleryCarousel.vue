@@ -8,7 +8,14 @@
     >
       <transition :name="transitionName" mode="out-in">
         <div :key="`${activeIndex}-${currentSlide}`" class="carousel-slide">
-          <img :src="currentSlide" :alt="slideAlt(activeIndex)" class="media" />
+          <NuxtImg
+            :src="currentSlide"
+            :alt="slideAlt(activeIndex)"
+            sizes="100vw md:720px"
+            format="webp"
+            quality="85"
+            class="media"
+          />
         </div>
       </transition>
 
