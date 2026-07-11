@@ -63,6 +63,39 @@ export default defineNuxtConfig({
         { rel: 'shortcut icon', href: '/favicon.ico' },
         { rel: 'canonical', href: 'https://www.luccc.org/' },
       ],
+      script: [
+        {
+          type: 'application/ld+json',
+          innerHTML: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@graph': [
+              {
+                '@type': 'Organization',
+                '@id': 'https://www.luccc.org/#organization',
+                name: 'LUCCC',
+                alternateName: ['COLOCAL', 'Least Developed Countries Universities Consortium on Climate Change'],
+                url: 'https://www.luccc.org',
+                logo: 'https://www.luccc.org/favicon.png',
+                description:
+                  'COLOCAL is a NORHED-II funded programme under the LUCCC consortium co-creating knowledge for locally led adaptation to climate change with Global South universities.',
+                sameAs: [],
+              },
+              {
+                '@type': 'WebSite',
+                '@id': 'https://www.luccc.org/#website',
+                url: 'https://www.luccc.org',
+                name: 'COLOCAL — LUCCC',
+                publisher: { '@id': 'https://www.luccc.org/#organization' },
+                potentialAction: {
+                  '@type': 'SearchAction',
+                  target: 'https://www.luccc.org/?q={search_term_string}',
+                  'query-input': 'required name=search_term_string',
+                },
+              },
+            ],
+          }),
+        },
+      ],
     },
   },
   vite: {

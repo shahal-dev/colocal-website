@@ -25,10 +25,52 @@ const { data: project, error: _projectError } = await useAsyncData<Project | nul
   }
 );
 
-useHead({
-  title: project.value?.shortTitle
-    ? `${project.value.shortTitle}`
-    : 'Projects & Programmes — LUCCC',
+useHead(() => {
+  const p = project.value;
+  const canonicalUrl = `https://www.luccc.org/projects/${slug}`;
+  const pageTitle = p?.shortTitle
+    ? `${p.shortTitle} — Co-creating Knowledge for Local Climate Adaptation | LUCCC`
+    : 'Projects & Programmes — LUCCC';
+  const metaDesc =
+    p?.shortDescription ||
+    `${p?.shortTitle || 'COLOCAL'} is a NORHED-II funded programme for locally led climate change adaptation with universities in Bangladesh, Mozambique, Nepal, Uganda and Norway.`;
+
+  return {
+    title: pageTitle,
+    meta: [
+      { name: 'description', content: metaDesc.slice(0, 160) },
+      {
+        name: 'keywords',
+        content: `${p?.shortTitle || 'COLOCAL'}, LUCCC, locally led adaptation, climate change adaptation, NORHED-II, Global South universities, Bangladesh, Mozambique, Nepal, Uganda, Norway`,
+      },
+      { property: 'og:title', content: p?.longTitle || p?.shortTitle || 'COLOCAL' },
+      { property: 'og:description', content: metaDesc.slice(0, 200) },
+      { property: 'og:url', content: canonicalUrl },
+      { property: 'og:type', content: 'website' },
+    ],
+    link: [{ rel: 'canonical', href: canonicalUrl }],
+    script: p
+      ? [
+          {
+            type: 'application/ld+json',
+            innerHTML: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'ResearchProject',
+              name: p.longTitle || p.shortTitle,
+              alternateName: p.shortTitle,
+              url: canonicalUrl,
+              description: metaDesc.slice(0, 300),
+              funder: { '@type': 'Organization', name: 'NORAD / NORHED-II' },
+              parentOrganization: {
+                '@type': 'Organization',
+                name: 'LUCCC',
+                url: 'https://www.luccc.org',
+              },
+            }),
+          },
+        ]
+      : [],
+  };
 });
 
 // Share project in state so sibling pages under this slug can access it easily
@@ -394,9 +436,9 @@ const _fellows = ref([
         <p class="text-xs font-semibold text-green-700 uppercase tracking-wide mb-2">
           {{ project?.shortTitle }}
         </p>
-        <h2 class="text-[22px] md:text-[26px] font-display font-semibold mb-3">
+        <h1 class="text-[22px] md:text-[26px] font-display font-semibold mb-3">
           {{ project?.longTitle }}
-        </h2>
+        </h1>
         <div v-if="project?.longDescription" class="space-y-4 text-gray-700 leading-relaxed">
           <MDC :value="project?.longDescription" class="prose max-w-none text-gray-800 space-y-6" />
         </div>
