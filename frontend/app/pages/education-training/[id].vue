@@ -12,10 +12,25 @@ const { data: current } = await useAsyncData(
 );
 const item = computed(() => (current.value && current.value[0]) || null);
 
-useHead({
-  title: item.value?.title
-    ? `${item.value.title} — Education & Training`
-    : 'Education & Training — LUCCC',
+useHead(() => {
+  const i = item.value;
+  const ogImage = i?.cover?.url || i?.imageCover?.url || 'https://www.luccc.org/og-image.jpg';
+  const ogTitle = i?.title || 'Education & Training — LUCCC';
+  const rawDesc = i?.body || '';
+  const ogDesc = rawDesc.replace(/[#*_`[\]()>]/g, '').replace(/\n+/g, ' ').trim().slice(0, 160);
+  return {
+    title: i?.title ? `${i.title} — Education & Training` : 'Education & Training — LUCCC',
+    meta: [
+      { property: 'og:title', content: ogTitle },
+      { property: 'og:description', content: ogDesc },
+      { property: 'og:image', content: ogImage },
+      { property: 'og:image:alt', content: ogTitle },
+      { name: 'twitter:card', content: 'summary_large_image' },
+      { name: 'twitter:title', content: ogTitle },
+      { name: 'twitter:description', content: ogDesc },
+      { name: 'twitter:image', content: ogImage },
+    ],
+  };
 });
 
 const coverUrl = computed(() => {

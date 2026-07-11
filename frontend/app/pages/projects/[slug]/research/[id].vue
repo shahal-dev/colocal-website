@@ -44,10 +44,27 @@ watch(
   }
 );
 
-useHead({
-  title: item.value?.title
-    ? `${item.value.title} — ${projectName.value} Research & Publications`
-    : `${projectName.value} — Research & Publications`,
+useHead(() => {
+  const i = item.value;
+  const ogImage = i?.imageCover?.url || 'https://www.luccc.org/og-image.jpg';
+  const ogTitle = i?.title || `${projectName.value} — Research & Publications`;
+  const rawDesc = i?.abstract || '';
+  const ogDesc = rawDesc.replace(/[#*_`[\]()>]/g, '').replace(/\n+/g, ' ').trim().slice(0, 160);
+  return {
+    title: i?.title
+      ? `${i.title} — ${projectName.value} Research & Publications`
+      : `${projectName.value} — Research & Publications`,
+    meta: [
+      { property: 'og:title', content: ogTitle },
+      { property: 'og:description', content: ogDesc },
+      { property: 'og:image', content: ogImage },
+      { property: 'og:image:alt', content: ogTitle },
+      { name: 'twitter:card', content: 'summary_large_image' },
+      { name: 'twitter:title', content: ogTitle },
+      { name: 'twitter:description', content: ogDesc },
+      { name: 'twitter:image', content: ogImage },
+    ],
+  };
 });
 const images = computed(() => {
   const arr = [];

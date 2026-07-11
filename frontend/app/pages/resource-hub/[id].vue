@@ -26,11 +26,26 @@ const formattedBody = computed(() => {
   return item.value.body.replace(/([^\r\n])\r?\n(?!\r?\n)/g, '$1  \n');
 });
 
-useHead(
-  computed(() => ({
-    title: item.value?.title ? `${item.value.title} — Resource Hub` : 'Resource Hub',
-  }))
-);
+useHead(() => {
+  const i = item.value;
+  const ogImage = i?.imageCover?.url || i?.cover?.url || 'https://www.luccc.org/og-image.jpg';
+  const ogTitle = i?.title || 'Resource Hub — LUCCC';
+  const rawDesc = i?.abstract || i?.body || '';
+  const ogDesc = rawDesc.replace(/[#*_`[\]()>]/g, '').replace(/\n+/g, ' ').trim().slice(0, 160);
+  return {
+    title: i?.title ? `${i.title} — Resource Hub` : 'Resource Hub',
+    meta: [
+      { property: 'og:title', content: ogTitle },
+      { property: 'og:description', content: ogDesc },
+      { property: 'og:image', content: ogImage },
+      { property: 'og:image:alt', content: ogTitle },
+      { name: 'twitter:card', content: 'summary_large_image' },
+      { name: 'twitter:title', content: ogTitle },
+      { name: 'twitter:description', content: ogDesc },
+      { name: 'twitter:image', content: ogImage },
+    ],
+  };
+});
 
 const images = computed(() => {
   const arr = [];

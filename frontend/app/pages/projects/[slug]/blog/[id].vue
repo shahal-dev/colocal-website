@@ -53,10 +53,24 @@ const formattedBody = computed(() => {
 });
 
 console.log(item.value?.body);
-useHead({
-  title: item.value?.title
-    ? `${item.value.title} — COLOCAL Blog`
-    : `${projectName.value} — COLOCAL Blog`,
+useHead(() => {
+  const i = item.value;
+  const ogImage = i?.cover?.url || 'https://www.luccc.org/og-image.jpg';
+  const ogTitle = i?.title || `${projectName.value} — Blog`;
+  const rawDesc = typeof i?.body === 'string' ? i.body.replace(/[#*_`[\]()>]/g, '').replace(/\n+/g, ' ').trim().slice(0, 160) : '';
+  return {
+    title: i?.title ? `${i.title} — COLOCAL Blog` : `${projectName.value} — COLOCAL Blog`,
+    meta: [
+      { property: 'og:title', content: ogTitle },
+      { property: 'og:description', content: rawDesc },
+      { property: 'og:image', content: ogImage },
+      { property: 'og:image:alt', content: ogTitle },
+      { name: 'twitter:card', content: 'summary_large_image' },
+      { name: 'twitter:title', content: ogTitle },
+      { name: 'twitter:description', content: rawDesc },
+      { name: 'twitter:image', content: ogImage },
+    ],
+  };
 });
 
 const carouselImages = computed(() => {

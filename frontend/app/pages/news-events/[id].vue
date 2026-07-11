@@ -12,8 +12,24 @@ const { data: current } = await useAsyncData(
 );
 const item = computed(() => (current.value && current.value[0]) || null);
 
-useHead({
-  title: item.value?.title ? `${item.value.title} — News & Events` : 'News & Events — LUCCC',
+useHead(() => {
+  const i = item.value;
+  const ogImage = i?.cover?.url || 'https://www.luccc.org/og-image.jpg';
+  const ogTitle = i?.title || 'News & Events — LUCCC';
+  const ogDesc = i?.body ? i.body.replace(/[#*_`[\]()>]/g, '').replace(/\n+/g, ' ').trim().slice(0, 160) : '';
+  return {
+    title: i?.title ? `${i.title} — News & Events` : 'News & Events — LUCCC',
+    meta: [
+      { property: 'og:title', content: ogTitle },
+      { property: 'og:description', content: ogDesc },
+      { property: 'og:image', content: ogImage },
+      { property: 'og:image:alt', content: ogTitle },
+      { name: 'twitter:card', content: 'summary_large_image' },
+      { name: 'twitter:title', content: ogTitle },
+      { name: 'twitter:description', content: ogDesc },
+      { name: 'twitter:image', content: ogImage },
+    ],
+  };
 });
 
 const { data: moreList } = await useAsyncData('news-events:all', () => $fetch('/api/news-events'));
