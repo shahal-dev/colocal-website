@@ -43,8 +43,10 @@ export default defineNuxtConfig({
         { property: 'og:url', content: 'https://www.luccc.org/' },
         { property: 'og:type', content: 'website' },
         { property: 'og:locale', content: 'en_US' },
-        { property: 'og:image', content: 'https://www.luccc.org/favicon.png' },
-        { property: 'og:image:alt', content: 'COLOCAL logo' },
+        { property: 'og:image', content: 'https://www.luccc.org/og-image.jpg' },
+        { property: 'og:image:alt', content: 'COLOCAL — co-creating climate adaptation knowledge with Global South universities' },
+        { property: 'og:image:width', content: '1280' },
+        { property: 'og:image:height', content: '853' },
 
         { name: 'twitter:card', content: 'summary_large_image' },
         {
@@ -56,7 +58,8 @@ export default defineNuxtConfig({
           content:
             'Locally led adaptation (LLA) to climate change with Global South universities in Bangladesh, Mozambique, Nepal, Uganda and Norway. A NORHED-II programme advancing the LUCCC consortium.',
         },
-        { name: 'twitter:image', content: 'https://www.luccc.org/favicon.png' },
+        { name: 'twitter:image', content: 'https://www.luccc.org/og-image.jpg' },
+        { name: 'twitter:image:alt', content: 'COLOCAL — co-creating climate adaptation knowledge with Global South universities' },
       ],
       link: [
         { rel: 'icon', type: 'image/png', href: '/favicon.png' },

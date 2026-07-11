@@ -35,6 +35,9 @@ useHead(() => {
     p?.shortDescription ||
     `${p?.shortTitle || 'COLOCAL'} is a NORHED-II funded programme for locally led climate change adaptation with universities in Bangladesh, Mozambique, Nepal, Uganda and Norway.`;
 
+  const ogImage = p?.cover?.url || 'https://www.luccc.org/og-image.jpg';
+  const ogImageAlt = p?.longTitle || p?.shortTitle || 'COLOCAL project';
+
   return {
     title: pageTitle,
     meta: [
@@ -47,6 +50,13 @@ useHead(() => {
       { property: 'og:description', content: metaDesc.slice(0, 200) },
       { property: 'og:url', content: canonicalUrl },
       { property: 'og:type', content: 'website' },
+      { property: 'og:image', content: ogImage },
+      { property: 'og:image:alt', content: ogImageAlt },
+      { name: 'twitter:card', content: 'summary_large_image' },
+      { name: 'twitter:title', content: p?.longTitle || p?.shortTitle || 'COLOCAL' },
+      { name: 'twitter:description', content: metaDesc.slice(0, 200) },
+      { name: 'twitter:image', content: ogImage },
+      { name: 'twitter:image:alt', content: ogImageAlt },
     ],
     link: [{ rel: 'canonical', href: canonicalUrl }],
     script: p
