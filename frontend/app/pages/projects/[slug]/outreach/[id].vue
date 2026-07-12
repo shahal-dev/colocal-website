@@ -60,23 +60,15 @@ const item = computed(() => {
   return currentItem;
 });
 
-useHead(() => {
+usePageSeo(() => {
   const i = item.value;
-  const ogImage = ogImageMeta(i?.cover, ...(Array.isArray(i?.images) ? i.images : []));
-  const ogTitle = i?.title || `${projectName.value} — Outreach`;
-  const rawDesc = typeof i?.body === 'string' ? i.body.replace(/[#*_`[\]()>]/g, '').replace(/\n+/g, ' ').trim().slice(0, 160) : '';
   return {
     title: i?.title
       ? `${i.title} — ${projectName.value} Outreach`
       : `${projectName.value} — Outreach`,
-    meta: [
-      { property: 'og:title', content: ogTitle },
-      { property: 'og:description', content: rawDesc },
-      ...ogImageTags(ogImage, ogTitle),
-      { name: 'twitter:card', content: 'summary_large_image' },
-      { name: 'twitter:title', content: ogTitle },
-      { name: 'twitter:description', content: rawDesc },
-    ],
+    ogTitle: i?.title,
+    description: i?.body,
+    images: [i?.cover, ...(i?.images || [])],
   };
 });
 

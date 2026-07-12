@@ -12,22 +12,13 @@ const { data: current } = await useAsyncData(
 );
 const item = computed(() => (current.value && current.value[0]) || null);
 
-useHead(() => {
+usePageSeo(() => {
   const i = item.value;
-  const ogImage = ogImageMeta(i?.cover, i?.imageCover, ...(Array.isArray(i?.images) ? i.images : []));
-  const ogTitle = i?.title || 'Education & Training — LUCCC';
-  const rawDesc = i?.body || '';
-  const ogDesc = rawDesc.replace(/[#*_`[\]()>]/g, '').replace(/\n+/g, ' ').trim().slice(0, 160);
   return {
     title: i?.title ? `${i.title} — Education & Training` : 'Education & Training — LUCCC',
-    meta: [
-      { property: 'og:title', content: ogTitle },
-      { property: 'og:description', content: ogDesc },
-      ...ogImageTags(ogImage, ogTitle),
-      { name: 'twitter:card', content: 'summary_large_image' },
-      { name: 'twitter:title', content: ogTitle },
-      { name: 'twitter:description', content: ogDesc },
-    ],
+    ogTitle: i?.title,
+    description: i?.body,
+    images: [i?.cover, i?.imageCover, ...(i?.images || [])],
   };
 });
 

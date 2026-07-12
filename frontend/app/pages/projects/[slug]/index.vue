@@ -25,37 +25,33 @@ const { data: project, error: _projectError } = await useAsyncData<Project | nul
   }
 );
 
+const metaDesc = computed(
+  () =>
+    project.value?.shortDescription ||
+    `${project.value?.shortTitle || 'COLOCAL'} is a NORHED-II funded programme for locally led climate change adaptation with universities in Bangladesh, Mozambique, Nepal, Uganda and Norway.`
+);
+
+usePageSeo(() => {
+  const p = project.value;
+  return {
+    title: p?.shortTitle
+      ? `${p.shortTitle} — Co-creating Knowledge for Local Climate Adaptation | LUCCC`
+      : 'Projects & Programmes — LUCCC',
+    ogTitle: p?.longTitle || p?.shortTitle || 'COLOCAL',
+    description: metaDesc.value,
+    images: [p?.cover],
+  };
+});
+
 useHead(() => {
   const p = project.value;
-  const canonicalUrl = `https://www.luccc.org/projects/${slug}`;
-  const pageTitle = p?.shortTitle
-    ? `${p.shortTitle} — Co-creating Knowledge for Local Climate Adaptation | LUCCC`
-    : 'Projects & Programmes — LUCCC';
-  const metaDesc =
-    p?.shortDescription ||
-    `${p?.shortTitle || 'COLOCAL'} is a NORHED-II funded programme for locally led climate change adaptation with universities in Bangladesh, Mozambique, Nepal, Uganda and Norway.`;
-
-  const ogImage = ogImageMeta(p?.cover);
-  const ogImageAlt = p?.longTitle || p?.shortTitle || 'COLOCAL project';
-
   return {
-    title: pageTitle,
     meta: [
-      { name: 'description', content: metaDesc.slice(0, 160) },
       {
         name: 'keywords',
         content: `${p?.shortTitle || 'COLOCAL'}, LUCCC, locally led adaptation, climate change adaptation, NORHED-II, Global South universities, Bangladesh, Mozambique, Nepal, Uganda, Norway`,
       },
-      { property: 'og:title', content: p?.longTitle || p?.shortTitle || 'COLOCAL' },
-      { property: 'og:description', content: metaDesc.slice(0, 200) },
-      { property: 'og:url', content: canonicalUrl },
-      { property: 'og:type', content: 'website' },
-      ...ogImageTags(ogImage, ogImageAlt),
-      { name: 'twitter:card', content: 'summary_large_image' },
-      { name: 'twitter:title', content: p?.longTitle || p?.shortTitle || 'COLOCAL' },
-      { name: 'twitter:description', content: metaDesc.slice(0, 200) },
     ],
-    link: [{ rel: 'canonical', href: canonicalUrl }],
     script: p
       ? [
           {
@@ -65,8 +61,8 @@ useHead(() => {
               '@type': 'ResearchProject',
               name: p.longTitle || p.shortTitle,
               alternateName: p.shortTitle,
-              url: canonicalUrl,
-              description: metaDesc.slice(0, 300),
+              url: `https://www.luccc.org/projects/${slug}`,
+              description: metaDesc.value.slice(0, 300),
               funder: { '@type': 'Organization', name: 'NORAD / NORHED-II' },
               parentOrganization: {
                 '@type': 'Organization',

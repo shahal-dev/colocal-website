@@ -12,21 +12,13 @@ const { data: current } = await useAsyncData(
 );
 const item = computed(() => (current.value && current.value[0]) || null);
 
-useHead(() => {
+usePageSeo(() => {
   const i = item.value;
-  const ogImage = ogImageMeta(i?.cover, ...(Array.isArray(i?.images) ? i.images : []));
-  const ogTitle = i?.title || 'News & Events — LUCCC';
-  const ogDesc = i?.body ? i.body.replace(/[#*_`[\]()>]/g, '').replace(/\n+/g, ' ').trim().slice(0, 160) : '';
   return {
     title: i?.title ? `${i.title} — News & Events` : 'News & Events — LUCCC',
-    meta: [
-      { property: 'og:title', content: ogTitle },
-      { property: 'og:description', content: ogDesc },
-      ...ogImageTags(ogImage, ogTitle),
-      { name: 'twitter:card', content: 'summary_large_image' },
-      { name: 'twitter:title', content: ogTitle },
-      { name: 'twitter:description', content: ogDesc },
-    ],
+    ogTitle: i?.title,
+    description: i?.body,
+    images: [i?.cover, ...(i?.images || [])],
   };
 });
 

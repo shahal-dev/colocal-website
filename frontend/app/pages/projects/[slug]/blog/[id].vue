@@ -52,22 +52,13 @@ const formattedBody = computed(() => {
   return item.value.body.replace(/([^\r\n])\r?\n(?!\r?\n)/g, '$1  \n');
 });
 
-console.log(item.value?.body);
-useHead(() => {
+usePageSeo(() => {
   const i = item.value;
-  const ogImage = ogImageMeta(i?.cover, ...(Array.isArray(i?.images) ? i.images : []));
-  const ogTitle = i?.title || `${projectName.value} — Blog`;
-  const rawDesc = typeof i?.body === 'string' ? i.body.replace(/[#*_`[\]()>]/g, '').replace(/\n+/g, ' ').trim().slice(0, 160) : '';
   return {
     title: i?.title ? `${i.title} — COLOCAL Blog` : `${projectName.value} — COLOCAL Blog`,
-    meta: [
-      { property: 'og:title', content: ogTitle },
-      { property: 'og:description', content: rawDesc },
-      ...ogImageTags(ogImage, ogTitle),
-      { name: 'twitter:card', content: 'summary_large_image' },
-      { name: 'twitter:title', content: ogTitle },
-      { name: 'twitter:description', content: rawDesc },
-    ],
+    ogTitle: i?.title,
+    description: i?.body,
+    images: [i?.cover, ...(i?.images || [])],
   };
 });
 

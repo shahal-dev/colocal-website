@@ -26,22 +26,13 @@ const formattedBody = computed(() => {
   return item.value.body.replace(/([^\r\n])\r?\n(?!\r?\n)/g, '$1  \n');
 });
 
-useHead(() => {
+usePageSeo(() => {
   const i = item.value;
-  const ogImage = ogImageMeta(i?.imageCover, i?.cover, ...(Array.isArray(i?.images) ? i.images : []));
-  const ogTitle = i?.title || 'Resource Hub — LUCCC';
-  const rawDesc = i?.abstract || i?.body || '';
-  const ogDesc = rawDesc.replace(/[#*_`[\]()>]/g, '').replace(/\n+/g, ' ').trim().slice(0, 160);
   return {
     title: i?.title ? `${i.title} — Resource Hub` : 'Resource Hub',
-    meta: [
-      { property: 'og:title', content: ogTitle },
-      { property: 'og:description', content: ogDesc },
-      ...ogImageTags(ogImage, ogTitle),
-      { name: 'twitter:card', content: 'summary_large_image' },
-      { name: 'twitter:title', content: ogTitle },
-      { name: 'twitter:description', content: ogDesc },
-    ],
+    ogTitle: i?.title,
+    description: i?.abstract || i?.body,
+    images: [i?.imageCover, i?.cover, ...(i?.images || [])],
   };
 });
 
