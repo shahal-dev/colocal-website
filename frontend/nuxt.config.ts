@@ -40,7 +40,6 @@ export default defineNuxtConfig({
           content:
             'COLOCAL co-creates knowledge with Global South universities in Bangladesh, Mozambique, Nepal, Uganda and Norway for locally led adaptation (LLA) to climate change — a NORHED-II programme advancing the LUCCC consortium of LDC universities.',
         },
-        { property: 'og:url', content: 'https://www.luccc.org/' },
         { property: 'og:type', content: 'website' },
         { property: 'og:locale', content: 'en_US' },
         { property: 'og:image', content: 'https://www.luccc.org/og-image.jpg' },
@@ -64,7 +63,6 @@ export default defineNuxtConfig({
       link: [
         { rel: 'icon', type: 'image/png', href: '/favicon.png' },
         { rel: 'shortcut icon', href: '/favicon.ico' },
-        { rel: 'canonical', href: 'https://www.luccc.org/' },
       ],
       script: [
         {
