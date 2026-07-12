@@ -5,6 +5,7 @@ import type {
   RawEntity,
   RawImageFormat,
   RawAuthorAttributes,
+  RawDesignationComponent,
   FlatAuthor,
   FlatMedia,
 } from '../../types/raw-strapi-types';
@@ -90,6 +91,19 @@ function mapStrapiMedia(baseUrl: string, m?: FlatMedia | null): StrapiMedia | nu
   };
 }
 
+// Designations from the repeatable `titles` component, falling back to the
+// legacy single `title` string for entries not yet migrated.
+function mapTitles(
+  titles?: RawDesignationComponent[] | null,
+  title?: string | null
+): string[] {
+  const list = (titles ?? [])
+    .map((t) => (typeof t?.title === 'string' ? t.title.trim() : ''))
+    .filter(Boolean);
+  if (list.length) return list;
+  return title ? [title] : [];
+}
+
 function mapRawAuthor(baseUrl: string, ent: RawEntity<RawAuthorAttributes>): Author {
   const a = ent.attributes;
   // For raw author, avatar is a relation - need to extract and map properly
@@ -109,6 +123,7 @@ function mapRawAuthor(baseUrl: string, ent: RawEntity<RawAuthorAttributes>): Aut
     documentId: ent.documentId || String(ent.id),
     name: a.name,
     title: a.title ?? null,
+    titles: mapTitles(a.titles, a.title),
     avatar: avatarMedia,
     email: a.email ?? null,
     research_publications: null,
@@ -124,6 +139,7 @@ function mapFlatAuthor(baseUrl: string, a: FlatAuthor): Author {
     documentId: a.documentId || String(a.id),
     name: a.name,
     title: a.title ?? null,
+    titles: mapTitles(a.titles, a.title),
     avatar: mapStrapiMedia(baseUrl, a.avatar ?? null),
     email: a.email ?? null,
     research_publications: null,
@@ -159,7 +175,10 @@ export default defineEventHandler(async (event) => {
     const strapiQuery: Record<string, string> = {
       'pagination[pageSize]': pageSize,
       sort,
-      populate: 'avatar',
+      // Wildcard rather than named keys: Strapi 400s on populate keys that
+      // don't exist yet, and the `titles` component only exists once the CMS
+      // schema is deployed.
+      populate: '*',
     };
 
     // Add filters based on query params

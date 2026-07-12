@@ -33,6 +33,7 @@ export type RawMediaAttributes = {
 export type RawAuthorAttributes = {
   name: string;
   title?: string | null;
+  titles?: RawDesignationComponent[] | null;
   avatar?: RawRelationOne<RawMediaAttributes>;
   email?: string | null;
   colocal: boolean;
@@ -41,6 +42,7 @@ export type RawAuthorAttributes = {
 };
 
 export type RawTagComponent = { tag: string };
+export type RawDesignationComponent = { id?: number; title?: string | null };
 export type RawObjectiveComponent = { objective: string };
 export type RawCountryComponent = { name: string };
 export type RawEducationComponent = { type: string };
@@ -112,6 +114,7 @@ export type FlatAuthor = {
   documentId?: string;
   name: string;
   title?: string | null;
+  titles?: RawDesignationComponent[] | null;
   avatar?: FlatMedia | null;
   email?: string | null;
   colocal: boolean;

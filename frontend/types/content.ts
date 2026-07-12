@@ -67,7 +67,8 @@ export interface Author {
   id: number;
   documentId: string;
   name: string; // required
-  title: string | null; // optional title/position
+  title: string | null; // optional title/position (legacy single value)
+  titles?: string[] | null; // designations, normalized to plain strings (falls back to [title])
   avatar: StrapiMedia | null; // optional in Strapi → can be null
   email: string | null; // optional in Strapi → can be null
   research_publications: ResearchPublication[] | null; // optional in Strapi → can be null

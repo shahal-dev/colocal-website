@@ -1,0 +1,15 @@
+{
+  "collectionName": "components_shared_designations",
+  "info": {
+    "displayName": "Designation",
+    "icon": "briefcase"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    }
+  },
+  "config": {}
+}

@@ -298,8 +298,12 @@ function selectCountry(index: number) {
                   </div>
                 </template>
                 <p class="m-0 font-medium text-gray-900 text-sm sm:text-base">{{ admin.name }}</p>
-                <p v-if="admin.title" class="m-0 text-xs sm:text-sm text-gray-600">
-                  {{ admin.title }}
+                <p
+                  v-for="t in admin.titles"
+                  :key="t"
+                  class="m-0 text-xs sm:text-sm text-gray-600"
+                >
+                  {{ t }}
                 </p>
               </div>
             </div>
@@ -332,8 +336,12 @@ function selectCountry(index: number) {
                 <p class="m-0 font-medium text-gray-900 text-sm sm:text-base">
                   {{ fellow.name }}
                 </p>
-                <p v-if="fellow.title" class="m-0 text-xs sm:text-sm text-gray-600">
-                  {{ fellow.title }}
+                <p
+                  v-for="t in fellow.titles"
+                  :key="t"
+                  class="m-0 text-xs sm:text-sm text-gray-600"
+                >
+                  {{ t }}
                 </p>
               </div>
             </div>

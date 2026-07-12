@@ -20,6 +20,7 @@ type Author = {
   id: number;
   name: string;
   title?: string | null;
+  titles?: string[];
   avatar: StrapiMedia | null;
   country?: string;
   admin?: boolean;
@@ -103,10 +104,17 @@ function mapAuthor(a: unknown): Author | null {
       : 0;
   const title =
     attrs.title == null || typeof attrs.title === 'string' ? (attrs.title as string | null) : null;
+  const titlesRaw = attrs.titles;
+  const titlesList = Array.isArray(titlesRaw)
+    ? titlesRaw
+        .map((t) => (isRecord(t) && typeof t.title === 'string' ? t.title.trim() : ''))
+        .filter(Boolean)
+    : [];
+  const titles = titlesList.length ? titlesList : title ? [title] : [];
   const avatar = mapMedia(
     (attrs as Record<string, unknown>).avatar ?? (ent as Record<string, unknown>).avatar ?? null
   );
-  return { id, name, title, avatar };
+  return { id, name, title, titles, avatar };
 }
 
 // Fetch Team single (about, cover, lead)
@@ -117,10 +125,10 @@ const { data: teamSingle, error: teamError } = await useAsyncData<TeamSingle>(
     const res: unknown = await $fetch(`${strapiUrl}/api/team`, {
       headers,
       query: {
-        // Use array populate syntax compatible across Strapi versions
-        'populate[0]': 'cover',
-        'populate[1]': 'lead',
-        'populate[2]': 'lead.avatar',
+        // Object syntax so the lead's avatar and titles populate without
+        // naming keys that may not exist yet (Strapi 400s on unknown keys).
+        'populate[cover]': 'true',
+        'populate[lead][populate]': '*',
       },
     });
     // v4 raw vs v5 flat
@@ -149,7 +157,9 @@ const { data: membersRes, error: membersError } = await useAsyncData<MembersRes>
         'filters[team][$eq]': 'true',
         'pagination[pageSize]': '200',
         sort: 'name:asc',
-        populate: 'avatar',
+        // Wildcard: Strapi 400s on populate keys that don't exist yet
+        // (the `titles` component ships with a later CMS deploy).
+        populate: '*',
       },
     });
     const r = isRecord(res) ? (res as Record<string, unknown>) : {};
@@ -298,8 +308,8 @@ function selectCountry(index: number) {
               </div>
             </template>
             <p class="m-0 font-medium text-gray-900">{{ leadAuthor.name }}</p>
-            <p v-if="leadAuthor.title" class="m-0 text-sm text-gray-600">
-              {{ leadAuthor.title }}
+            <p v-for="t in leadAuthor.titles" :key="t" class="m-0 text-sm text-gray-600">
+              {{ t }}
             </p>
           </div>
         </div>
@@ -332,7 +342,9 @@ function selectCountry(index: number) {
                 </div>
               </template>
               <p class="m-0 font-medium text-gray-900 text-sm sm:text-base">{{ m.name }}</p>
-              <p v-if="m.title" class="m-0 text-xs sm:text-sm text-gray-600">{{ m.title }}</p>
+              <p v-for="t in m.titles" :key="t" class="m-0 text-xs sm:text-sm text-gray-600">
+                {{ t }}
+              </p>
             </div>
           </div>
 
@@ -419,8 +431,12 @@ function selectCountry(index: number) {
                   </div>
                 </template>
                 <p class="m-0 font-medium text-gray-900 text-sm sm:text-base">{{ admin.name }}</p>
-                <p v-if="admin.title" class="m-0 text-xs sm:text-sm text-gray-600">
-                  {{ admin.title }}
+                <p
+                  v-for="t in admin.titles"
+                  :key="t"
+                  class="m-0 text-xs sm:text-sm text-gray-600"
+                >
+                  {{ t }}
                 </p>
               </div>
             </div>
@@ -453,8 +469,12 @@ function selectCountry(index: number) {
                 <p class="m-0 font-medium text-gray-900 text-sm sm:text-base">
                   {{ fellow.name }}
                 </p>
-                <p v-if="fellow.title" class="m-0 text-xs sm:text-sm text-gray-600">
-                  {{ fellow.title }}
+                <p
+                  v-for="t in fellow.titles"
+                  :key="t"
+                  class="m-0 text-xs sm:text-sm text-gray-600"
+                >
+                  {{ t }}
                 </p>
               </div>
             </div>

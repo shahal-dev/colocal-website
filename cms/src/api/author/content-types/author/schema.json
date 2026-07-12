@@ -41,6 +41,11 @@
     "title": {
       "type": "string"
     },
+    "titles": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.designation"
+    },
     "admin": {
       "type": "boolean",
       "default": false

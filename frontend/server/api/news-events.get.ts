@@ -188,20 +188,24 @@ function mapNewsEvent(
 
 function mapFlatAuthors(baseUrl: string, list?: FlatAuthor[] | null): Author[] | null {
   if (!Array.isArray(list)) return null;
-  return list.map(
-    (a): Author => ({
+  return list.map((a): Author => {
+    const titles = (a.titles ?? [])
+      .map((t) => (typeof t?.title === 'string' ? t.title.trim() : ''))
+      .filter(Boolean);
+    return {
       id: a.id,
       documentId: a.documentId || String(a.id),
       name: a.name,
       title: a.title ?? null,
+      titles: titles.length ? titles : a.title ? [a.title] : [],
       avatar: mapFlatMedia(baseUrl, a.avatar ?? null),
       email: a.email ?? null,
       research_publications: null,
       colocal: !!a.colocal,
       admin: !!a.admin,
       country: a.country ?? null,
-    })
-  );
+    };
+  });
 }
 
 function mapFlatNewsEvents(baseUrl: string, list?: _FlatNewsEvent[] | null): NewsEvent[] | null {
