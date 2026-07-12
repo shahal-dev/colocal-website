@@ -11,6 +11,17 @@ export interface SharedCountry extends Struct.ComponentSchema {
   };
 }
 
+export interface SharedDesignation extends Struct.ComponentSchema {
+  collectionName: 'components_shared_designations';
+  info: {
+    displayName: 'Designation';
+    icon: 'briefcase';
+  };
+  attributes: {
+    title: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
 export interface SharedEducation extends Struct.ComponentSchema {
   collectionName: 'components_shared_educations';
   info: {
@@ -132,6 +143,7 @@ declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
       'shared.country': SharedCountry;
+      'shared.designation': SharedDesignation;
       'shared.education': SharedEducation;
       'shared.media': SharedMedia;
       'shared.objective': SharedObjective;

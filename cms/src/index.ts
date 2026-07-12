@@ -22,8 +22,10 @@ export default {
     // any designations yet. Idempotent, so it's safe to run on every startup;
     // can be removed once all authors carry `titles`.
     try {
+      // Wildcard populate: the generated content types may lag behind the
+      // schema, and naming `titles` fails the build's typecheck when they do.
       const authors = (await strapi.documents('api::author.author').findMany({
-        populate: ['titles'],
+        populate: '*',
         limit: 1000,
       })) as Array<{
         documentId: string;

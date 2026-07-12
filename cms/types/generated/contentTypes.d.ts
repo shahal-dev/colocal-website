@@ -484,6 +484,7 @@ export interface ApiAuthorAuthor extends Struct.CollectionTypeSchema {
     publishedAt: Schema.Attribute.DateTime;
     team: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     title: Schema.Attribute.String;
+    titles: Schema.Attribute.Component<'shared.designation', true>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
