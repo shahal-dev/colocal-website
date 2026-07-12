@@ -14,7 +14,7 @@ const item = computed(() => (current.value && current.value[0]) || null);
 
 useHead(() => {
   const i = item.value;
-  const ogImage = i?.cover?.url || 'https://www.luccc.org/og-image.jpg';
+  const ogImage = ogImageMeta(i?.cover, ...(Array.isArray(i?.images) ? i.images : []));
   const ogTitle = i?.title || 'News & Events — LUCCC';
   const ogDesc = i?.body ? i.body.replace(/[#*_`[\]()>]/g, '').replace(/\n+/g, ' ').trim().slice(0, 160) : '';
   return {
@@ -22,12 +22,10 @@ useHead(() => {
     meta: [
       { property: 'og:title', content: ogTitle },
       { property: 'og:description', content: ogDesc },
-      { property: 'og:image', content: ogImage },
-      { property: 'og:image:alt', content: ogTitle },
+      ...ogImageTags(ogImage, ogTitle),
       { name: 'twitter:card', content: 'summary_large_image' },
       { name: 'twitter:title', content: ogTitle },
       { name: 'twitter:description', content: ogDesc },
-      { name: 'twitter:image', content: ogImage },
     ],
   };
 });

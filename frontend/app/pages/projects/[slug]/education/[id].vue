@@ -30,10 +30,27 @@ const item = computed(() => (current.value && current.value[0]) || null);
 
 console.log(item?.value?.body);
 
-useHead({
-  title: item.value?.title
-    ? `${item.value.title} — ${projectName.value} Education & Training`
-    : `${projectName.value} — Education & Training`,
+useHead(() => {
+  const i = item.value;
+  const ogImage = ogImageMeta(i?.cover, ...(Array.isArray(i?.images) ? i.images : []));
+  const ogTitle = i?.title || `${projectName.value} — Education & Training`;
+  const rawDesc =
+    typeof i?.body === 'string'
+      ? i.body.replace(/[#*_`[\]()>]/g, '').replace(/\n+/g, ' ').trim().slice(0, 160)
+      : '';
+  return {
+    title: i?.title
+      ? `${i.title} — ${projectName.value} Education & Training`
+      : `${projectName.value} — Education & Training`,
+    meta: [
+      { property: 'og:title', content: ogTitle },
+      { property: 'og:description', content: rawDesc },
+      ...ogImageTags(ogImage, ogTitle),
+      { name: 'twitter:card', content: 'summary_large_image' },
+      { name: 'twitter:title', content: ogTitle },
+      { name: 'twitter:description', content: rawDesc },
+    ],
+  };
 });
 
 const coverUrl = computed(() => {
