@@ -2,6 +2,10 @@
 import { useRoute } from '#app';
 import type { Project } from '~~/types/content';
 
+definePageMeta({
+  middleware: 'project-data',
+});
+
 const route = useRoute();
 const slug = route.params.slug;
 
