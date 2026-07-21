@@ -118,6 +118,20 @@ const formattedBody = computed(() => {
   return item.value.body.replace(/([^\r\n])\r?\n(?!\r?\n)/g, '$1  \n');
 });
 
+const youtubeEmbedUrl = computed(() => {
+  const url = item.value?.youtubeUrl;
+  if (!url) return null;
+  try {
+    const u = new URL(url);
+    let id = '';
+    if (u.hostname === 'youtu.be') id = u.pathname.slice(1);
+    else id = u.searchParams.get('v') || u.pathname.split('/').pop() || '';
+    return id ? `https://www.youtube.com/embed/${id}` : null;
+  } catch {
+    return null;
+  }
+});
+
 const { data: moreList } = await useAsyncData(
   () => `education-trainings-more:${slug}`,
   () => $fetch('/api/education-trainings', { params: { projectSlug: String(slug) } })
@@ -204,6 +218,15 @@ function formatDate(iso: string) {
               :value="formattedBody"
               class="mdc-body prose text-justify max-w-none text-gray-800 space-y-6"
             />
+            <div v-if="youtubeEmbedUrl" class="mt-6 aspect-video">
+              <iframe
+                :src="youtubeEmbedUrl"
+                class="w-full h-full rounded-lg"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen
+                frameborder="0"
+              />
+            </div>
           </div>
         </div>
 
