@@ -8,11 +8,6 @@ import type {
   NewsEvent,
   EducationTraining,
 } from '~~/types/content';
-import bdSvg from '~/assets/bd.svg';
-import mzSvg from '~/assets/mz.svg';
-import noSvg from '~/assets/no.svg';
-import npSvg from '~/assets/np.svg';
-import ugSvg from '~/assets/ug.svg';
 
 type CountryData = {
   id: string;
@@ -21,6 +16,7 @@ type CountryData = {
   selectors: string[];
   partner: string;
   description: string;
+  images: string[];
 };
 
 const route = useRoute();
@@ -31,54 +27,15 @@ const countryParam = (route.params.country as string)?.toLowerCase();
 
 const project = useState<Project | null>(`project:${slug}`, () => null);
 
-const svgMap: Record<string, string> = {
-  bd: bdSvg,
-  mz: mzSvg,
-  no: noSvg,
-  np: npSvg,
-  ug: ugSvg,
+// Country flags (used as a fallback carousel when a country has no real photos yet).
+const flagMap: Record<string, string> = {
+  bd: '/images/flags/bd.svg',
+  mz: '/images/flags/mz.svg',
+  no: '/images/flags/no.svg',
+  np: '/images/flags/np.svg',
+  ug: '/images/flags/ug.svg',
 };
 
-// Glob import for country images
-const countryImagesRaw = import.meta.glob('~/assets/*/*.{jpg,jpeg,png,webp,svg}', {
-  eager: true,
-  import: 'default',
-});
-
-// Build a map of country iso to array of image URLs
-const countryImagesMap = computed(() => {
-  const map: Record<string, string[]> = {
-    bd: [],
-    mz: [],
-    no: [],
-    np: [],
-    ug: [],
-  };
-
-  for (const [path, url] of Object.entries(countryImagesRaw)) {
-    const parts = path.split('/');
-    if (parts.length >= 3) {
-      // path looks like /app/assets/bd/1.jpg or similar depending on glob resolution
-      // Let's extract the folder name safely
-      const match = path.match(/\/assets\/([^/]+)\//);
-      if (match && match[1]) {
-        const folder = match[1].toLowerCase();
-        if (map[folder]) {
-          map[folder].push(url as string);
-        }
-      }
-    }
-  }
-
-  // Fallback to the SVG map if no images exist for the country
-  for (const iso of Object.keys(map)) {
-    if (map[iso].length === 0 && svgMap[iso]) {
-      map[iso].push(svgMap[iso]);
-    }
-  }
-
-  return map;
-});
 const countryDataRecord: Record<string, CountryData> = {
   bangladesh: {
     id: 'bangladesh',
@@ -86,6 +43,7 @@ const countryDataRecord: Record<string, CountryData> = {
     iso: 'BD',
     selectors: ['#BD'],
     partner: 'ICCCAD at Independent University, Bangladesh',
+    images: ['/images/countries/bd/1.jpg'],
     description: `The Department of Environmental Science and Management (DESM) at Independent University Bangladesh (IUB), together with the International Centre for Climate Change and Development (ICCCAD), are acting as a global south partner for the COLOCAL project.
 
 Established in 1993, DESM at IUB has achieved a reputation as one of the best institutions providing environmental education in Bangladesh. Having an interdisciplinary and holistic approach, the department integrates science, management, law, economics, public health and governance with an aim to create professionals for environmental problem-solving.
@@ -102,6 +60,7 @@ Also at IUB, ICCCAD is one of the leading research and capacity building organis
     selectors: ['#NP'],
     partner:
       'The School of Environmental Science and Management of Pokhara University (PU-SchESM) is acting as an implementing partner of the COLOCAL project.',
+    images: ['/images/countries/np/1.jpg'],
     description: `School of Environmental Science and Management (SchEMS) College, affiliated with Pokhara University, Nepal, serves as a key Global South partner for the COLOCAL project.
 
 Established in 1999 has built a strong reputation as one of Nepal's leading institutions for environmental education. With an interdisciplinary and holistic approach, the department blends science, management, policy, economics, public health, and governance to train professionals equipped to tackle environmental challenges.
@@ -116,6 +75,7 @@ SchEMS leverages Pokhara University's networks and Nepal's frontline experience 
     iso: 'MZ',
     selectors: ['#MZ'],
     partner: 'Eduardo Mondlane University',
+    images: ['/images/countries/mz/1.png'],
     description: `Mozambique is a country of multiple opportunities and challenges. Rich in natural resources such as gas, gold, iron, heavy sands, coal, graphite, paradisiac beaches, fertile soils and unexploited forests, the country is, yet, a global reference of complex disasters emerging out of armed conflicts, climate-change induced disasters and institutionalized governance failures to a point that disasters are, to say, a part of everyday life of millions of people. With about 30 million inhabitants and a GDP of 15 billion, Mozambique ranks as one of the poorest countries in the world – Bottom 10 on the UNDP human development index (UNDP, 2020) and has been under continuous conflicts and disasters over his history.
 
 Established in 1962, Eduardo Mondlane University (Universidade Eduardo Mondlane-UEM) is the oldest, number one, and most prestigious university in Mozambique. By 2024 it was ranked by Edurank, amongst the 32 best African universities. UEM offers 204 different programs (104 BSc; 85 MSc and 15 PhD) across its 11 faculties and 6 high education schools. It has an annual intake of around 5,000 students with a global of around 50.000 students. The university vision is to become an international, regional and national reference on scientific knowledge production, innovation and dissemination putting research as the backbone for teaching and outreach.
@@ -128,6 +88,7 @@ Within the UEM, COLOCAL sits within the Faculty of Agronomy and Forestry Enginee
     iso: 'UG',
     selectors: ['#UG'],
     partner: 'Makerere University',
+    images: [],
     description:
       'Makerere University leads research on community adaptation and climate policy integration.',
   },
@@ -137,8 +98,17 @@ Within the UEM, COLOCAL sits within the Faculty of Agronomy and Forestry Enginee
     iso: 'NO',
     selectors: ['.Norway'],
     partner: 'Norwegian University of Life Sciences',
-    description:
-      'The Norwegian University of Life Sciences provides north-south research leadership.',
+    images: [
+      '/images/countries/no/1.webp',
+      '/images/countries/no/2.webp',
+      '/images/countries/no/3.webp',
+      '/images/countries/no/4.webp',
+    ],
+    description: `The Norwegian University of Life Sciences (NMBU) strives to help safeguard the basis for life on Earth. Since 1859 and throughout its proud history, as the Norwegian College of Agriculture and the Norwegian School of Veterinary Science, NMBU has evolved into a world-leading university within our realm of knowledge. NMBU has unique expertise that targets the wide-ranging and complex challenges that society is facing, including green transitions and climate change. We have the country's most satisfied university students, who receive research-based education in a unique student environment.
+
+The Faculty of Landscape and Society brings together leading academic environments in planning, landscape studies, property studies, public health science, international relations, and international environment and development studies. We develop knowledge for sustainable societal development at national and global levels. The faculty has approximately 1,300 students and 180 staff members, organised across five departments.
+
+The COLOCAL project draws on expertise from two departments in the Faculty of Landscape and Society: the Department of Urban and Regional Development and the Department of International Environment and Development Studies.`,
   },
 };
 
@@ -146,14 +116,14 @@ const countryData = computed(() => countryDataRecord[countryParam] || null);
 
 const currentCountryImages = computed(() => {
   if (!countryData.value) return [];
-  return countryImagesMap.value[countryData.value.iso.toLowerCase()] || [];
+  if (countryData.value.images.length > 0) return countryData.value.images;
+  const flag = flagMap[countryData.value.iso.toLowerCase()];
+  return flag ? [flag] : [];
 });
 
 const isFallbackSvg = computed(() => {
   if (!countryData.value) return false;
-  const iso = countryData.value.iso.toLowerCase();
-  const images = currentCountryImages.value;
-  return images.length === 1 && images[0] === svgMap[iso];
+  return countryData.value.images.length === 0;
 });
 
 // Fetch all necessary data

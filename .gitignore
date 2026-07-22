@@ -28,6 +28,9 @@ CLAUDE.local.md
 .headroom/
 graphify-out/
 
+# Scratch/source files not meant for the repo
+temp_files/
+
 # Editor
 .vscode/
 
