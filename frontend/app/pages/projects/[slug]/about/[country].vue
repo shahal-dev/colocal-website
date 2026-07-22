@@ -280,6 +280,15 @@ useHead({
         </div>
       </div>
 
+      <!-- Norway Flag -->
+      <div v-if="countryData.iso === 'NO'" class="w-full mb-16">
+        <div
+          class="w-full min-h-[500px] flex items-center justify-center rounded-xl overflow-hidden bg-[#041b18] p-8"
+        >
+          <img src="/images/flags/no.svg" alt="Flag of Norway" class="max-h-106 w-auto" />
+        </div>
+      </div>
+
       <!-- Publications -->
       <div v-if="countryPublications.length > 0" class="w-full mb-16">
         <h2
