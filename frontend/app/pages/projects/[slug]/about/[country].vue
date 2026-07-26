@@ -150,11 +150,13 @@ const teamMembers = computed(() => {
 });
 
 const countryPublications = computed(() => {
-  return publications.value
-    ?.filter((p) => p.country?.name.toLowerCase() === countryData.value?.name.toLowerCase())
-    .slice()
-    .sort((a, b) => new Date(b.date || 0).getTime() - new Date(a.date || 0).getTime())
-    .slice(0, 3);
+  return (
+    publications.value
+      ?.filter((p) => p.country?.name.toLowerCase() === countryData.value?.name.toLowerCase())
+      .slice()
+      .sort((a, b) => new Date(b.date || 0).getTime() - new Date(a.date || 0).getTime())
+      .slice(0, 3) || []
+  );
 });
 
 const countryNewsEvents = computed(() => {
@@ -277,15 +279,6 @@ useHead({
             <h3 class="text-lg font-semibold text-gray-900 mb-1">{{ member.name }}</h3>
             <p v-if="member.title" class="text-sm text-gray-600">{{ member.title }}</p>
           </div>
-        </div>
-      </div>
-
-      <!-- Norway Flag -->
-      <div v-if="countryData.iso === 'NO'" class="w-full mb-16">
-        <div
-          class="w-full min-h-[500px] flex items-center justify-center rounded-xl overflow-hidden bg-[#041b18] p-8"
-        >
-          <img src="/images/flags/no.svg" alt="Flag of Norway" class="max-h-106 w-auto" />
         </div>
       </div>
 
