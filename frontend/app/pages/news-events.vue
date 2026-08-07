@@ -65,7 +65,7 @@ watch(totalPages, (next) => {
           <NuxtLink
             v-for="e in visible"
             :key="e.id"
-            :to="`/news-events/${e.id}`"
+            :to="`/news-events/${e.documentId || e.id}`"
             class="border border-gray-200 rounded-md bg-white overflow-hidden hover:shadow transition-shadow"
           >
             <div class="w-full h-40 overflow-hidden">
@@ -112,7 +112,7 @@ watch(totalPages, (next) => {
             <NuxtLink
               v-for="e in colocalItems"
               :key="e.id"
-              :to="`/news-events/${e.id}`"
+              :to="`/news-events/${e.documentId || e.id}`"
               class="border border-gray-200 rounded-md bg-white overflow-hidden hover:shadow transition-shadow"
             >
               <div class="w-full h-40 overflow-hidden">

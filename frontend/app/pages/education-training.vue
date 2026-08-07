@@ -83,7 +83,7 @@ function goTo(p: number) {
           <NuxtLink
             v-for="card in visible"
             :key="card.id"
-            :to="`/education-training/${card.id}`"
+            :to="`/education-training/${card.documentId || card.id}`"
             class="border border-gray-200 rounded-md overflow-hidden bg-white hover:shadow transition-shadow"
           >
             <div class="h-44 w-full overflow-hidden">

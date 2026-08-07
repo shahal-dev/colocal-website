@@ -2,7 +2,7 @@
 import type { NewsEvent } from '~~/types/content';
 
 type NewsItem = {
-  id: number;
+  id: number | string;
   title: string;
   date: string; // pre-formatted for now
   image: string;
@@ -12,7 +12,7 @@ const props = defineProps<{ newsEvents: NewsEvent[] | null | undefined }>();
 const newsItems = computed<NewsItem[]>(() => {
   if (!Array.isArray(props.newsEvents)) return [];
   return props.newsEvents.map((p) => ({
-    id: p.id,
+    id: p.documentId || p.id,
     title: p.title,
     date: p.date
       ? new Date(p.date).toLocaleDateString('en-GB', {

@@ -205,7 +205,7 @@ export default defineNuxtConfig({
 
         // Generate publication routes (nested under projects)
         for (const pub of publications) {
-          const id = pub.id;
+          const id = pub.documentId || pub.id;
           const projectRel = pub.attributes?.project?.data;
           const slug = projectRel?.attributes?.slug || projectRel?.slug;
           if (id && slug) {
@@ -215,7 +215,7 @@ export default defineNuxtConfig({
 
         // Generate news/event routes (nested under projects)
         for (const news of newsEvents) {
-          const id = news.id;
+          const id = news.documentId || news.id;
           const projectRel = news.attributes?.project?.data;
           const slug = projectRel?.attributes?.slug || projectRel?.slug;
           if (id && slug) {
@@ -225,7 +225,7 @@ export default defineNuxtConfig({
 
         // Generate education/training routes (nested under projects)
         for (const edu of educationTrainings) {
-          const id = edu.id;
+          const id = edu.documentId || edu.id;
           const projectRel = edu.attributes?.project?.data;
           const slug = projectRel?.attributes?.slug || projectRel?.slug;
           if (id && slug) {

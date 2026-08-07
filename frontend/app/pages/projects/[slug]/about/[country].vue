@@ -443,7 +443,7 @@ useHead({
             class="border border-gray-200 rounded-xl bg-white p-0 overflow-hidden hover:shadow-md transition-shadow"
           >
             <NuxtLink
-              :to="`/projects/${e.project?.slug || slug || 'global'}/education-training/${e.documentId || e.id}`"
+              :to="`/projects/${e.project?.slug || slug || 'global'}/education/${e.documentId || e.id}`"
               class="flex flex-col sm:flex-row h-full group"
             >
               <div class="w-full sm:w-48 h-48 sm:h-auto flex-shrink-0 bg-gray-100">

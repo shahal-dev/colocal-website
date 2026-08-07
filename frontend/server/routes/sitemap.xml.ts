@@ -5,7 +5,7 @@ const SITE_URL = 'https://www.luccc.org';
 
 type Entry = { loc: string; lastmod?: string; changefreq?: string; priority?: string };
 
-type RawEntity<T> = { id?: number | string; attributes?: T } & Partial<T>;
+type RawEntity<T> = { id?: number | string; documentId?: string; attributes?: T } & Partial<T>;
 type StrapiList<T> = { data?: RawEntity<T>[] };
 
 type ProjectAttrs = { slug?: string | null; updatedAt?: string | null };
@@ -147,7 +147,7 @@ export default defineEventHandler(async (event) => {
 
   // Publications: nested + standalone resource-hub
   for (const pub of publications) {
-    const id = pub.id;
+    const id = pub.documentId || pub.id;
     if (id == null) continue;
     const lastmod = toIsoDate(getAttr(pub, 'updatedAt'));
     const slug = getProjectSlug(pub);
@@ -169,7 +169,7 @@ export default defineEventHandler(async (event) => {
 
   // News-events: nested under project + standalone
   for (const news of newsEvents) {
-    const id = news.id;
+    const id = news.documentId || news.id;
     if (id == null) continue;
     const lastmod = toIsoDate(getAttr(news, 'updatedAt'));
     const slug = getProjectSlug(news);
@@ -191,7 +191,7 @@ export default defineEventHandler(async (event) => {
 
   // Education/training: nested under project + standalone
   for (const edu of educationTrainings) {
-    const id = edu.id;
+    const id = edu.documentId || edu.id;
     if (id == null) continue;
     const lastmod = toIsoDate(getAttr(edu, 'updatedAt'));
     const slug = getProjectSlug(edu);
