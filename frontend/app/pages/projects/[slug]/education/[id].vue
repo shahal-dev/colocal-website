@@ -28,6 +28,14 @@ const { data: current } = await useAsyncData(
 );
 const item = computed(() => (current.value && current.value[0]) || null);
 
+// This item also lives at /education-training/{id} (and /resource-hub/{id});
+// education-training is the canonical copy, so point search engines there.
+useHead(() => ({
+  link: item.value
+    ? [{ rel: 'canonical', href: `https://www.luccc.org/education-training/${id}` }]
+    : [],
+}));
+
 usePageSeo(() => {
   const i = item.value;
   return {

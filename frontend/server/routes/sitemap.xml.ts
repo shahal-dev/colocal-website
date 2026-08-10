@@ -23,17 +23,6 @@ function getAttr<T extends object, K extends keyof T>(
   return (item as Partial<T>)[key];
 }
 
-function getProjectSlug(item: RawEntity<ResourceAttrs> | null | undefined): string | null {
-  const rel = getAttr(item, 'project');
-  if (!rel) return null;
-  const projectEntity =
-    rel && typeof rel === 'object' && 'data' in rel
-      ? (rel as { data?: RawEntity<ProjectAttrs> | null }).data
-      : (rel as RawEntity<ProjectAttrs>);
-  const slug = getAttr(projectEntity, 'slug');
-  return typeof slug === 'string' && slug ? slug : null;
-}
-
 function xmlEscape(value: string): string {
   return value
     .replace(/&/g, '&amp;')
@@ -145,20 +134,13 @@ export default defineEventHandler(async (event) => {
     }
   }
 
-  // Publications: nested + standalone resource-hub
+  // Publications: canonical URL is always the resource-hub copy — the
+  // project-nested copy (when it exists) carries a canonical tag pointing
+  // here, so it's deliberately left out of the sitemap.
   for (const pub of publications) {
     const id = pub.documentId || pub.id;
     if (id == null) continue;
     const lastmod = toIsoDate(getAttr(pub, 'updatedAt'));
-    const slug = getProjectSlug(pub);
-    if (slug) {
-      push({
-        loc: `${SITE_URL}/projects/${slug}/research/${id}`,
-        lastmod,
-        changefreq: 'monthly',
-        priority: '0.6',
-      });
-    }
     push({
       loc: `${SITE_URL}/resource-hub/${id}`,
       lastmod,
@@ -167,20 +149,12 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  // News-events: nested under project + standalone
+  // News-events: canonical URL is always the news-events copy — same
+  // reasoning as publications above.
   for (const news of newsEvents) {
     const id = news.documentId || news.id;
     if (id == null) continue;
     const lastmod = toIsoDate(getAttr(news, 'updatedAt'));
-    const slug = getProjectSlug(news);
-    if (slug) {
-      push({
-        loc: `${SITE_URL}/projects/${slug}/outreach/${id}`,
-        lastmod,
-        changefreq: 'monthly',
-        priority: '0.6',
-      });
-    }
     push({
       loc: `${SITE_URL}/news-events/${id}`,
       lastmod,
@@ -189,31 +163,18 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  // Education/training: nested under project + standalone
+  // Education/training: canonical URL is always the education-training
+  // copy — the project-nested and resource-hub copies both canonicalize
+  // here, so neither is listed separately.
   for (const edu of educationTrainings) {
     const id = edu.documentId || edu.id;
     if (id == null) continue;
     const lastmod = toIsoDate(getAttr(edu, 'updatedAt'));
-    const slug = getProjectSlug(edu);
-    if (slug) {
-      push({
-        loc: `${SITE_URL}/projects/${slug}/education/${id}`,
-        lastmod,
-        changefreq: 'monthly',
-        priority: '0.6',
-      });
-    }
     push({
       loc: `${SITE_URL}/education-training/${id}`,
       lastmod,
       changefreq: 'monthly',
       priority: '0.6',
-    });
-    push({
-      loc: `${SITE_URL}/resource-hub/${id}`,
-      lastmod,
-      changefreq: 'monthly',
-      priority: '0.5',
     });
   }
 

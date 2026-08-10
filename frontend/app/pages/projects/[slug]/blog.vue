@@ -1,14 +1,22 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import { useRoute } from '#app';
-// import type { Project } from '~~/types/content';
+import type { Project } from '~~/types/content';
 
 // Route + derived project name
 const route = useRoute();
 const slug = route.params.slug;
 const hasChild = computed(() => Boolean(route.params.id));
-// const project = useState<Project | null>(`project:${slug}`, () => null);
-// const projectName = computed(() => project.value?.shortTitle || 'Project');
+const project = useState<Project | null>(`project:${slug}`, () => null);
+const projectName = computed(() => project.value?.shortTitle || 'Project');
+
+useHead(() => ({
+  title: `COLOCAL Blog — ${projectName.value}`,
+}));
+useSeoMeta({
+  description: () =>
+    `Insights, updates, and stories from the ${projectName.value} COLOCAL project on locally led adaptation to climate change.`,
+});
 
 // Use shared project navbar
 const basePath = computed(() => `/projects/${slug}`);

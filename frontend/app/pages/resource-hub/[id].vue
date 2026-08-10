@@ -36,6 +36,15 @@ usePageSeo(() => {
   };
 });
 
+// Education/training items also live at /education-training/{id}, which is
+// canonical for that type; publications have no other top-level hub, so this
+// page stays self-canonical for those (default behavior from app.vue).
+useHead(() => ({
+  link: education.value
+    ? [{ rel: 'canonical', href: `https://www.luccc.org/education-training/${id}` }]
+    : [],
+}));
+
 const images = computed(() => {
   const arr = [];
   if (item.value?.imageCover?.url) arr.push(item.value.imageCover.url);

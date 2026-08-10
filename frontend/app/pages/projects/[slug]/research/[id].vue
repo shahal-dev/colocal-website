@@ -55,6 +55,12 @@ usePageSeo(() => {
     images: [i?.imageCover, ...(i?.images || [])],
   };
 });
+
+// This publication also lives at /resource-hub/{id}; that's the canonical
+// copy, so point search engines there instead of indexing this one too.
+useHead(() => ({
+  link: item.value ? [{ rel: 'canonical', href: `https://www.luccc.org/resource-hub/${id}` }] : [],
+}));
 const images = computed(() => {
   const arr = [];
   if (item.value?.imageCover?.url) arr.push(item.value.imageCover.url);

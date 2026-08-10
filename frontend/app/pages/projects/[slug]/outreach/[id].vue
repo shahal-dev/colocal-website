@@ -60,6 +60,12 @@ const item = computed(() => {
   return currentItem;
 });
 
+// This news/event also lives at /news-events/{id}; that's the canonical
+// copy, so point search engines there instead of indexing this one too.
+useHead(() => ({
+  link: item.value ? [{ rel: 'canonical', href: `https://www.luccc.org/news-events/${id}` }] : [],
+}));
+
 usePageSeo(() => {
   const i = item.value;
   return {
