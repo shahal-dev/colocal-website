@@ -132,10 +132,10 @@ function formatDate(iso: string) {
         <p class="mt-4 text-gray-700 leading-relaxed max-w-6xl">
           You can send submissions for the blog to:
           <a
-            href="mailto:fahmid.mohtasin@icccad.org"
+            href="mailto:maeeshasiddiqui1@gmail.com"
             class="text-green-700 underline"
             aria-label="Email COLOCAL Blog"
-            >fahmid.mohtasin@icccad.org</a
+            >maeeshasiddiqui1@gmail.com</a
           >
         </p>
         <!-- <p class="mt-4 text-gray-700"> -->
