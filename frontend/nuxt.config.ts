@@ -109,7 +109,14 @@ export default defineNuxtConfig({
   // Strapi Cloud serves the API from `<id>.strapiapp.com` but uploaded media
   // from a separate `<id>.media.strapiapp.com` CDN host — both must be
   // whitelisted or @nuxt/image silently passes the original through unoptimized.
+  //
+  // provider is forced to 'ipx' (self-hosted, uses the `sharp` dependency)
+  // instead of leaving it on 'auto' — on Vercel, 'auto' silently activates
+  // the 'vercel' provider, which bills every resize against Vercel's Image
+  // Optimization transformations quota and exhausted the free tier.
   image: {
+    provider: 'ipx',
+    densities: [1],
     domains: (() => {
       let host = 'localhost';
       try {
