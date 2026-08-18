@@ -9,9 +9,9 @@ const slug = route.params.slug;
 const project = useState<Project | null>(`project:${slug}`, () => null);
 const projectName = computed(() => project.value?.shortTitle || 'Project');
 
-useHead({
-  title: projectName.value ? `${projectName.value} — Outreach` : 'Outreach',
-});
+useHead(() => ({
+  title: `News & Events — ${projectName.value}`,
+}));
 
 // Use shared project navbar
 const basePath = computed(() => `/projects/${slug}`);
@@ -91,7 +91,7 @@ function goTo(page: number) {
 
       <!-- News and Events -->
       <section class="w-full max-w-6xl mx-auto px-4 md:px-0 pb-14 mt-8">
-        <h2 class="text-[22px] md:text-[26px] font-display font-semibold mb-4">News and Events</h2>
+        <h2 class="text-[22px] md:text-[26px] font-display font-semibold mb-4">News &amp; Events</h2>
         <div class="flex flex-col gap-8">
           <article
             v-for="e in visible"

@@ -154,6 +154,8 @@ export default defineNuxtConfig({
     '/news-events/**': { prerender: true },
     '/resource-hub': { prerender: true },
     '/resource-hub/**': { prerender: true },
+    '/blog': { prerender: true },
+    '/blog/**': { prerender: true },
   },
 
   // Hooks to generate dynamic routes
@@ -207,6 +209,8 @@ export default defineNuxtConfig({
             routes.push(`/projects/${slug}/outreach`);
             routes.push(`/projects/${slug}/education`);
             routes.push(`/projects/${slug}/team`);
+            routes.push(`/projects/${slug}/about`);
+            routes.push(`/projects/${slug}/blog`);
           }
         }
 
@@ -244,6 +248,7 @@ export default defineNuxtConfig({
         routes.push('/education-training');
         routes.push('/news-events');
         routes.push('/resource-hub');
+        routes.push('/blog');
 
         nitroConfig.prerender = nitroConfig.prerender || {};
         nitroConfig.prerender.routes = nitroConfig.prerender.routes || [];

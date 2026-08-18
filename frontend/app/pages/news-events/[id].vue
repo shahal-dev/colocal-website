@@ -23,8 +23,15 @@ usePageSeo(() => {
 });
 
 const { data: moreList } = await useAsyncData('news-events:all', () => $fetch('/api/news-events'));
+// Blog posts and news/events share this page, so keep the sidebar in the same
+// stream the reader arrived from: more blog posts for a post, more news/events
+// for an activity.
+const isBlogPost = computed(() => Boolean(item.value?.blog));
 const more = computed(() =>
-  (moreList.value || []).filter((n) => String(n.documentId || n.id) !== id).slice(0, 6)
+  (moreList.value || [])
+    .filter((n) => String(n.documentId || n.id) !== id)
+    .filter((n) => Boolean(n.blog) === isBlogPost.value)
+    .slice(0, 6)
 );
 
 const carouselImages = computed(() => {
@@ -125,9 +132,11 @@ const youtubeEmbedUrl = computed(() => {
     <BreadCrumb
       :breadcrumb-items="[
         { text: 'Home', href: '/' },
-        { text: 'News & Events', href: '/news-events' },
+        isBlogPost
+          ? { text: 'Blog', href: '/blog' }
+          : { text: 'News & Events', href: '/news-events' },
       ]"
-      :page-title="item?.title ? item.title : 'News & Events'"
+      :page-title="item?.title ? item.title : isBlogPost ? 'Blog' : 'News & Events'"
     />
 
     <section class="w-full max-w-6xl mx-auto px-4 md:px-0 py-8">
@@ -174,10 +183,12 @@ const youtubeEmbedUrl = computed(() => {
 
         <aside class="md:col-span-4">
           <div class="bg-gray-50 rounded-2xl p-6 md:p-8 border border-gray-100 sticky top-24">
+            <!-- Submissions CTA only makes sense on blog posts, not on news/events -->
+            <BlogSubmissionBanner v-if="isBlogPost" class="mb-6" />
             <h3
               class="text-xl font-display font-semibold text-gray-900 mb-6 pb-4 border-b border-gray-200"
             >
-              More Activities
+              {{ isBlogPost ? 'More Posts' : 'More Activities' }}
             </h3>
             <div class="space-y-6">
               <NuxtLink
@@ -225,10 +236,10 @@ const youtubeEmbedUrl = computed(() => {
             </div>
             <div class="mt-8 pt-5 border-t border-gray-200">
               <NuxtLink
-                to="/news-events"
+                :to="isBlogPost ? '/blog' : '/news-events'"
                 class="text-sm font-semibold text-green-700 hover:text-green-800 flex items-center gap-1.5 group w-fit"
               >
-                View all activities
+                {{ isBlogPost ? 'View all posts' : 'View all activities' }}
                 <svg
                   class="w-4 h-4 group-hover:translate-x-1 transition-transform"
                   fill="none"

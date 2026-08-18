@@ -276,6 +276,7 @@ function formatAuthorLine(authors: unknown[]) {
         <!-- Sidebar -->
         <aside class="md:col-span-4">
           <div class="bg-gray-50 rounded-2xl p-6 md:p-8 border border-gray-100 sticky top-24">
+            <BlogSubmissionBanner class="mb-6" />
             <h3
               class="text-xl font-display font-semibold text-gray-900 mb-6 pb-4 border-b border-gray-200"
             >

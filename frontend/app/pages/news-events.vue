@@ -18,11 +18,11 @@ const { data: newsData } = await useAsyncData<NewsEvent[]>(
 );
 const items = computed(() => newsData.value ?? []);
 
-const isColocal = (entry: NewsEvent): boolean =>
+// Blog posts live on their own /blog page (its own nav item), so keep them out of here.
+const isBlogPost = (entry: NewsEvent): boolean =>
   Boolean((entry as unknown as { blog?: boolean }).blog);
 
-const regularItems = computed(() => items.value.filter((entry) => !isColocal(entry)));
-const colocalItems = computed(() => items.value.filter((entry) => isColocal(entry)));
+const regularItems = computed(() => items.value.filter((entry) => !isBlogPost(entry)));
 
 // 3x3 grid pagination
 const pageSize = 9;
@@ -104,35 +104,6 @@ watch(totalPages, (next) => {
           </button>
         </div>
 
-        <div v-if="colocalItems.length" class="mt-16">
-          <div class="text-center max-w-3xl mx-auto mb-8">
-            <h2 class="text-[24px] md:text-[28px] font-display font-medium">COLOCAL Blog</h2>
-          </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <NuxtLink
-              v-for="e in colocalItems"
-              :key="e.id"
-              :to="`/news-events/${e.documentId || e.id}`"
-              class="border border-gray-200 rounded-md bg-white overflow-hidden hover:shadow transition-shadow"
-            >
-              <div class="w-full h-40 overflow-hidden">
-                <NuxtImg
-                :src="e.cover?.url"
-                :alt="e.title"
-                sizes="100vw sm:50vw lg:380px"
-                format="webp"
-                quality="80"
-                loading="lazy"
-                class="w-full h-full object-cover"
-              />
-              </div>
-              <div class="p-4">
-                <h3 class="text-[16px] font-semibold text-green-800 mb-1">{{ e.title }}</h3>
-                <p class="text-sm text-gray-700 line-clamp-3">{{ excerpt(e.body, 180) }}</p>
-              </div>
-            </NuxtLink>
-          </div>
-        </div>
       </section>
     </template>
   </div>

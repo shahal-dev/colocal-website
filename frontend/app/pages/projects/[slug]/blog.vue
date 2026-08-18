@@ -129,15 +129,7 @@ function formatDate(iso: string) {
           engagement, sustainable practices, and innovative solutions that drive positive change at
           the local level.
         </p>
-        <p class="mt-4 text-gray-700 leading-relaxed max-w-6xl">
-          You can send submissions for the blog to:
-          <a
-            href="mailto:maeeshasiddiqui1@gmail.com"
-            class="text-green-700 underline"
-            aria-label="Email COLOCAL Blog"
-            >maeeshasiddiqui1@gmail.com</a
-          >
-        </p>
+        <BlogSubmissionBanner variant="strip" class="mt-6" />
         <!-- <p class="mt-4 text-gray-700"> -->
         <!--   If you would like to contribute to the COLOCAL Blog, please contact us at: -->
         <!--   <a href="mailto:mail2ena@gmail.com" class="text-green-700 underline" aria-label="Email COLOCAL Blog">mail2ena@gmail.com</a> -->

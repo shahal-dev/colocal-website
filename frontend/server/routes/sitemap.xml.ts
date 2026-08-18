@@ -93,6 +93,7 @@ export default defineEventHandler(async (event) => {
     { path: '/education-training', changefreq: 'weekly', priority: '0.8' },
     { path: '/news-events', changefreq: 'weekly', priority: '0.8' },
     { path: '/resource-hub', changefreq: 'weekly', priority: '0.8' },
+    { path: '/blog', changefreq: 'weekly', priority: '0.8' },
   ];
   for (const r of staticRoutes) {
     push({ loc: `${SITE_URL}${r.path}`, changefreq: r.changefreq, priority: r.priority });
