@@ -61,7 +61,7 @@ export type RawPublicationAttributes = {
   file?: RawRelationOne<RawMediaAttributes>;
   image_cover?: RawRelationOne<RawMediaAttributes> | null;
   images?: RawRelationMany<RawMediaAttributes> | null;
-  // project?: RawRelationOne<RawProjectAttributes> // avoid cycle
+  project?: unknown; // relation (raw or flat shape) — narrowed at runtime
   publication_type?: RawPublicationTypeComponent; // component
   theme?: RawThemeComponent | null; // optional component
   country?: RawCountryComponent | null; // optional component
@@ -125,6 +125,7 @@ export type FlatAuthor = {
 export type FlatPublication = {
   id: number;
   documentId?: string;
+  project?: unknown;
   title: string;
   secondary_title?: string | null;
   abstract: string;
@@ -169,6 +170,7 @@ export type StrapiListResponseUnion =
 // Additional raw/flat shapes for future endpoints --------------------------
 export type _RawEducationTrainingAttributes = {
   title: string;
+  project?: unknown;
   secondary_title?: string | null;
   date: string;
   cover: RawRelationOne<RawMediaAttributes>;
@@ -184,6 +186,7 @@ export type _RawEducationTrainingAttributes = {
 export type _FlatEducationTraining = {
   id: number;
   documentId?: string;
+  project?: unknown;
   title: string;
   secondary_title?: string | null;
   date: string;
@@ -199,6 +202,7 @@ export type _FlatEducationTraining = {
 
 export type _RawNewsEventAttributes = {
   title: string;
+  projects?: unknown;
   secondary_title?: string | null;
   date: string;
   cover: RawRelationOne<RawMediaAttributes>;
@@ -215,6 +219,7 @@ export type _RawNewsEventAttributes = {
 export type _FlatNewsEvent = {
   id: number;
   documentId?: string;
+  projects?: unknown;
   title: string;
   secondary_title?: string | null;
   date: string;

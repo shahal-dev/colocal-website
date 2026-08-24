@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import { useRoute } from '#app';
-import type { Project } from '~~/types/content';
+import type { Project, StrapiMedia } from '~~/types/content';
 
 // Route + derived project name
 const route = useRoute();
@@ -78,6 +78,34 @@ const llaNewsEvents = computed(() => {
   });
 });
 
+// Carousel: the five most recent blog posts with a cover image
+type CarouselItem = {
+  id: string;
+  title: string;
+  description: string;
+  cover: string | StrapiMedia | null | undefined;
+  type: 'research' | 'outreach' | 'education';
+  slug: string;
+  to: string;
+};
+
+const carouselItems = computed<CarouselItem[]>(() =>
+  (llaNewsEvents.value || [])
+    .filter((p) => Boolean(p.cover && p.cover.url))
+    .slice()
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .slice(0, 5)
+    .map((p) => ({
+      id: String(p.documentId || p.id),
+      title: p.secondaryTitle || p.title,
+      description: excerpt(p.body, 140),
+      cover: p.cover,
+      slug: basePath.value,
+      type: 'outreach' as const,
+      to: `${basePath.value}/blog/${p.documentId || p.id}`,
+    }))
+);
+
 // Pagination for blog posts
 const pageSize = 6;
 const page = ref(1);
@@ -120,6 +148,11 @@ function formatDate(iso: string) {
       <!-- Secondary navbar (links to sibling pages) -->
       <!-- <ProjectNavbar :project="project" :slug="String(slug)" /> -->
 
+      <!-- Carousel -->
+      <section v-if="carouselItems.length" class="w-full mx-auto px-0 md:px-0">
+        <ResearchOutreachCarousel :items="carouselItems" />
+      </section>
+
       <!-- Intro/description -->
       <section class="w-full max-w-6xl mx-auto py-10 px-4 md:px-0">
         <h1 class="text-[26px] md:text-[30px] font-display font-medium mb-3">COLOCAL Blog</h1>
@@ -128,15 +161,6 @@ function formatDate(iso: string) {
           collaborative local development initiatives. Here, we explore topics such as community
           engagement, sustainable practices, and innovative solutions that drive positive change at
           the local level.
-        </p>
-        <p class="mt-4 text-gray-700 leading-relaxed max-w-6xl">
-          You can send submissions for the blog to:
-          <a
-            href="mailto:maeeshasiddiqui1@gmail.com"
-            class="text-green-700 underline"
-            aria-label="Email COLOCAL Blog"
-            >maeeshasiddiqui1@gmail.com</a
-          >
         </p>
         <!-- <p class="mt-4 text-gray-700"> -->
         <!--   If you would like to contribute to the COLOCAL Blog, please contact us at: -->
@@ -319,6 +343,25 @@ function formatDate(iso: string) {
         </article>
       </div>
     </section> -->
+
+      <!-- Blog submission banner -->
+      <section class="w-full max-w-4xl mx-auto px-4 md:px-0 pb-14">
+        <a
+          href="https://forms.gle/YyzkQuzEQAW5ZVgx9"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="block rounded-lg overflow-hidden hover:shadow-lg transition-shadow"
+        >
+          <img
+            src="/images/blog-banner.svg"
+            alt="Submit a blog post — opens the submission form"
+            width="1600"
+            height="400"
+            loading="lazy"
+            class="w-full h-auto"
+          />
+        </a>
+      </section>
     </template>
   </div>
 </template>

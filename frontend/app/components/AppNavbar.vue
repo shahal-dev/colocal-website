@@ -30,24 +30,31 @@
             <a
               href="/about"
               class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 border-b border-slate-200"
-              >About Us</a
+              >About LUCCC</a
             >
             <a
               href="/about/universities"
               class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 border-b border-slate-200"
               >List of Universities</a
             >
-            <a href="/about/team" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+            <a
+              href="/about/team"
+              class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 border-b border-slate-200"
               >Our Team</a
+            >
+            <a
+              href="/projects"
+              class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              >Projects &amp; Programmes</a
             >
           </div>
         </div>
       </div>
 
-      <a href="/resource-hub" class="navbar-item">Resource Hub</a>
-      <a href="/projects" class="navbar-item">Projects & Programmes</a>
-      <a href="/education-training" class="navbar-item">Education & Training</a>
-      <a href="/news-events" class="navbar-item">News & Events</a>
+      <a href="/education-training" class="navbar-item">Education &amp; Training</a>
+      <a href="/research-publications" class="navbar-item">Research &amp; Publications</a>
+      <a href="/outreach" class="navbar-item">Outreach</a>
+      <a href="/blog" class="navbar-item">Blog Posts</a>
     </div>
 
     <!-- Mobile controls -->
@@ -124,7 +131,7 @@
             <transition name="slide-fade">
               <div v-show="aboutOpen" class="mt-1 ml-2 border-l border-slate-100 pl-3">
                 <a href="/about" class="block px-3 py-2 rounded-md hover:bg-gray-100 text-sm"
-                  >About Us</a
+                  >About LUCCC</a
                 >
                 <a
                   href="/about/universities"
@@ -134,21 +141,24 @@
                 <a href="/about/team" class="block px-3 py-2 rounded-md hover:bg-gray-100 text-sm"
                   >Our Team</a
                 >
+                <a href="/projects" class="block px-3 py-2 rounded-md hover:bg-gray-100 text-sm"
+                  >Projects &amp; Programmes</a
+                >
               </div>
             </transition>
           </div>
 
-          <a href="/resource-hub" class="block px-3 py-2 rounded-md hover:bg-gray-100"
-            >Resource Hub</a
-          >
-          <a href="/projects" class="block px-3 py-2 rounded-md hover:bg-gray-100"
-            >Projects & Programmes</a
-          >
           <a href="/education-training" class="block px-3 py-2 rounded-md hover:bg-gray-100"
-            >Education & Training</a
+            >Education &amp; Training</a
           >
-          <a href="/news-events" class="block px-3 py-2 rounded-md hover:bg-gray-100"
-            >News & Events</a
+          <a href="/research-publications" class="block px-3 py-2 rounded-md hover:bg-gray-100"
+            >Research &amp; Publications</a
+          >
+          <a href="/outreach" class="block px-3 py-2 rounded-md hover:bg-gray-100"
+            >Outreach</a
+          >
+          <a href="/blog" class="block px-3 py-2 rounded-md hover:bg-gray-100"
+            >Blog Post</a
           >
         </div>
       </div>

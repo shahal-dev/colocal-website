@@ -91,8 +91,9 @@ export default defineEventHandler(async (event) => {
     { path: '/about/universities', changefreq: 'monthly', priority: '0.7' },
     { path: '/projects', changefreq: 'weekly', priority: '0.9' },
     { path: '/education-training', changefreq: 'weekly', priority: '0.8' },
-    { path: '/news-events', changefreq: 'weekly', priority: '0.8' },
-    { path: '/resource-hub', changefreq: 'weekly', priority: '0.8' },
+    { path: '/research-publications', changefreq: 'weekly', priority: '0.8' },
+    { path: '/outreach', changefreq: 'weekly', priority: '0.8' },
+    { path: '/blog', changefreq: 'weekly', priority: '0.8' },
   ];
   for (const r of staticRoutes) {
     push({ loc: `${SITE_URL}${r.path}`, changefreq: r.changefreq, priority: r.priority });
@@ -134,7 +135,7 @@ export default defineEventHandler(async (event) => {
     }
   }
 
-  // Publications: canonical URL is always the resource-hub copy — the
+  // Publications: canonical URL is always the research-publications copy — the
   // project-nested copy (when it exists) carries a canonical tag pointing
   // here, so it's deliberately left out of the sitemap.
   for (const pub of publications) {
@@ -142,21 +143,22 @@ export default defineEventHandler(async (event) => {
     if (id == null) continue;
     const lastmod = toIsoDate(getAttr(pub, 'updatedAt'));
     push({
-      loc: `${SITE_URL}/resource-hub/${id}`,
+      loc: `${SITE_URL}/research-publications/${id}`,
       lastmod,
       changefreq: 'monthly',
       priority: '0.5',
     });
   }
 
-  // News-events: canonical URL is always the news-events copy — same
-  // reasoning as publications above.
+  // News-events: canonical URL is the LUCCC-layer copy — /blog for blog
+  // posts, /outreach for everything else. Same reasoning as publications above.
   for (const news of newsEvents) {
     const id = news.documentId || news.id;
     if (id == null) continue;
     const lastmod = toIsoDate(getAttr(news, 'updatedAt'));
+    const section = getAttr(news, 'blog') ? 'blog' : 'outreach';
     push({
-      loc: `${SITE_URL}/news-events/${id}`,
+      loc: `${SITE_URL}/${section}/${id}`,
       lastmod,
       changefreq: 'monthly',
       priority: '0.6',
@@ -164,7 +166,7 @@ export default defineEventHandler(async (event) => {
   }
 
   // Education/training: canonical URL is always the education-training
-  // copy — the project-nested and resource-hub copies both canonicalize
+  // copy — the project-nested and research-publications copies both canonicalize
   // here, so neither is listed separately.
   for (const edu of educationTrainings) {
     const id = edu.documentId || edu.id;

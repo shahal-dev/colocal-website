@@ -1,89 +1,65 @@
-<script setup lang="ts">
+<script setup>
 import { computed } from 'vue';
 import { useRoute } from '#app';
-import type { Project } from '~~/types/content';
 
 const route = useRoute();
-const slug = route.params.slug;
 const id = String(route.params.id);
-const project = useState<Project | null>(`project:${slug}`, () => null);
-const projectName = computed(() => project.value?.shortTitle || 'Project');
 
-const basePath = computed(() => `/projects/${slug}`);
-// const tabs = computed(() => [
-//   { key: 'home', label: 'Home', to: basePath.value },
-//   { key: 'about', label: 'About ' + projectName, to: `${basePath.value}/about` },
-//   { key: 'education', label: 'Education & Training', to: `${basePath.value}/education` },
-//   { key: 'research', label: 'Research & Publications', to: `${basePath.value}/research` },
-//   { key: 'outreach', label: 'Outreach', to: `${basePath.value}/outreach` },
-//   { key: 'lla', label: 'LLA Hub', to: `${basePath.value}/lla` },
-// ]);
-// const isActive = (to) => route.path.startsWith(to);
-
-// Fetch current education/training and more for sidebar
+// Fetch current news/event and more for sidebar (no project filter)
 const { data: current } = await useAsyncData(
-  () => `education-training:${slug}:${id}`,
-  () =>
-    $fetch('/api/education-trainings', { params: { projectSlug: String(slug), id: String(id) } })
+  () => `news-event:${id}`,
+  () => $fetch('/api/news-events', { params: { id } })
 );
 const item = computed(() => (current.value && current.value[0]) || null);
-
-// This item also lives at /education-training/{id} (and /research-publications/{id});
-// education-training is the canonical copy, so point search engines there.
-useHead(() => ({
-  link: item.value
-    ? [{ rel: 'canonical', href: `https://www.luccc.org/education-training/${id}` }]
-    : [],
-}));
 
 usePageSeo(() => {
   const i = item.value;
   return {
-    title: i?.title
-      ? `${i.title} — ${projectName.value} Education & Training`
-      : `${projectName.value} — Education & Training`,
+    title: i?.title ? `${i.title} — Outreach` : 'Outreach — LUCCC',
     ogTitle: i?.title,
     description: i?.body,
     images: [i?.cover, ...(i?.images || [])],
   };
 });
 
-const coverUrl = computed(() => {
-  const cover = item.value?.cover?.url ?? '';
-  return cover?.trim?.() ?? '';
-});
+const { data: moreList } = await useAsyncData('news-events:all', () => $fetch('/api/news-events'));
+const more = computed(() =>
+  (moreList.value || [])
+    .filter((n) => !n.blog && String(n.documentId || n.id) !== id)
+    .slice(0, 6)
+);
 
 const carouselImages = computed(() => {
-  const extras: string[] = [];
+  const extras = [];
   if (Array.isArray(item.value?.images)) {
-    for (const entry of item.value.images) {
-      if (!entry) continue;
-      const candidate = typeof entry === 'string' ? entry : entry.url;
-      const normalized = candidate?.trim?.() ?? '';
-      if (!normalized || extras.includes(normalized)) continue;
+    item.value.images.forEach((entry) => {
+      if (!entry) return;
+      const src = typeof entry === 'string' ? entry : entry.url;
+      const normalized = src?.trim?.() ?? '';
+      if (!normalized || extras.includes(normalized)) return;
       extras.push(normalized);
-    }
+    });
   }
 
   if (!extras.length) {
     return [];
   }
 
-  const urls: string[] = [];
-  const seen = new Set<string>();
-  const cover = coverUrl.value;
+  const list = [];
+  const seen = new Set();
+  const cover = item.value?.cover?.url?.trim?.();
   if (cover) {
     seen.add(cover);
-    urls.push(cover);
+    list.push(cover);
   }
 
-  for (const img of extras) {
-    if (seen.has(img)) continue;
+  extras.forEach((img) => {
+    if (seen.has(img)) return;
     seen.add(img);
-    urls.push(img);
-  }
+    list.push(img);
+  });
 
-  return urls;
+  return list;
 });
 
 const secondaryTitle = computed(() => {
@@ -92,24 +68,17 @@ const secondaryTitle = computed(() => {
 });
 
 const authorLine = computed(() => {
-  const source = item.value as Record<string, unknown> | null;
-  if (source) {
-    const rawAuthors = source.authors as unknown;
-    if (Array.isArray(rawAuthors)) {
-      const names = rawAuthors
-        .map((entry) => {
-          if (typeof entry === 'string') return entry;
-          if (entry && typeof entry === 'object' && 'name' in entry) {
-            const name = (entry as Record<string, unknown>).name;
-            return typeof name === 'string' ? name : '';
-          }
-          return '';
-        })
-        .filter((name): name is string => typeof name === 'string' && name.trim().length > 0)
-        .map((name) => name.trim());
-      if (names.length) return names.join(' • ');
-    }
+  const authors = item.value?.authors;
+  if (Array.isArray(authors)) {
+    const names = authors
+      .map((entry) => (typeof entry === 'string' ? entry : entry?.name))
+      .filter((name) => typeof name === 'string' && name.trim().length > 0)
+      .map((name) => name.trim());
+    if (names.length) return names.join(' • ');
+  }
 
+  const source = item.value && typeof item.value === 'object' ? item.value : null;
+  if (source) {
     for (const key of ['author', 'authorName', 'byline']) {
       const value = source[key];
       if (typeof value === 'string' && value.trim().length > 0) {
@@ -120,6 +89,18 @@ const authorLine = computed(() => {
 
   return '';
 });
+
+function formatDate(iso) {
+  try {
+    return new Date(iso).toLocaleDateString('en-GB', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    });
+  } catch {
+    return iso;
+  }
+}
 
 const formattedBody = computed(() => {
   if (typeof item.value?.body !== 'string') return item.value?.body || '';
@@ -139,73 +120,28 @@ const youtubeEmbedUrl = computed(() => {
     return null;
   }
 });
-
-const { data: moreList } = await useAsyncData(
-  () => `education-trainings-more:${slug}`,
-  () => $fetch('/api/education-trainings', { params: { projectSlug: String(slug) } })
-);
-const more = computed(() =>
-  (moreList.value || []).filter((n) => n.documentId !== id && String(n.id) !== id).slice(0, 6)
-);
-
-function formatDate(iso: string) {
-  try {
-    return new Date(iso).toLocaleDateString('en-GB', {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric',
-    });
-  } catch {
-    return iso;
-  }
-}
 </script>
 
 <template>
   <div class="flex flex-col items-center w-full justify-center">
-    <!-- <BreadCrumb
+    <BreadCrumb
       :breadcrumb-items="[
         { text: 'Home', href: '/' },
-        { text: 'Projects & Programmes', href: '/projects' },
-        { text: projectName, href: basePath },
-        { text: 'Education & Training', href: `${basePath}/education` },
+        { text: 'Outreach', href: '/outreach' },
       ]"
-      :page-title="item?.title ? item.title : projectName + ' — Education & Training'"
-    /> -->
-
-    <!-- <div class="w-full sticky top-0 z-20 bg-white/95 backdrop-blur">
-      <nav class="max-w-6xl flex items-center gap-2 px-25 overflow-x-auto hide-scrollbar">
-        <NuxtLink
-          v-for="t in tabs"
-          :key="t.key"
-          :to="t.to"
-          class="px-4 py-3 text-base font-semibold whitespace-nowrap"
-          :class="
-            isActive(t.to)
-              ? 'bg-green-100 text-green-900 border-b-2 border-green-700'
-              : 'bg-white text-gray-700 border-gray-300 hover:border-green-300'
-          "
-        >
-          {{ t.label }}
-        </NuxtLink>
-      </nav>
-    </div> -->
-    <!-- <ProjectNavbar :project="project" :slug="String(slug)" /> -->
+      :page-title="item?.title ? item.title : 'Outreach'"
+    />
 
     <section class="w-full max-w-6xl mx-auto px-4 md:px-0 py-8">
       <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
-        <div class="md:col-span-8">
+        <div class="md:col-span-8 mr-8 md:mr-12">
           <div v-if="item">
             <div v-if="carouselImages.length" class="mb-5">
               <GalleryCarousel :images="carouselImages" :title="item.title" />
             </div>
-            <div
-              v-else-if="coverUrl"
-              class="w-full h-[24rem] md:h-[30rem] rounded-lg overflow-hidden mb-5"
-            >
-              <img :src="coverUrl" :alt="item.title" class="w-full h-full object-cover" />
+            <div v-else-if="item.cover?.url" class="w-full rounded-lg overflow-hidden mb-5">
+              <img :src="item.cover?.url" :alt="item.title" class="w-full h-full object-cover" />
             </div>
-
             <h1 class="text-2xl md:text-3xl font-display font-semibold mb-2">{{ item.title }}</h1>
             <div v-if="secondaryTitle" class="text-lg text-gray-700 font-display mb-2">
               {{ secondaryTitle }}
@@ -224,7 +160,7 @@ function formatDate(iso: string) {
             </div>
             <MDC
               :value="formattedBody"
-              class="mdc-body prose text-justify max-w-none text-gray-800 space-y-6"
+              class="mdc-body prose max-w-none text-gray-800 space-y-6 text-justify"
             />
             <div v-if="youtubeEmbedUrl" class="mt-6 aspect-video">
               <iframe
@@ -249,7 +185,7 @@ function formatDate(iso: string) {
               <NuxtLink
                 v-for="m in more"
                 :key="m.documentId || m.id"
-                :to="`${basePath}/education/${m.documentId || m.id}`"
+                :to="`/outreach/${m.documentId || m.id}`"
                 class="flex gap-4 items-start group"
               >
                 <div
@@ -257,7 +193,7 @@ function formatDate(iso: string) {
                 >
                   <img
                     v-if="m.cover?.url"
-                    :src="m.cover.url"
+                    :src="m.cover?.url"
                     :alt="m.title"
                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />
@@ -291,7 +227,7 @@ function formatDate(iso: string) {
             </div>
             <div class="mt-8 pt-5 border-t border-gray-200">
               <NuxtLink
-                :to="`${basePath}/education`"
+                to="/outreach"
                 class="text-sm font-semibold text-green-700 hover:text-green-800 flex items-center gap-1.5 group w-fit"
               >
                 View all activities
@@ -333,7 +269,6 @@ function formatDate(iso: string) {
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }
-
 .hide-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;

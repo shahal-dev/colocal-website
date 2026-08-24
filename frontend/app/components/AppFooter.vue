@@ -137,8 +137,8 @@ const primaryLinks = computed(() => {
   }
   return [
     { label: 'Home', path: '/' },
-    { label: 'About', path: '/about' },
-    { label: 'Resource Hub', path: '/resource-hub' },
+    { label: 'About Us', path: '/about' },
+    { label: 'Research & Publications', path: '/research-publications' },
   ];
 });
 
@@ -147,14 +147,14 @@ const secondaryLinks = computed(() => {
     const slug = projectSlug.value;
     return [
       { label: 'Outreach', path: `/projects/${slug}/outreach` },
-      { label: 'COLOCAL Blog', path: `/projects/${slug}/blog` },
+      { label: 'Blog Post', path: `/projects/${slug}/blog` },
       { label: 'Research & Publications', path: `/projects/${slug}/research` },
       { label: 'Education & Training', path: `/projects/${slug}/education` },
     ];
   }
   return [
-    { label: 'News & Events', path: '/news-events' },
-    { label: 'Projects & Programmes', path: '/projects' },
+    { label: 'Outreach', path: '/outreach' },
+    { label: 'Blog Post', path: '/blog' },
     { label: 'Education & Training', path: '/education-training' },
   ];
 });

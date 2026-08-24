@@ -295,7 +295,7 @@ useHead({
             :key="p.id"
             class="flex flex-col border border-gray-200 rounded-xl bg-white p-6 hover:shadow-md transition-shadow h-full"
           >
-            <NuxtLink :to="`/resource-hub/${p.documentId || p.id}`" class="flex flex-col h-full">
+            <NuxtLink :to="`/research-publications/${p.documentId || p.id}`" class="flex flex-col h-full">
               <h3
                 class="text-lg md:text-xl font-semibold text-green-800 mb-3 line-clamp-3 hover:underline"
               >

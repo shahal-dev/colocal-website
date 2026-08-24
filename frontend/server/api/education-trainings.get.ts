@@ -1,5 +1,6 @@
 import { defineEventHandler, createError, getQuery } from 'h3';
 import { useRuntimeConfig } from '#imports';
+import { mapProjectRefs } from '../utils/project-refs';
 import type {
   EducationTraining,
   Education,
@@ -193,6 +194,7 @@ function mapEducationTraining(
     lla: !!a.lla,
     youtubeUrl: a.youtubeUrl ?? null,
     project: null,
+    projectRefs: mapProjectRefs(a.project),
     country: mapCountry(a.country),
   };
 }
@@ -217,6 +219,7 @@ function mapFlatEducationTrainings(
       lla: !!e.lla,
       youtubeUrl: e.youtubeUrl ?? null,
       project: null,
+      projectRefs: mapProjectRefs(e.project),
       country: mapCountry(e.country ?? null),
     })
   );

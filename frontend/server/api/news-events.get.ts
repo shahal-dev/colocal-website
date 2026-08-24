@@ -1,5 +1,6 @@
 import { defineEventHandler, createError, getQuery } from 'h3';
 import { useRuntimeConfig } from '#imports';
+import { mapProjectRefs } from '../utils/project-refs';
 import type { NewsEvent, StrapiMedia, StrapiImageFormat, Author } from '../../types/content';
 import type {
   RawEntity,
@@ -182,6 +183,7 @@ function mapNewsEvent(
     lla: !!a.lla,
     youtubeUrl: a.youtubeUrl ?? null,
     projects: null,
+    projectRefs: mapProjectRefs(a.projects),
     country: mapCountry(a.country),
   };
 }
@@ -226,6 +228,7 @@ function mapFlatNewsEvents(baseUrl: string, list?: _FlatNewsEvent[] | null): New
       blog: e.blog,
       authors: mapFlatAuthors(baseUrl, e.authors ?? null),
       projects: null,
+      projectRefs: mapProjectRefs(e.projects),
       country: mapCountry(e.country ?? null),
     })
   );

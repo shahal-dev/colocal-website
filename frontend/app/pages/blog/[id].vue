@@ -7,7 +7,7 @@ const id = String(route.params.id);
 
 // Fetch current news/event and more for sidebar (no project filter)
 const { data: current } = await useAsyncData(
-  () => `news-event:${id}`,
+  () => `blog-post:${id}`,
   () => $fetch('/api/news-events', { params: { id } })
 );
 const item = computed(() => (current.value && current.value[0]) || null);
@@ -15,16 +15,18 @@ const item = computed(() => (current.value && current.value[0]) || null);
 usePageSeo(() => {
   const i = item.value;
   return {
-    title: i?.title ? `${i.title} — News & Events` : 'News & Events — LUCCC',
+    title: i?.title ? `${i.title} — Blog Post` : 'Blog Post — LUCCC',
     ogTitle: i?.title,
     description: i?.body,
     images: [i?.cover, ...(i?.images || [])],
   };
 });
 
-const { data: moreList } = await useAsyncData('news-events:all', () => $fetch('/api/news-events'));
+const { data: moreList } = await useAsyncData('blog-posts:all', () => $fetch('/api/news-events'));
 const more = computed(() =>
-  (moreList.value || []).filter((n) => String(n.documentId || n.id) !== id).slice(0, 6)
+  (moreList.value || [])
+    .filter((n) => n.blog && String(n.documentId || n.id) !== id)
+    .slice(0, 6)
 );
 
 const carouselImages = computed(() => {
@@ -125,9 +127,9 @@ const youtubeEmbedUrl = computed(() => {
     <BreadCrumb
       :breadcrumb-items="[
         { text: 'Home', href: '/' },
-        { text: 'News & Events', href: '/news-events' },
+        { text: 'Blog Post', href: '/blog' },
       ]"
-      :page-title="item?.title ? item.title : 'News & Events'"
+      :page-title="item?.title ? item.title : 'Blog Post'"
     />
 
     <section class="w-full max-w-6xl mx-auto px-4 md:px-0 py-8">
@@ -177,13 +179,13 @@ const youtubeEmbedUrl = computed(() => {
             <h3
               class="text-xl font-display font-semibold text-gray-900 mb-6 pb-4 border-b border-gray-200"
             >
-              More Activities
+              More Blog Posts
             </h3>
             <div class="space-y-6">
               <NuxtLink
                 v-for="m in more"
                 :key="m.documentId || m.id"
-                :to="`/news-events/${m.documentId || m.id}`"
+                :to="`/blog/${m.documentId || m.id}`"
                 class="flex gap-4 items-start group"
               >
                 <div
@@ -225,10 +227,10 @@ const youtubeEmbedUrl = computed(() => {
             </div>
             <div class="mt-8 pt-5 border-t border-gray-200">
               <NuxtLink
-                to="/news-events"
+                to="/blog"
                 class="text-sm font-semibold text-green-700 hover:text-green-800 flex items-center gap-1.5 group w-fit"
               >
-                View all activities
+                View all blog posts
                 <svg
                   class="w-4 h-4 group-hover:translate-x-1 transition-transform"
                   fill="none"

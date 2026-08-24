@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
-import type { EducationTraining } from '~~/types/content';
+import { ref, computed, watch } from 'vue';
+import type { EducationTraining, StrapiMedia } from '~~/types/content';
 
 useHead({
   title: 'Education & Training — LUCCC',
@@ -15,18 +15,52 @@ const route = useRoute();
 const items = computed(() => eduData.value ?? []);
 const hasChild = computed(() => Boolean(route.params.id));
 
-// Search
+// Filters
 const q = ref('');
+const projectSlug = ref('');
+
 const filtered = computed(() => {
   const query = q.value.trim().toLowerCase();
-  if (!query) return items.value;
   return items.value.filter((it) => {
+    if (projectSlug.value) {
+      const refs = it.projectRefs ?? [];
+      if (!refs.some((ref) => ref.slug === projectSlug.value)) return false;
+    }
+    if (!query) return true;
     if (it.title.toLowerCase().includes(query)) return true;
     if (it.body && it.body.toLowerCase().includes(query)) return true;
     if (it.type?.type && it.type.type.toLowerCase().includes(query)) return true;
     return false;
   });
 });
+
+// Carousel: the five most recent entries with a cover image
+type CarouselItem = {
+  id: string;
+  title: string;
+  description: string;
+  cover: string | StrapiMedia | null | undefined;
+  type: 'research' | 'outreach' | 'education';
+  slug: string;
+  to: string;
+};
+
+const carouselItems = computed<CarouselItem[]>(() =>
+  filtered.value
+    .filter((e) => Boolean(e.cover && e.cover.url))
+    .slice()
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .slice(0, 5)
+    .map((e) => ({
+      id: String(e.documentId || e.id),
+      title: e.title,
+      description: excerpt(e.body, 140),
+      cover: e.cover,
+      slug: '',
+      type: 'education' as const,
+      to: `/education-training/${e.documentId || e.id}`,
+    }))
+);
 
 // Pagination
 const pageSize = 6; // 3x2 grid per page
@@ -41,6 +75,10 @@ function goTo(p: number) {
   if (p < 1 || p > totalPages.value) return;
   page.value = p;
 }
+
+watch([q, projectSlug], () => {
+  page.value = 1;
+});
 </script>
 
 <template>
@@ -55,12 +93,20 @@ function goTo(p: number) {
         page-title="Education & Training"
       />
 
+      <!-- Carousel -->
+      <section v-if="carouselItems.length" class="w-full mx-auto px-0 md:px-0">
+        <ResearchOutreachCarousel :items="carouselItems" />
+      </section>
+
       <section class="w-full max-w-6xl mx-auto py-10 px-4 md:px-0">
         <div class="text-center max-w-3xl mx-auto">
           <h1 class="text-[26px] md:text-[30px] font-display font-medium mb-3">
             Education & Training
           </h1>
         </div>
+
+        <!-- Project filter -->
+        <ProjectFilter v-model="projectSlug" :items="items" class="mt-4" />
 
         <!-- Search -->
         <div class="mt-6 relative">
@@ -94,16 +140,30 @@ function goTo(p: number) {
                 {{ card.title }}
               </h3>
               <p class="text-sm text-gray-700 line-clamp-3 mb-4">{{ excerpt(card.body, 200) }}</p>
-              <div v-if="card.type?.type" class="flex items-center gap-2">
+              <div
+                v-if="card.type?.type || card.country?.name"
+                class="flex items-center gap-2 flex-wrap"
+              >
                 <span
+                  v-if="card.type?.type"
                   class="inline-block text-xs px-2 py-1 rounded border border-green-200 text-green-700 bg-green-50"
                 >
                   {{ card.type.type }}
+                </span>
+                <span
+                  v-if="card.country?.name"
+                  class="inline-block text-xs px-2 py-1 rounded border border-blue-200 text-blue-700 bg-blue-50"
+                >
+                  {{ card.country.name }}
                 </span>
               </div>
             </div>
           </NuxtLink>
         </div>
+
+        <p v-if="!visible.length" class="text-center text-gray-600 py-10">
+          No education or training entries match the current filters.
+        </p>
 
         <!-- Pagination -->
         <div v-if="totalPages > 1" class="mt-10 flex items-center justify-center gap-2">

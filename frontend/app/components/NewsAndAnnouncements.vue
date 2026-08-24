@@ -37,7 +37,7 @@ const newsItems = computed<NewsItem[]>(() => {
           </h2>
         </div>
         <NuxtLink
-          to="/news-events"
+          to="/outreach"
           class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-sm font-body font-semibold transition-colors whitespace-nowrap"
         >
           View All
@@ -70,7 +70,7 @@ const newsItems = computed<NewsItem[]>(() => {
           </template>
 
           <div class="flex-1 min-w-0">
-            <NuxtLink :to="`/news-events/${item.id}`" class="block">
+            <NuxtLink :to="`/outreach/${item.id}`" class="block">
               <h3
                 class="m-0 text-sm sm:text-[16px] md:text-[16px] font-semibold text-gray-900 line-clamp-2"
               >

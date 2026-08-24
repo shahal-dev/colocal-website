@@ -7,13 +7,13 @@ const id = String(route.params.id);
 
 // Try both: publications and education-trainings
 const { data: pubData } = await useAsyncData(
-  () => `resource-hub:publication:${id}`,
+  () => `research-publications:publication:${id}`,
   () => $fetch('/api/publications', { params: { id } })
 );
 const publication = computed(() => (pubData.value && pubData.value[0]) || null);
 
 const { data: eduData } = await useAsyncData(
-  () => `resource-hub:education:${id}`,
+  () => `research-publications:education:${id}`,
   () => $fetch('/api/education-trainings', { params: { id } })
 );
 const education = computed(() => (eduData.value && eduData.value[0]) || null);
@@ -29,7 +29,7 @@ const formattedBody = computed(() => {
 usePageSeo(() => {
   const i = item.value;
   return {
-    title: i?.title ? `${i.title} — Resource Hub` : 'Resource Hub',
+    title: i?.title ? `${i.title} — Research & Publications` : 'Research & Publications',
     ogTitle: i?.title,
     description: i?.abstract || i?.body,
     images: [i?.imageCover, i?.cover, ...(i?.images || [])],
@@ -63,10 +63,10 @@ const kind = computed(() =>
 );
 
 // Side lists for "More ..."
-const { data: allPubs } = await useAsyncData('resource-hub:all-pubs', () =>
+const { data: allPubs } = await useAsyncData('research-publications:all-pubs', () =>
   $fetch('/api/publications')
 );
-const { data: allEdus } = await useAsyncData('resource-hub:all-edus', () =>
+const { data: allEdus } = await useAsyncData('research-publications:all-edus', () =>
   $fetch('/api/education-trainings')
 );
 
@@ -132,9 +132,9 @@ function onTouchEnd() {
     <BreadCrumb
       :breadcrumb-items="[
         { text: 'Home', href: '/' },
-        { text: 'Resource Hub', href: '/resource-hub' },
+        { text: 'Research & Publications', href: '/research-publications' },
       ]"
-      :page-title="item?.title ? item.title : 'Resource Hub'"
+      :page-title="item?.title ? item.title : 'Research & Publications'"
     />
 
     <section class="w-full max-w-6xl mx-auto px-4 md:px-0 py-8">
@@ -329,7 +329,7 @@ function onTouchEnd() {
               <NuxtLink
                 v-for="m in morePublications"
                 :key="m.documentId || m.id"
-                :to="`/resource-hub/${m.documentId || m.id}`"
+                :to="`/research-publications/${m.documentId || m.id}`"
                 class="group block"
               >
                 <p class="text-sm text-green-700 group-hover:underline line-clamp-2">
@@ -348,7 +348,7 @@ function onTouchEnd() {
               <NuxtLink
                 v-for="m in moreEducations"
                 :key="m.documentId || m.id"
-                :to="`/resource-hub/${m.documentId || m.id}`"
+                :to="`/research-publications/${m.documentId || m.id}`"
                 class="flex gap-3 items-center group"
               >
                 <div class="w-20 h-14 rounded overflow-hidden flex-shrink-0">

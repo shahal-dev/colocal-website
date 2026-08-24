@@ -150,10 +150,18 @@ export default defineNuxtConfig({
     '/projects/**': { prerender: true },
     '/education-training': { prerender: true },
     '/education-training/**': { prerender: true },
-    '/news-events': { prerender: true },
-    '/news-events/**': { prerender: true },
-    '/resource-hub': { prerender: true },
-    '/resource-hub/**': { prerender: true },
+    '/research-publications': { prerender: true },
+    '/research-publications/**': { prerender: true },
+    '/outreach': { prerender: true },
+    '/outreach/**': { prerender: true },
+    '/blog': { prerender: true },
+    '/blog/**': { prerender: true },
+
+    // Legacy URLs kept alive for inbound links and search engines
+    '/news-events': { redirect: { to: '/outreach', statusCode: 301 } },
+    '/news-events/**': { redirect: { to: '/outreach/**', statusCode: 301 } },
+    '/resource-hub': { redirect: { to: '/research-publications', statusCode: 301 } },
+    '/resource-hub/**': { redirect: { to: '/research-publications/**', statusCode: 301 } },
   },
 
   // Hooks to generate dynamic routes
@@ -207,6 +215,7 @@ export default defineNuxtConfig({
             routes.push(`/projects/${slug}/outreach`);
             routes.push(`/projects/${slug}/education`);
             routes.push(`/projects/${slug}/team`);
+            routes.push(`/projects/${slug}/blog`);
           }
         }
 
@@ -242,8 +251,9 @@ export default defineNuxtConfig({
 
         // Generate top-level routes (if any exist)
         routes.push('/education-training');
-        routes.push('/news-events');
-        routes.push('/resource-hub');
+        routes.push('/research-publications');
+        routes.push('/outreach');
+        routes.push('/blog');
 
         nitroConfig.prerender = nitroConfig.prerender || {};
         nitroConfig.prerender.routes = nitroConfig.prerender.routes || [];

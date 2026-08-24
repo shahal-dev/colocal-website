@@ -1,5 +1,6 @@
 import { defineEventHandler, createError, getQuery } from 'h3';
 import { useRuntimeConfig } from '#imports';
+import { mapProjectRefs } from '../utils/project-refs';
 import type {
   ResearchPublication,
   Tag,
@@ -206,6 +207,7 @@ function mapPublication(
     imageCover: mapStrapiMedia(baseUrl, a.image_cover) ?? null,
     images: mapStrapiMediaMany(baseUrl, a.images),
     project: null,
+    projectRefs: mapProjectRefs(a.project),
     publication_type: mapPublicationType(a.publication_type),
     theme: mapTheme(a.theme ?? null),
     country: mapCountry(a.country ?? null),
@@ -233,6 +235,7 @@ function mapFlatPublications(
       imageCover: mapFlatMedia(baseUrl, p.image_cover ?? null),
       images: mapFlatMediaList(baseUrl, p.images ?? null),
       project: null,
+      projectRefs: mapProjectRefs(p.project),
       publication_type: mapPublicationType(p.publication_type),
       theme: mapTheme(p.theme ?? null),
       country: mapCountry(p.country ?? null),

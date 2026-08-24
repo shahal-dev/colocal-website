@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { useRoute } from '#app';
-import type { Project, EducationTraining, StrapiMedia } from '~~/types/content';
+import type { Project, StrapiMedia } from '~~/types/content';
 
 // Route + derived project name
 const route = useRoute();
@@ -52,380 +52,136 @@ const carouselItems = computed<CarouselItem[]>(() => {
     }));
 });
 
-// Group items by section
-const moduleDevelopment = computed(() =>
-  items.value.filter((item: EducationTraining) => item.section === 'module development')
-);
-const shortCourse = computed(() =>
-  items.value.filter((item: EducationTraining) => item.section === 'short course')
-);
-const trainingWorkshop = computed(() =>
-  items.value.filter((item: EducationTraining) => item.section === 'training workshop')
-);
-const generalEducation = computed(() =>
-  items.value.filter((item: EducationTraining) => !item.section || item.section === null)
-);
+// Search
+const q = ref('');
+const filtered = computed(() => {
+  const query = q.value.trim().toLowerCase();
+  if (!query) return items.value;
+  return items.value.filter((it) => {
+    if (it.title.toLowerCase().includes(query)) return true;
+    if (it.body && it.body.toLowerCase().includes(query)) return true;
+    if (it.type?.type && it.type.type.toLowerCase().includes(query)) return true;
+    return false;
+  });
+});
 
-// Pagination for each section
+// Pagination — a single flat list, matching the LUCCC layer
 const pageSize = 6;
-
-// Module Development pagination
-const moduleDevPage = ref(1);
-const moduleDevTotalPages = computed(() =>
-  Math.max(1, Math.ceil(moduleDevelopment.value.length / pageSize))
-);
-const moduleDevVisible = computed(() => {
-  const start = (moduleDevPage.value - 1) * pageSize;
-  return moduleDevelopment.value.slice(start, start + pageSize);
+const page = ref(1);
+const totalPages = computed(() => Math.max(1, Math.ceil(filtered.value.length / pageSize)));
+const visible = computed(() => {
+  const start = (page.value - 1) * pageSize;
+  return filtered.value.slice(start, start + pageSize);
 });
 
-// Short Course pagination
-const shortCoursePage = ref(1);
-const shortCourseTotalPages = computed(() =>
-  Math.max(1, Math.ceil(shortCourse.value.length / pageSize))
-);
-const shortCourseVisible = computed(() => {
-  const start = (shortCoursePage.value - 1) * pageSize;
-  return shortCourse.value.slice(start, start + pageSize);
-});
-
-// Training Workshop pagination
-const trainingWorkshopPage = ref(1);
-const trainingWorkshopTotalPages = computed(() =>
-  Math.max(1, Math.ceil(trainingWorkshop.value.length / pageSize))
-);
-const trainingWorkshopVisible = computed(() => {
-  const start = (trainingWorkshopPage.value - 1) * pageSize;
-  return trainingWorkshop.value.slice(start, start + pageSize);
-});
-
-// General Education & Training pagination
-const generalEduPage = ref(1);
-const generalEduTotalPages = computed(() =>
-  Math.max(1, Math.ceil(generalEducation.value.length / pageSize))
-);
-const generalEduVisible = computed(() => {
-  const start = (generalEduPage.value - 1) * pageSize;
-  return generalEducation.value.slice(start, start + pageSize);
-});
-
-function goToPage(
-  page: number,
-  section: 'moduleDev' | 'shortCourse' | 'trainingWorkshop' | 'generalEdu'
-) {
-  if (section === 'moduleDev' && page >= 1 && page <= moduleDevTotalPages.value) {
-    moduleDevPage.value = page;
-  } else if (section === 'shortCourse' && page >= 1 && page <= shortCourseTotalPages.value) {
-    shortCoursePage.value = page;
-  } else if (
-    section === 'trainingWorkshop' &&
-    page >= 1 &&
-    page <= trainingWorkshopTotalPages.value
-  ) {
-    trainingWorkshopPage.value = page;
-  } else if (section === 'generalEdu' && page >= 1 && page <= generalEduTotalPages.value) {
-    generalEduPage.value = page;
-  }
+function goTo(p: number) {
+  if (p < 1 || p > totalPages.value) return;
+  page.value = p;
 }
+
+watch(q, () => {
+  page.value = 1;
+});
 </script>
 
 <template>
   <div class="flex flex-col items-center w-full justify-center">
     <NuxtPage v-if="hasChild" />
     <template v-else>
-      <!-- Breadcrumb -->
-      <!-- <BreadCrumb
-        :breadcrumb-items="[
-          { text: 'Home', href: '/' },
-          { text: 'Projects & Programmes', href: '/projects' },
-          { text: projectName, href: basePath },
-          { text: 'Education & Training', href: '' },
-        ]"
-        :page-title="projectName + ' — Education & Training'"
-      /> -->
-
-      <!-- Secondary navbar (links to sibling pages) -->
-      <!-- <ProjectNavbar :project="project" :slug="String(slug)" /> -->
-
       <!-- Carousel -->
       <section v-if="carouselItems.length" class="w-full mx-auto px-0 md:px-0">
         <ResearchOutreachCarousel :items="carouselItems" />
       </section>
 
       <section class="w-full max-w-6xl mx-auto py-10 px-4 md:px-0">
-        <!-- Education & Training Section (items with no section or null) -->
-        <!-- Module Development Section -->
-        <div v-if="moduleDevelopment.length > 0" class="mb-16">
-          <h2 class="text-2xl font-semibold text-gray-900 mb-6">Module Development</h2>
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <article
-              v-for="card in moduleDevVisible"
-              :key="card.id"
-              class="border border-gray-200 rounded-md overflow-hidden bg-white hover:shadow transition-shadow"
-            >
-              <NuxtLink :to="`${basePath}/education/${card.documentId || card.id}`" class="block">
-                <div class="h-44 w-full overflow-hidden">
-                  <NuxtImg
-                    :src="card.cover?.url"
-                    :alt="card.title"
-                    sizes="100vw sm:50vw lg:380px"
-                    format="webp"
-                    quality="80"
-                    loading="lazy"
-                    class="w-full h-full object-cover"
-                  />
-                </div>
-                <div class="p-4">
-                  <h3 class="text-[15px] font-semibold text-green-800 mb-1">
-                    {{ card.title }}
-                  </h3>
-                  <p class="text-sm text-gray-700 line-clamp-3 mb-4">{{ excerpt(card.body) }}</p>
-                  <div
-                    v-if="card.type?.type || card.country?.name"
-                    class="flex items-center gap-2 flex-wrap"
-                  >
-                    <span
-                      v-if="card.type?.type"
-                      class="inline-block text-xs px-2 py-1 rounded border border-green-200 text-green-700 bg-green-50"
-                    >
-                      {{ card.type.type }}
-                    </span>
-                    <span
-                      v-if="card.country?.name"
-                      class="inline-block text-xs px-2 py-1 rounded border border-blue-200 text-blue-700 bg-blue-50"
-                    >
-                      {{ card.country.name }}
-                    </span>
-                  </div>
-                </div>
-              </NuxtLink>
-            </article>
-          </div>
-
-          <!-- Pagination for Module Development -->
-          <div v-if="moduleDevTotalPages > 1" class="mt-10 flex items-center justify-center gap-2">
-            <button
-              v-for="page in moduleDevTotalPages"
-              :key="page"
-              :aria-current="page === moduleDevPage ? 'true' : 'false'"
-              class="min-w-[32px] h-7 px-2 text-sm rounded border"
-              :class="
-                page === moduleDevPage
-                  ? 'bg-green-600 text-white border-green-600'
-                  : 'bg-white text-gray-800 border-gray-300'
-              "
-              @click="goToPage(page, 'moduleDev')"
-            >
-              {{ page }}
-            </button>
-          </div>
+        <div class="text-center max-w-3xl mx-auto">
+          <h1 class="text-[26px] md:text-[30px] font-display font-medium mb-3">
+            Education & Training
+          </h1>
         </div>
 
-        <!-- Short Course Section -->
-        <div v-if="shortCourse.length > 0" class="mb-16">
-          <h2 class="text-2xl font-semibold text-gray-900 mb-6">Short Courses</h2>
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <article
-              v-for="card in shortCourseVisible"
-              :key="card.id"
-              class="border border-gray-200 rounded-md overflow-hidden bg-white hover:shadow transition-shadow"
-            >
-              <NuxtLink :to="`${basePath}/education/${card.documentId || card.id}`" class="block">
-                <div class="h-44 w-full overflow-hidden">
-                  <NuxtImg
-                    :src="card.cover?.url"
-                    :alt="card.title"
-                    sizes="100vw sm:50vw lg:380px"
-                    format="webp"
-                    quality="80"
-                    loading="lazy"
-                    class="w-full h-full object-cover"
-                  />
-                </div>
-                <div class="p-4">
-                  <h3 class="text-[15px] font-semibold text-green-800 mb-1">
-                    {{ card.title }}
-                  </h3>
-                  <p class="text-sm text-gray-700 line-clamp-3 mb-4">{{ excerpt(card.body) }}</p>
-                  <div
-                    v-if="card.type?.type || card.country?.name"
-                    class="flex items-center gap-2 flex-wrap"
-                  >
-                    <span
-                      v-if="card.type?.type"
-                      class="inline-block text-xs px-2 py-1 rounded border border-green-200 text-green-700 bg-green-50"
-                    >
-                      {{ card.type.type }}
-                    </span>
-                    <span
-                      v-if="card.country?.name"
-                      class="inline-block text-xs px-2 py-1 rounded border border-blue-200 text-blue-700 bg-blue-50"
-                    >
-                      {{ card.country.name }}
-                    </span>
-                  </div>
-                </div>
-              </NuxtLink>
-            </article>
-          </div>
+        <!-- Search -->
+        <div class="mt-6 relative">
+          <input
+            v-model="q"
+            type="text"
+            placeholder="Search education or training"
+            class="w-full border rounded-md pl-4 pr-10 py-3 outline-none focus:border-green-600"
+          />
+          <span class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <circle cx="11" cy="11" r="7" stroke-width="2" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" stroke-width="2" />
+            </svg>
+          </span>
+        </div>
 
-          <!-- Pagination for Short Course -->
-          <div
-            v-if="shortCourseTotalPages > 1"
-            class="mt-10 flex items-center justify-center gap-2"
+        <!-- Grid -->
+        <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <article
+            v-for="card in visible"
+            :key="card.id"
+            class="border border-gray-200 rounded-md overflow-hidden bg-white hover:shadow transition-shadow"
           >
-            <button
-              v-for="page in shortCourseTotalPages"
-              :key="page"
-              :aria-current="page === shortCoursePage ? 'true' : 'false'"
-              class="min-w-[32px] h-7 px-2 text-sm rounded border"
-              :class="
-                page === shortCoursePage
-                  ? 'bg-green-600 text-white border-green-600'
-                  : 'bg-white text-gray-800 border-gray-300'
-              "
-              @click="goToPage(page, 'shortCourse')"
-            >
-              {{ page }}
-            </button>
-          </div>
+            <NuxtLink :to="`${basePath}/education/${card.documentId || card.id}`" class="block">
+              <div class="h-44 w-full overflow-hidden">
+                <NuxtImg
+                  :src="card.cover?.url"
+                  :alt="card.title"
+                  sizes="100vw sm:50vw lg:380px"
+                  format="webp"
+                  quality="80"
+                  loading="lazy"
+                  class="w-full h-full object-cover"
+                />
+              </div>
+              <div class="p-4">
+                <h3 class="text-[15px] font-semibold text-green-800 mb-1">
+                  {{ card.title }}
+                </h3>
+                <p class="text-sm text-gray-700 line-clamp-3 mb-4">{{ excerpt(card.body) }}</p>
+                <div
+                  v-if="card.type?.type || card.country?.name"
+                  class="flex items-center gap-2 flex-wrap"
+                >
+                  <span
+                    v-if="card.type?.type"
+                    class="inline-block text-xs px-2 py-1 rounded border border-green-200 text-green-700 bg-green-50"
+                  >
+                    {{ card.type.type }}
+                  </span>
+                  <span
+                    v-if="card.country?.name"
+                    class="inline-block text-xs px-2 py-1 rounded border border-blue-200 text-blue-700 bg-blue-50"
+                  >
+                    {{ card.country.name }}
+                  </span>
+                </div>
+              </div>
+            </NuxtLink>
+          </article>
         </div>
 
-        <!-- Training Workshop Section -->
-        <div v-if="trainingWorkshop.length > 0" class="mb-16">
-          <h2 class="text-2xl font-semibold text-gray-900 mb-6">Training Workshops</h2>
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <article
-              v-for="card in trainingWorkshopVisible"
-              :key="card.id"
-              class="border border-gray-200 rounded-md overflow-hidden bg-white hover:shadow transition-shadow"
-            >
-              <NuxtLink :to="`${basePath}/education/${card.documentId || card.id}`" class="block">
-                <div class="h-44 w-full overflow-hidden">
-                  <NuxtImg
-                    :src="card.cover?.url"
-                    :alt="card.title"
-                    sizes="100vw sm:50vw lg:380px"
-                    format="webp"
-                    quality="100"
-                    loading="lazy"
-                    class="w-full h-full object-cover"
-                  />
-                </div>
-                <div class="p-4">
-                  <h3 class="text-[15px] font-semibold text-green-800 mb-1">
-                    {{ card.title }}
-                  </h3>
-                  <p class="text-sm text-gray-700 line-clamp-3 mb-4">{{ excerpt(card.body) }}</p>
-                  <div
-                    v-if="card.type?.type || card.country?.name"
-                    class="flex items-center gap-2 flex-wrap"
-                  >
-                    <span
-                      v-if="card.type?.type"
-                      class="inline-block text-xs px-2 py-1 rounded border border-green-200 text-green-700 bg-green-50"
-                    >
-                      {{ card.type.type }}
-                    </span>
-                    <span
-                      v-if="card.country?.name"
-                      class="inline-block text-xs px-2 py-1 rounded border border-blue-200 text-blue-700 bg-blue-50"
-                    >
-                      {{ card.country.name }}
-                    </span>
-                  </div>
-                </div>
-              </NuxtLink>
-            </article>
-          </div>
+        <p v-if="!visible.length" class="text-center text-gray-600 py-10">
+          No education or training entries match the current search.
+        </p>
 
-          <!-- Pagination for Training Workshop -->
-          <div
-            v-if="trainingWorkshopTotalPages > 1"
-            class="mt-10 flex items-center justify-center gap-2"
+        <!-- Pagination -->
+        <div v-if="totalPages > 1" class="mt-10 flex items-center justify-center gap-2">
+          <button
+            v-for="i in totalPages"
+            :key="i"
+            :aria-current="i === page ? 'true' : 'false'"
+            class="min-w-[32px] h-7 px-2 text-sm rounded border"
+            :class="
+              i === page
+                ? 'bg-green-600 text-white border-green-600'
+                : 'bg-white text-gray-800 border-gray-300'
+            "
+            @click="goTo(i)"
           >
-            <button
-              v-for="page in trainingWorkshopTotalPages"
-              :key="page"
-              :aria-current="page === trainingWorkshopPage ? 'true' : 'false'"
-              class="min-w-[32px] h-7 px-2 text-sm rounded border"
-              :class="
-                page === trainingWorkshopPage
-                  ? 'bg-green-600 text-white border-green-600'
-                  : 'bg-white text-gray-800 border-gray-300'
-              "
-              @click="goToPage(page, 'trainingWorkshop')"
-            >
-              {{ page }}
-            </button>
-          </div>
-        </div>
-
-        <!-- Others section -->
-        <div v-if="generalEducation.length > 0" class="mb-16">
-          <h2 class="text-2xl font-semibold text-gray-900 mb-6">Others</h2>
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <article
-              v-for="card in generalEduVisible"
-              :key="card.id"
-              class="border border-gray-200 rounded-md overflow-hidden bg-white hover:shadow transition-shadow"
-            >
-              <NuxtLink :to="`${basePath}/education/${card.documentId || card.id}`" class="block">
-                <div class="h-44 w-full overflow-hidden">
-                  <NuxtImg
-                    :src="card.cover?.url"
-                    :alt="card.title"
-                    sizes="100vw sm:50vw lg:380px"
-                    format="webp"
-                    quality="80"
-                    loading="lazy"
-                    class="w-full h-full object-cover"
-                  />
-                </div>
-                <div class="p-4">
-                  <h3 class="text-[15px] font-semibold text-green-800 mb-1">
-                    {{ card.title }}
-                  </h3>
-                  <p class="text-sm text-gray-700 line-clamp-3 mb-4">{{ excerpt(card.body) }}</p>
-                  <div
-                    v-if="card.type?.type || card.country?.name"
-                    class="flex items-center gap-2 flex-wrap"
-                  >
-                    <span
-                      v-if="card.type?.type"
-                      class="inline-block text-xs px-2 py-1 rounded border border-green-200 text-green-700 bg-green-50"
-                    >
-                      {{ card.type.type }}
-                    </span>
-                    <span
-                      v-if="card.country?.name"
-                      class="inline-block text-xs px-2 py-1 rounded border border-blue-200 text-blue-700 bg-blue-50"
-                    >
-                      {{ card.country.name }}
-                    </span>
-                  </div>
-                </div>
-              </NuxtLink>
-            </article>
-          </div>
-
-          <!-- Pagination for General Education -->
-          <div v-if="generalEduTotalPages > 1" class="mt-10 flex items-center justify-center gap-2">
-            <button
-              v-for="page in generalEduTotalPages"
-              :key="page"
-              :aria-current="page === generalEduPage ? 'true' : 'false'"
-              class="min-w-[32px] h-7 px-2 text-sm rounded border"
-              :class="
-                page === generalEduPage
-                  ? 'bg-green-600 text-white border-green-600'
-                  : 'bg-white text-gray-800 border-gray-300'
-              "
-              @click="goToPage(page, 'generalEdu')"
-            >
-              {{ page }}
-            </button>
-          </div>
+            {{ i }}
+          </button>
         </div>
       </section>
     </template>

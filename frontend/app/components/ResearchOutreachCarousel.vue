@@ -156,6 +156,8 @@ export type ResearchOutreachCarouselItem = {
   cover: string | StrapiMedia | null | undefined;
   type: 'research' | 'outreach' | 'education';
   slug: string;
+  /** Explicit destination; falls back to `${slug}/${type}/${id}` when omitted. */
+  to?: string;
 };
 
 const props = defineProps<{ items: ResearchOutreachCarouselItem[] | null | undefined }>();
@@ -194,7 +196,7 @@ const slides = computed<Slide[]>(() => {
       subtitle: item.description,
       image,
       alt,
-      to: `${item.slug}/${item.type}/${item.id}`,
+      to: item.to || `${item.slug}/${item.type}/${item.id}`,
       cta: item.type === 'research' ? 'View Full Article' : 'View Full Article',
     } satisfies Slide;
   });

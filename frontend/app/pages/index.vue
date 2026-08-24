@@ -151,7 +151,7 @@ function goToPubPage(page: number) {
 // News items logic
 const homeNewsItems = computed(() => {
   const items: (NewsEvent & { isSeeMore?: boolean; body?: string })[] = (newsData.value || [])
-    .slice()
+    .filter((e) => !e.blog)
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     .slice(0, 8)
     .map((e) => ({ ...e, isSeeMore: false }));
@@ -249,7 +249,7 @@ function goToNewsPage(page: number) {
               resources, and other priority climate adaptation themes from each partner country.
             </p>
             <NuxtLink
-              to="/resource-hub"
+              to="/research-publications"
               class="inline-block mt-3 text-green-700 hover:underline font-medium"
               >Browse research &amp; publications →</NuxtLink
             >
@@ -263,7 +263,7 @@ function goToNewsPage(page: number) {
               the latest news, events and blog posts from the consortium below.
             </p>
             <NuxtLink
-              to="/news-events"
+              to="/outreach"
               class="inline-block mt-3 text-green-700 hover:underline font-medium"
               >Read the latest news &amp; events →</NuxtLink
             >
@@ -341,7 +341,7 @@ function goToNewsPage(page: number) {
           >
             <NuxtLink
               v-if="!p.isSeeMore"
-              :to="`/resource-hub/${p.documentId || p.id}`"
+              :to="`/research-publications/${p.documentId || p.id}`"
               class="flex flex-col h-full"
             >
               <h3
@@ -388,7 +388,7 @@ function goToNewsPage(page: number) {
             <!-- Final "See More" Card -->
             <NuxtLink
               v-else
-              to="/resource-hub"
+              to="/research-publications"
               class="flex flex-col h-full items-center justify-center text-center group"
             >
               <div
@@ -447,7 +447,7 @@ function goToNewsPage(page: number) {
           >
             <NuxtLink
               v-if="!e.isSeeMore"
-              :to="`/news-events/${e.documentId || e.id}`"
+              :to="`/outreach/${e.documentId || e.id}`"
               class="flex flex-col h-full group"
             >
               <div class="w-full h-48 flex-shrink-0 bg-gray-100">
@@ -484,7 +484,7 @@ function goToNewsPage(page: number) {
             <!-- Final "See More" Card -->
             <NuxtLink
               v-else
-              to="/news-events"
+              to="/outreach"
               class="flex flex-col h-full items-center justify-center text-center group p-6"
             >
               <div

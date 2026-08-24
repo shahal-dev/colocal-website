@@ -56,10 +56,10 @@ usePageSeo(() => {
   };
 });
 
-// This publication also lives at /resource-hub/{id}; that's the canonical
+// This publication also lives at /research-publications/{id}; that's the canonical
 // copy, so point search engines there instead of indexing this one too.
 useHead(() => ({
-  link: item.value ? [{ rel: 'canonical', href: `https://www.luccc.org/resource-hub/${id}` }] : [],
+  link: item.value ? [{ rel: 'canonical', href: `https://www.luccc.org/research-publications/${id}` }] : [],
 }));
 const images = computed(() => {
   const arr = [];

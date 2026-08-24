@@ -77,6 +77,14 @@ export interface Author {
   country: 'norway' | 'bangladesh' | 'mozambique' | 'nepal' | 'uganda' | null; // optional country
 }
 
+// Lightweight reference to a Project, used for cross-layer project filtering.
+export type ProjectRef = {
+  id: number;
+  documentId: string;
+  shortTitle: string;
+  slug: string;
+};
+
 export interface ResearchPublication {
   id: number;
   documentId: string;
@@ -92,6 +100,7 @@ export interface ResearchPublication {
   imageCover?: StrapiMedia | null; // optional hero/feature image
   images?: StrapiMedia[] | null; // optional gallery
   project: Project | null; // optional relation (many-to-one to Project) → can be null
+  projectRefs?: ProjectRef[] | null; // flattened project relation(s) for filtering
   publication_type: PublicationType; // required (component)
   theme?: Theme | null; // optional component → can be null
   country?: Country | null; // optional component → can be null
@@ -131,6 +140,7 @@ export interface EducationTraining {
   lla: boolean; // required
   youtubeUrl?: string | null;
   project?: Project | null; // optional relation (many-to-one to Project)
+  projectRefs?: ProjectRef[] | null; // flattened project relation(s) for filtering
   country?: Country | null; // optional component
 }
 
@@ -149,6 +159,7 @@ export interface NewsEvent {
   blog?: boolean; // optional flag for blog posts
   authors?: Author[] | null; // optional relation (one-to-many to Author)
   projects?: Project[] | null; // optional relation (many-to-many to Project)
+  projectRefs?: ProjectRef[] | null; // flattened project relation(s) for filtering
   country?: Country | null; // optional component
 }
 
