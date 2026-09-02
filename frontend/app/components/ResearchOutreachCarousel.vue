@@ -18,7 +18,17 @@
         >
           <div v-if="currentSlide && currentSlide.image" class="relative w-full h-full">
             <!-- Blurred background image to fill blank spaces -->
+            <img
+              v-if="isLocalImage(currentSlide.image)"
+              :src="currentSlide.image"
+              :alt="currentSlide.alt || 'Feature image'"
+              class="absolute inset-0 w-full h-full object-cover blur-md scale-110 opacity-80"
+              loading="lazy"
+              decoding="async"
+              aria-hidden="true"
+            />
             <NuxtImg
+              v-else
               :src="currentSlide.image"
               :alt="currentSlide.alt || 'Feature image'"
               sizes="100vw md:720px"
@@ -31,7 +41,16 @@
             />
 
             <!-- Main image with object-contain -->
+            <img
+              v-if="isLocalImage(currentSlide.image)"
+              :src="currentSlide.image"
+              :alt="currentSlide.alt || 'Feature image'"
+              class="relative z-10 w-full h-full object-contain"
+              loading="lazy"
+              decoding="async"
+            />
             <NuxtImg
+              v-else
               :src="currentSlide.image"
               :alt="currentSlide.alt || 'Feature image'"
               sizes="100vw md:720px"
@@ -183,6 +202,10 @@ function resolveCover(cover: ResearchOutreachCarouselItem['cover'], title: strin
   const image = cover.url || cover.formats?.large?.url || '';
   const alt = cover.alternativeText || `${title} cover image`;
   return { image, alt };
+}
+
+function isLocalImage(src: string) {
+  return src.startsWith('/') && !src.startsWith('//');
 }
 
 const isClient = import.meta.client;

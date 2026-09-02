@@ -55,14 +55,11 @@ const aboutParagraphs = computed(() => {
     <!-- Right: Image -->
     <div class="order-1 md:order-2">
       <figure class="w-full rounded overflow-hidden shadow-sm">
-        <NuxtImg
+        <img
           :src="aboutImage"
           alt="LUCCC team working"
           width="720"
           height="480"
-          sizes="100vw md:50vw lg:720px"
-          format="webp"
-          quality="75"
           loading="lazy"
           decoding="async"
           class="w-full h-56 sm:h-72 md:h-[360px] object-cover object-center block"

@@ -11,13 +11,11 @@ const { name, role, quote, avatar } = defineProps<{
   <div
     class="w-full max-w-3xl bg-white border border-gray-200 rounded-md shadow-sm p-6 md:p-8 flex gap-6"
   >
-    <NuxtImg
+    <img
       :src="avatar"
       :alt="name"
       width="64"
       height="64"
-      format="webp"
-      quality="70"
       loading="lazy"
       class="w-16 h-16 rounded-full object-cover"
     />

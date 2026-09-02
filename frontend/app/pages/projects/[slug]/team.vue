@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import type { Project, Author, StrapiMedia, StrapiImageFormat } from '~~/types/content';
+import colocalAboutImage from '~/assets/images/colocal-about.jpeg';
 
 const route = useRoute();
 const slug = computed(() => {
@@ -223,14 +224,11 @@ function selectCountry(index: number) {
             <div
               class="w-full h-56 sm:h-72 md:h-96 rounded bg-gray-200 flex items-center justify-center text-gray-500"
             >
-              <NuxtImg
-                src="~/assets/images/colocal-about.jpeg"
+              <img
+                :src="colocalAboutImage"
                 alt="CoLocal Logo"
                 width="960"
                 height="640"
-                sizes="100vw md:50vw lg:960px"
-                format="webp"
-                quality="75"
                 loading="lazy"
                 class="w-auto object-contain"
               />
