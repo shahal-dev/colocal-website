@@ -17,8 +17,11 @@ const hasChild = computed(() => Boolean(route.params.id));
 
 // Blog posts are News & Events flagged as blog
 const { data: newsData } = await useAsyncData<NewsEvent[]>(
-  'news-events-all',
-  async () => (await $fetch('/api/news-events')) as NewsEvent[]
+  'blog:all',
+  async () =>
+    (await $fetch('/api/news-events', {
+      query: { blog: 'true', summary: 'true' },
+    })) as NewsEvent[]
 );
 
 // Author avatars are only returned by the authors endpoint

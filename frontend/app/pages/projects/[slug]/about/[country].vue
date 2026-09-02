@@ -131,14 +131,14 @@ const { data: authorsRes } = await useAsyncData<{ data: Author[] }>('authors', (
   $fetch('/api/authors')
 );
 const { data: publications } = await useAsyncData<ResearchPublication[]>('publications', () =>
-  $fetch('/api/publications', { query: { projectSlug: slug } })
+  $fetch('/api/publications', { query: { projectSlug: slug, summary: 'true' } })
 );
 const { data: newsEvents } = await useAsyncData<NewsEvent[]>('news-events', () =>
-  $fetch('/api/news-events')
+  $fetch('/api/news-events', { query: { summary: 'true' } })
 );
 const { data: educationTrainings } = await useAsyncData<EducationTraining[]>(
   'education-trainings',
-  () => $fetch('/api/education-trainings')
+  () => $fetch('/api/education-trainings', { query: { summary: 'true' } })
 );
 
 const teamMembers = computed(() => {
@@ -295,7 +295,10 @@ useHead({
             :key="p.id"
             class="flex flex-col border border-gray-200 rounded-xl bg-white p-6 hover:shadow-md transition-shadow h-full"
           >
-            <NuxtLink :to="`/research-publications/${p.documentId || p.id}`" class="flex flex-col h-full">
+            <NuxtLink
+              :to="`/research-publications/${p.documentId || p.id}`"
+              class="flex flex-col h-full"
+            >
               <h3
                 class="text-lg md:text-xl font-semibold text-green-800 mb-3 line-clamp-3 hover:underline"
               >
@@ -402,7 +405,15 @@ useHead({
               </div>
               <div class="p-5 flex flex-col justify-center flex-grow">
                 <div class="text-xs text-green-600 font-medium mb-2">
-                  {{ e.date ? new Date(e.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) : 'News' }}
+                  {{
+                    e.date
+                      ? new Date(e.date).toLocaleDateString('en-GB', {
+                          day: 'numeric',
+                          month: 'long',
+                          year: 'numeric',
+                        })
+                      : 'News'
+                  }}
                 </div>
                 <h3
                   class="text-[17px] font-semibold text-gray-900 mb-2 group-hover:text-green-700 transition-colors line-clamp-2"
@@ -466,7 +477,15 @@ useHead({
               </div>
               <div class="p-5 flex flex-col justify-center flex-grow">
                 <div class="text-xs text-green-600 font-medium mb-2">
-                  {{ e.date ? new Date(e.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) : 'Education' }}
+                  {{
+                    e.date
+                      ? new Date(e.date).toLocaleDateString('en-GB', {
+                          day: 'numeric',
+                          month: 'long',
+                          year: 'numeric',
+                        })
+                      : 'Education'
+                  }}
                   <span
                     v-if="e.type?.type"
                     class="ml-2 px-1.5 py-0.5 bg-green-50 rounded text-green-700"

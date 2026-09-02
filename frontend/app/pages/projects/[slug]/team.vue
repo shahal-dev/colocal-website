@@ -223,9 +223,15 @@ function selectCountry(index: number) {
             <div
               class="w-full h-56 sm:h-72 md:h-96 rounded bg-gray-200 flex items-center justify-center text-gray-500"
             >
-              <img
+              <NuxtImg
                 src="~/assets/images/colocal-about.jpeg"
                 alt="CoLocal Logo"
+                width="960"
+                height="640"
+                sizes="100vw md:50vw lg:960px"
+                format="webp"
+                quality="75"
+                loading="lazy"
                 class="w-auto object-contain"
               />
             </div>
@@ -298,11 +304,7 @@ function selectCountry(index: number) {
                   </div>
                 </template>
                 <p class="m-0 font-medium text-gray-900 text-sm sm:text-base">{{ admin.name }}</p>
-                <p
-                  v-for="t in admin.titles"
-                  :key="t"
-                  class="m-0 text-xs sm:text-sm text-gray-600"
-                >
+                <p v-for="t in admin.titles" :key="t" class="m-0 text-xs sm:text-sm text-gray-600">
                   {{ t }}
                 </p>
               </div>
@@ -336,11 +338,7 @@ function selectCountry(index: number) {
                 <p class="m-0 font-medium text-gray-900 text-sm sm:text-base">
                   {{ fellow.name }}
                 </p>
-                <p
-                  v-for="t in fellow.titles"
-                  :key="t"
-                  class="m-0 text-xs sm:text-sm text-gray-600"
-                >
+                <p v-for="t in fellow.titles" :key="t" class="m-0 text-xs sm:text-sm text-gray-600">
                   {{ t }}
                 </p>
               </div>

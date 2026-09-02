@@ -23,7 +23,9 @@ const hasChild = computed(() => Boolean(route.params.id));
 const { data: publications, status } = await useAsyncData<ResearchPublication[]>(
   () => `publications-${slug}`,
   async () => {
-    const res = await $fetch('/api/publications', { query: { projectSlug: String(slug) } });
+    const res = await $fetch('/api/publications', {
+      query: { projectSlug: String(slug), summary: 'true' },
+    });
     return (res as ResearchPublication[]) || [];
   }
 );

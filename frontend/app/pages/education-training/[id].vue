@@ -8,7 +8,7 @@ const id = String(route.params.id);
 // Fetch current education/training and more for sidebar (no project filter)
 const { data: current } = await useAsyncData(
   () => `education-training:${id}`,
-  () => $fetch('/api/education-trainings', { params: { id } })
+  () => $fetch('/api/education-trainings', { params: { id, pageSize: '1' } })
 );
 const item = computed(() => (current.value && current.value[0]) || null);
 
@@ -107,8 +107,8 @@ const youtubeEmbedUrl = computed(() => {
   }
 });
 
-const { data: moreList } = await useAsyncData('education-trainings:all', () =>
-  $fetch('/api/education-trainings')
+const { data: moreList } = await useAsyncData('education-trainings:related', () =>
+  $fetch('/api/education-trainings', { query: { pageSize: '7', summary: 'true' } })
 );
 const more = computed(() =>
   (moreList.value || []).filter((n) => String(n.documentId || n.id) !== id).slice(0, 6)

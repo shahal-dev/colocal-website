@@ -23,7 +23,10 @@ const basePath = computed(() => `/projects/${slug}`);
 // Fetch current news/event and more activities for sidebar
 const { data: current } = await useAsyncData(
   () => `news-event:${slug}:${id}`,
-  () => $fetch('/api/news-events', { params: { projectSlug: String(slug), id: String(id) } })
+  () =>
+    $fetch('/api/news-events', {
+      params: { projectSlug: String(slug), id: String(id), pageSize: '1' },
+    })
 );
 
 // Fetch all authors with avatars
@@ -142,7 +145,10 @@ const authorLine = computed(() => {
 
 const { data: moreList } = await useAsyncData(
   () => `news-events-more:${slug}`,
-  () => $fetch('/api/news-events', { params: { projectSlug: String(slug) } })
+  () =>
+    $fetch('/api/news-events', {
+      params: { projectSlug: String(slug), blog: 'false', pageSize: '7', summary: 'true' },
+    })
 );
 const more = computed(() =>
   (moreList.value || []).filter((n) => n.documentId !== id && String(n.id) !== id).slice(0, 6)

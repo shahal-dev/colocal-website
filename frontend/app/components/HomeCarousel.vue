@@ -38,10 +38,15 @@
 
         <!-- Image -->
         <div class="md:w-[720px] w-full h-48 md:h-full flex items-center justify-center">
-          <img
+          <NuxtImg
             v-if="currentItem.image"
             :src="currentItem.image"
             :alt="currentItem.title"
+            width="720"
+            height="600"
+            sizes="100vw md:720px"
+            format="webp"
+            quality="75"
             class="w-full h-full object-cover"
           />
         </div>

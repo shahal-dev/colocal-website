@@ -13,8 +13,11 @@ const hasChild = computed(() => Boolean(route.params.id));
 
 // Fetch all News & Events
 const { data: newsData } = await useAsyncData<NewsEvent[]>(
-  'news-events-all',
-  async () => (await $fetch('/api/news-events')) as NewsEvent[]
+  'outreach:all',
+  async () =>
+    (await $fetch('/api/news-events', {
+      query: { blog: 'false', summary: 'true' },
+    })) as NewsEvent[]
 );
 const items = computed(() => newsData.value ?? []);
 

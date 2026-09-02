@@ -250,6 +250,8 @@ export default defineEventHandler(async (event) => {
     projectSlug?: string;
     projectId?: string;
     id?: string;
+    pageSize?: string;
+    summary?: string;
   };
   const baseUrl =
     (config?.strapi?.url as string) ||
@@ -257,11 +259,30 @@ export default defineEventHandler(async (event) => {
     'http://localhost:1337';
   const token = (config?.strapi?.token as string) || '';
 
+  const requestedPageSize = Number(q.pageSize);
+  const pageSize =
+    Number.isInteger(requestedPageSize) && requestedPageSize > 0
+      ? Math.min(requestedPageSize, 500)
+      : 500;
+
   const query: Record<string, string> = {
     populate: '*',
-    'pagination[pageSize]': '500',
+    'pagination[pageSize]': String(pageSize),
     sort: 'date:desc',
   };
+  if (q.summary === 'true') {
+    delete query.populate;
+    for (const relation of [
+      'image_cover',
+      'project',
+      'publication_type',
+      'tags',
+      'theme',
+      'country',
+    ]) {
+      query[`populate[${relation}]`] = 'true';
+    }
+  }
 
   const slug = (q.projectSlug || q.project) as string | undefined;
   const id = q.projectId ? Number(q.projectId) : undefined;
@@ -301,6 +322,14 @@ export default defineEventHandler(async (event) => {
         const dataFlat = res as StrapiListResponseFlat<FlatPublication>;
         items = mapFlatPublications(baseUrl, dataFlat.data) ?? [];
       }
+    }
+
+    if (q.summary === 'true') {
+      return items.map((item) => ({
+        ...item,
+        file: null,
+        images: null,
+      }));
     }
 
     return items;

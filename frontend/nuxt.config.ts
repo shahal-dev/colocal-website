@@ -43,7 +43,11 @@ export default defineNuxtConfig({
         { property: 'og:type', content: 'website' },
         { property: 'og:locale', content: 'en_US' },
         { property: 'og:image', content: 'https://www.luccc.org/og-image.jpg' },
-        { property: 'og:image:alt', content: 'COLOCAL — co-creating climate adaptation knowledge with Global South universities' },
+        {
+          property: 'og:image:alt',
+          content:
+            'COLOCAL — co-creating climate adaptation knowledge with Global South universities',
+        },
         { property: 'og:image:width', content: '1280' },
         { property: 'og:image:height', content: '853' },
 
@@ -58,7 +62,11 @@ export default defineNuxtConfig({
             'Locally led adaptation (LLA) to climate change with Global South universities in Bangladesh, Mozambique, Nepal, Uganda and Norway. A NORHED-II programme advancing the LUCCC consortium.',
         },
         { name: 'twitter:image', content: 'https://www.luccc.org/og-image.jpg' },
-        { name: 'twitter:image:alt', content: 'COLOCAL — co-creating climate adaptation knowledge with Global South universities' },
+        {
+          name: 'twitter:image:alt',
+          content:
+            'COLOCAL — co-creating climate adaptation knowledge with Global South universities',
+        },
       ],
       link: [
         { rel: 'icon', type: 'image/png', href: '/favicon.png' },
@@ -74,7 +82,10 @@ export default defineNuxtConfig({
                 '@type': 'Organization',
                 '@id': 'https://www.luccc.org/#organization',
                 name: 'LUCCC',
-                alternateName: ['COLOCAL', 'Least Developed Countries Universities Consortium on Climate Change'],
+                alternateName: [
+                  'COLOCAL',
+                  'Least Developed Countries Universities Consortium on Climate Change',
+                ],
                 url: 'https://www.luccc.org',
                 logo: 'https://www.luccc.org/favicon.png',
                 description:
@@ -135,135 +146,14 @@ export default defineNuxtConfig({
 
   nitro: {
     preset: 'vercel',
-    prerender: {
-      crawlLinks: true,
-      routes: ['/', '/sitemap.xml'],
-      failOnError: false,
-    },
   },
 
-  // Route rules for static generation
   routeRules: {
-    '/': { prerender: true },
-    '/about/**': { prerender: true },
-    '/projects': { prerender: true },
-    '/projects/**': { prerender: true },
-    '/education-training': { prerender: true },
-    '/education-training/**': { prerender: true },
-    '/research-publications': { prerender: true },
-    '/research-publications/**': { prerender: true },
-    '/outreach': { prerender: true },
-    '/outreach/**': { prerender: true },
-    '/blog': { prerender: true },
-    '/blog/**': { prerender: true },
-
     // Legacy URLs kept alive for inbound links and search engines
     '/news-events': { redirect: { to: '/outreach', statusCode: 301 } },
     '/news-events/**': { redirect: { to: '/outreach/**', statusCode: 301 } },
     '/resource-hub': { redirect: { to: '/research-publications', statusCode: 301 } },
     '/resource-hub/**': { redirect: { to: '/research-publications/**', statusCode: 301 } },
-  },
-
-  // Hooks to generate dynamic routes
-  hooks: {
-    async 'nitro:config'(nitroConfig) {
-      if (nitroConfig.dev) return;
-
-      const strapiUrl = process.env.NUXT_STRAPI_URL || 'http://localhost:1337';
-      const token = process.env.NUXT_STRAPI_TOKEN || '';
-      const headers: Record<string, string> = {};
-      if (token) headers.Authorization = `Bearer ${token}`;
-
-      try {
-        // Fetch all projects
-        const projectsRes = await fetch(`${strapiUrl}/api/projects?pagination[limit]=100`, {
-          headers,
-        });
-        const projectsData = await projectsRes.json();
-        const projects = projectsData.data || [];
-
-        // Fetch all publications
-        const pubsRes = await fetch(
-          `${strapiUrl}/api/research-publications?pagination[limit]=1000`,
-          { headers }
-        );
-        const pubsData = await pubsRes.json();
-        const publications = pubsData.data || [];
-
-        // Fetch all news/events
-        const newsRes = await fetch(`${strapiUrl}/api/news-events?pagination[limit]=1000`, {
-          headers,
-        });
-        const newsData = await newsRes.json();
-        const newsEvents = newsData.data || [];
-
-        // Fetch all education/training
-        const eduRes = await fetch(`${strapiUrl}/api/education-trainings?pagination[limit]=1000`, {
-          headers,
-        });
-        const eduData = await eduRes.json();
-        const educationTrainings = eduData.data || [];
-
-        const routes: string[] = [];
-
-        // Generate project routes
-        for (const project of projects) {
-          const slug = project.attributes?.slug || project.slug;
-          if (slug) {
-            routes.push(`/projects/${slug}`);
-            routes.push(`/projects/${slug}/research`);
-            routes.push(`/projects/${slug}/outreach`);
-            routes.push(`/projects/${slug}/education`);
-            routes.push(`/projects/${slug}/team`);
-            routes.push(`/projects/${slug}/blog`);
-          }
-        }
-
-        // Generate publication routes (nested under projects)
-        for (const pub of publications) {
-          const id = pub.documentId || pub.id;
-          const projectRel = pub.attributes?.project?.data;
-          const slug = projectRel?.attributes?.slug || projectRel?.slug;
-          if (id && slug) {
-            routes.push(`/projects/${slug}/research/${id}`);
-          }
-        }
-
-        // Generate news/event routes (nested under projects)
-        for (const news of newsEvents) {
-          const id = news.documentId || news.id;
-          const projectRel = news.attributes?.project?.data;
-          const slug = projectRel?.attributes?.slug || projectRel?.slug;
-          if (id && slug) {
-            routes.push(`/projects/${slug}/outreach/${id}`);
-          }
-        }
-
-        // Generate education/training routes (nested under projects)
-        for (const edu of educationTrainings) {
-          const id = edu.documentId || edu.id;
-          const projectRel = edu.attributes?.project?.data;
-          const slug = projectRel?.attributes?.slug || projectRel?.slug;
-          if (id && slug) {
-            routes.push(`/projects/${slug}/education/${id}`);
-          }
-        }
-
-        // Generate top-level routes (if any exist)
-        routes.push('/education-training');
-        routes.push('/research-publications');
-        routes.push('/outreach');
-        routes.push('/blog');
-
-        nitroConfig.prerender = nitroConfig.prerender || {};
-        nitroConfig.prerender.routes = nitroConfig.prerender.routes || [];
-        nitroConfig.prerender.routes.push(...routes);
-
-        console.log(`✅ Pre-rendering ${routes.length} dynamic routes`);
-      } catch (error) {
-        console.warn('⚠️  Failed to fetch dynamic routes for prerendering:', error);
-      }
-    },
   },
 
   fonts: {

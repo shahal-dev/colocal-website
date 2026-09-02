@@ -14,7 +14,8 @@ const hasChild = computed(() => Boolean(route.params.id));
 // Fetch all publications across the consortium
 const { data: publications, status } = await useAsyncData<ResearchPublication[]>(
   'all-publications',
-  async () => (await $fetch('/api/publications')) as ResearchPublication[]
+  async () =>
+    (await $fetch('/api/publications', { query: { summary: 'true' } })) as ResearchPublication[]
 );
 const allPublications = computed(() => publications.value ?? []);
 
@@ -48,9 +49,7 @@ const filtered = computed(() => {
       p.title.toLowerCase().includes(query) ||
       (p.authors_text ? p.authors_text.toLowerCase().includes(query) : false) ||
       (p.abstract ? p.abstract.toLowerCase().includes(query) : false) ||
-      (p.publication_type?.type
-        ? p.publication_type.type.toLowerCase().includes(query)
-        : false)
+      (p.publication_type?.type ? p.publication_type.type.toLowerCase().includes(query) : false)
     );
   });
 });

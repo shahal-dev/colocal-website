@@ -4,7 +4,7 @@ import type { NewsEvent, Project, ResearchPublication } from '../../types/conten
 
 useHead({
   title: 'LUCCC - Least Developed Countries Universities Consortium on Climate Change',
-    meta: [
+  meta: [
     {
       name: 'description',
       content:
@@ -81,21 +81,26 @@ if (error.value) {
 
 // Fetch projects from our Nuxt server endpoint
 const { data: projects } = await useAsyncData<Project[]>(
-  'projects',
-  async () => await $fetch('/api/projects')
+  'home:projects',
+  async () => await $fetch('/api/projects', { query: { summary: 'true' } })
 );
 
 // Fetch all News & Events
 const { data: newsData } = await useAsyncData<NewsEvent[]>(
-  'news-events-all',
-  async () => (await $fetch('/api/news-events')) as NewsEvent[]
+  'home:news:latest',
+  async () =>
+    (await $fetch('/api/news-events', {
+      query: { blog: 'false', pageSize: '8', summary: 'true' },
+    })) as NewsEvent[]
 );
 
 // Fetch all Publications
 const { data: publications } = await useAsyncData<ResearchPublication[]>(
-  'publications-all',
+  'home:publications:latest',
   async () => {
-    const res = await $fetch('/api/publications');
+    const res = await $fetch('/api/publications', {
+      query: { pageSize: '8', summary: 'true' },
+    });
     return (res as ResearchPublication[]) || [];
   }
 );
@@ -470,7 +475,15 @@ function goToNewsPage(page: number) {
               </div>
               <div class="p-5 flex flex-col justify-center flex-grow">
                 <div class="text-xs text-green-600 font-medium mb-2">
-                  {{ e.date ? new Date(e.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) : 'News' }}
+                  {{
+                    e.date
+                      ? new Date(e.date).toLocaleDateString('en-GB', {
+                          day: 'numeric',
+                          month: 'long',
+                          year: 'numeric',
+                        })
+                      : 'News'
+                  }}
                 </div>
                 <h3
                   class="text-[17px] font-semibold text-gray-900 mb-2 group-hover:text-green-700 transition-colors line-clamp-2"

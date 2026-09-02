@@ -461,7 +461,7 @@ function mapProject(
 
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig(event);
-  const q = getQuery(event) as { slug?: string };
+  const q = getQuery(event) as { slug?: string; summary?: string };
   const baseUrl =
     (config?.strapi?.url as string) ||
     (config?.public?.strapiUrl as string) ||
@@ -470,7 +470,7 @@ export default defineEventHandler(async (event) => {
 
   // Build Strapi query params
   const query: Record<string, string> = {
-    populate: '*',
+    populate: q.summary === 'true' ? 'cover' : '*',
   };
   if (q.slug) {
     query['filters[slug][$eq]'] = String(q.slug);
@@ -505,6 +505,18 @@ export default defineEventHandler(async (event) => {
     // If requesting a single project by slug, return the first match or null
     if (q.slug) {
       return items[0] ?? null;
+    }
+    if (q.summary === 'true') {
+      return items.map((item) => ({
+        ...item,
+        longDescription: '',
+        about: '',
+        objectives: null,
+        images: null,
+        research_publications: null,
+        news_events: null,
+        education_trainings: null,
+      }));
     }
     return items;
   } catch (err: unknown) {

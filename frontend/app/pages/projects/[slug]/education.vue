@@ -22,7 +22,10 @@ const hasChild = computed(() => Boolean(route.params.id));
 // Fetch education/trainings for this project
 const { data: eduData } = await useAsyncData(
   () => `education-trainings:${slug}`,
-  () => $fetch('/api/education-trainings', { params: { projectSlug: String(slug) } })
+  () =>
+    $fetch('/api/education-trainings', {
+      params: { projectSlug: String(slug), summary: 'true' },
+    })
 );
 const items = computed(() => (eduData.value ?? []).filter((e) => !e.lla));
 

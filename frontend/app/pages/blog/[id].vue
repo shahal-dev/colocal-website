@@ -8,7 +8,7 @@ const id = String(route.params.id);
 // Fetch current news/event and more for sidebar (no project filter)
 const { data: current } = await useAsyncData(
   () => `blog-post:${id}`,
-  () => $fetch('/api/news-events', { params: { id } })
+  () => $fetch('/api/news-events', { params: { id, pageSize: '1' } })
 );
 const item = computed(() => (current.value && current.value[0]) || null);
 
@@ -22,11 +22,13 @@ usePageSeo(() => {
   };
 });
 
-const { data: moreList } = await useAsyncData('blog-posts:all', () => $fetch('/api/news-events'));
+const { data: moreList } = await useAsyncData('blog-posts:related', () =>
+  $fetch('/api/news-events', {
+    query: { blog: 'true', pageSize: '7', summary: 'true' },
+  })
+);
 const more = computed(() =>
-  (moreList.value || [])
-    .filter((n) => n.blog && String(n.documentId || n.id) !== id)
-    .slice(0, 6)
+  (moreList.value || []).filter((n) => n.blog && String(n.documentId || n.id) !== id).slice(0, 6)
 );
 
 const carouselImages = computed(() => {

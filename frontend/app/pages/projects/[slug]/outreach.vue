@@ -20,7 +20,10 @@ const hasChild = computed(() => Boolean(route.params.id));
 // Fetch News & Events for this project
 const { data: newsData } = await useAsyncData(
   () => `news-events:${slug}`,
-  () => $fetch('/api/news-events', { params: { projectSlug: String(slug) } })
+  () =>
+    $fetch('/api/news-events', {
+      params: { projectSlug: String(slug), blog: 'false', summary: 'true' },
+    })
 );
 const newsEvents = computed(() => (newsData.value ?? []).filter((n) => !n.blog));
 
@@ -110,7 +113,7 @@ function goTo(page: number) {
                   :src="e.cover.url"
                   :alt="e.title"
                   class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                >
+                />
                 <div
                   v-else
                   class="absolute inset-0 w-full h-full flex items-center justify-center text-gray-400"

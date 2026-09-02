@@ -24,7 +24,9 @@ const basePath = computed(() => `/projects/${slug}`);
 const { data: current } = await useAsyncData(
   () => `education-training:${slug}:${id}`,
   () =>
-    $fetch('/api/education-trainings', { params: { projectSlug: String(slug), id: String(id) } })
+    $fetch('/api/education-trainings', {
+      params: { projectSlug: String(slug), id: String(id), pageSize: '1' },
+    })
 );
 const item = computed(() => (current.value && current.value[0]) || null);
 
@@ -142,7 +144,10 @@ const youtubeEmbedUrl = computed(() => {
 
 const { data: moreList } = await useAsyncData(
   () => `education-trainings-more:${slug}`,
-  () => $fetch('/api/education-trainings', { params: { projectSlug: String(slug) } })
+  () =>
+    $fetch('/api/education-trainings', {
+      params: { projectSlug: String(slug), pageSize: '7', summary: 'true' },
+    })
 );
 const more = computed(() =>
   (moreList.value || []).filter((n) => n.documentId !== id && String(n.id) !== id).slice(0, 6)

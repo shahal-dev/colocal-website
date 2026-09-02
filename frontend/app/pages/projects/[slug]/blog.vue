@@ -42,7 +42,10 @@ const basePath = computed(() => `/projects/${slug}`);
 // Fetch LLA news & events for this project
 const { data: newsData } = await useAsyncData(
   () => `lla-news-events:${slug}`,
-  () => $fetch('/api/news-events', { params: { projectSlug: String(slug) } })
+  () =>
+    $fetch('/api/news-events', {
+      params: { projectSlug: String(slug), blog: 'true', summary: 'true' },
+    })
 );
 
 // Fetch all authors with avatars

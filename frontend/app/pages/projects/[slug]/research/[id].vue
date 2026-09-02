@@ -28,7 +28,10 @@ const basePath = computed(() => `/projects/${slug}`);
 // Fetch current publication and more publications for sidebar
 const { data: current, status } = await useAsyncData(
   () => `publication:${slug}:${id}`,
-  () => $fetch('/api/publications', { params: { projectSlug: String(slug), id: String(id) } }),
+  () =>
+    $fetch('/api/publications', {
+      params: { projectSlug: String(slug), id: String(id), pageSize: '1' },
+    }),
   {
     watch: [() => route.params.id],
   }
@@ -59,7 +62,9 @@ usePageSeo(() => {
 // This publication also lives at /research-publications/{id}; that's the canonical
 // copy, so point search engines there instead of indexing this one too.
 useHead(() => ({
-  link: item.value ? [{ rel: 'canonical', href: `https://www.luccc.org/research-publications/${id}` }] : [],
+  link: item.value
+    ? [{ rel: 'canonical', href: `https://www.luccc.org/research-publications/${id}` }]
+    : [],
 }));
 const images = computed(() => {
   const arr = [];
@@ -81,7 +86,10 @@ const formattedAbstract = computed(() => {
 
 const { data: moreList, status: moreStatus } = await useAsyncData(
   () => `publications-more:${slug}`,
-  () => $fetch('/api/publications', { params: { projectSlug: String(slug) } })
+  () =>
+    $fetch('/api/publications', {
+      params: { projectSlug: String(slug), pageSize: '7', summary: 'true' },
+    })
 );
 const more = computed(() =>
   (moreList.value || []).filter((n) => n.documentId !== id && String(n.id) !== id).slice(0, 6)

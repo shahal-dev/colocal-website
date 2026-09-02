@@ -91,7 +91,9 @@ const hasChild = computed(() => Boolean(route.params.id));
 const { data: publications } = await useAsyncData<ResearchPublication[]>(
   () => `publications-${slug}`,
   async () => {
-    const res = await $fetch('/api/publications', { query: { projectSlug: String(slug) } });
+    const res = await $fetch('/api/publications', {
+      query: { projectSlug: String(slug), summary: 'true' },
+    });
     return (res as ResearchPublication[]) || [];
   }
 );
@@ -230,7 +232,9 @@ const fallbackNews: NewsCard[] = [
 const { data: newsEvents } = await useAsyncData<NewsEvent[] | null>(
   () => `news-events-${slug}`,
   async () => {
-    const res = await $fetch('/api/news-events', { query: { projectSlug: String(slug) } });
+    const res = await $fetch('/api/news-events', {
+      query: { projectSlug: String(slug), summary: 'true' },
+    });
     return (res as NewsEvent[]) || [];
   }
 );
@@ -238,7 +242,9 @@ const { data: newsEvents } = await useAsyncData<NewsEvent[] | null>(
 const { data: educationTraining } = await useAsyncData<EducationTraining[] | null>(
   () => `education-training-${slug}`,
   async () => {
-    const res = await $fetch('/api/education-trainings', { query: { projectSlug: String(slug) } });
+    const res = await $fetch('/api/education-trainings', {
+      query: { projectSlug: String(slug), summary: 'true' },
+    });
     return (res as EducationTraining[]) || [];
   }
 );

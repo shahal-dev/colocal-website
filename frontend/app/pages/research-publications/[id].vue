@@ -5,21 +5,27 @@ import { useRoute } from '#app';
 const route = useRoute();
 const id = String(route.params.id);
 
-// Try both: publications and education-trainings
-const { data: pubData } = await useAsyncData(
-  () => `research-publications:publication:${id}`,
-  () => $fetch('/api/publications', { params: { id } })
-);
-const publication = computed(() => (pubData.value && pubData.value[0]) || null);
+// Publications are the normal case. Keep the legacy education fallback, but
+// only request it when the publication lookup is empty.
+const { data: resolved } = await useAsyncData(
+  () => `research-publications:item:${id}`,
+  async () => {
+    const publications = await $fetch('/api/publications', {
+      params: { id, pageSize: '1' },
+    });
+    if (publications?.[0]) return { kind: 'publication', item: publications[0] };
 
-const { data: eduData } = await useAsyncData(
-  () => `research-publications:education:${id}`,
-  () => $fetch('/api/education-trainings', { params: { id } })
+    const educations = await $fetch('/api/education-trainings', {
+      params: { id, pageSize: '1' },
+    });
+    if (educations?.[0]) return { kind: 'education', item: educations[0] };
+    return { kind: null, item: null };
+  }
 );
-const education = computed(() => (eduData.value && eduData.value[0]) || null);
 
-// Fallback resolution: if neither returned, item is null
-const item = computed(() => publication.value || education.value || null);
+const kind = computed(() => resolved.value?.kind ?? null);
+const item = computed(() => resolved.value?.item ?? null);
+const education = computed(() => (kind.value === 'education' ? item.value : null));
 
 const formattedBody = computed(() => {
   if (typeof item.value?.body !== 'string') return item.value?.body || '';
@@ -58,23 +64,32 @@ const images = computed(() => {
   return arr;
 });
 
-const kind = computed(() =>
-  publication.value ? 'publication' : education.value ? 'education' : null
-);
-
-// Side lists for "More ..."
-const { data: allPubs } = await useAsyncData('research-publications:all-pubs', () =>
-  $fetch('/api/publications')
-);
-const { data: allEdus } = await useAsyncData('research-publications:all-edus', () =>
-  $fetch('/api/education-trainings')
+// Fetch only the relevant related-content list, and only enough records to
+// fill the six-item sidebar after excluding the current entry.
+const { data: related } = await useAsyncData(
+  () => `research-publications:related:${kind.value ?? 'none'}`,
+  async () => {
+    if (kind.value === 'education') {
+      const items = await $fetch('/api/education-trainings', {
+        query: { pageSize: '7', summary: 'true' },
+      });
+      return { publications: [], educations: items };
+    }
+    if (kind.value === 'publication') {
+      const items = await $fetch('/api/publications', {
+        query: { pageSize: '7', summary: 'true' },
+      });
+      return { publications: items, educations: [] };
+    }
+    return { publications: [], educations: [] };
+  }
 );
 
 const morePublications = computed(() =>
-  (allPubs.value || []).filter((p) => String(p.documentId || p.id) !== id).slice(0, 6)
+  (related.value?.publications || []).filter((p) => String(p.documentId || p.id) !== id).slice(0, 6)
 );
 const moreEducations = computed(() =>
-  (allEdus.value || []).filter((e) => String(e.documentId || e.id) !== id).slice(0, 6)
+  (related.value?.educations || []).filter((e) => String(e.documentId || e.id) !== id).slice(0, 6)
 );
 
 function formatMonthYear(iso) {
@@ -310,7 +325,13 @@ function onTouchEnd() {
                     stroke-width="2"
                   />
                 </svg>
-                <span>{{ new Date(item.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) }}</span>
+                <span>{{
+                  new Date(item.date).toLocaleDateString('en-GB', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric',
+                  })
+                }}</span>
                 <span v-if="item.type?.type">• {{ item.type.type }}</span>
               </div>
               <MDC

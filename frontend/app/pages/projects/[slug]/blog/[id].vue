@@ -14,7 +14,10 @@ const basePath = computed(() => `/projects/${slug}`);
 // Fetch current blog post
 const { data: current } = await useAsyncData(
   () => `news-event:${slug}:${id}`,
-  () => $fetch('/api/news-events', { params: { projectSlug: String(slug), id: String(id) } })
+  () =>
+    $fetch('/api/news-events', {
+      params: { projectSlug: String(slug), id: String(id), pageSize: '1' },
+    })
 );
 
 // Fetch all authors with avatars
@@ -141,7 +144,10 @@ const authorLine = computed(() => {
 // Sidebar: other blog posts only
 const { data: moreList } = await useAsyncData(
   () => `blog-posts-more:${slug}`,
-  () => $fetch('/api/news-events', { params: { projectSlug: String(slug) } })
+  () =>
+    $fetch('/api/news-events', {
+      params: { projectSlug: String(slug), blog: 'true', pageSize: '7', summary: 'true' },
+    })
 );
 const more = computed(() =>
   (moreList.value || [])

@@ -9,7 +9,10 @@ useHead({
 // Fetch all Education & Training items
 const { data: eduData } = await useAsyncData<EducationTraining[]>(
   'education-trainings-all',
-  async () => (await $fetch('/api/education-trainings')) as EducationTraining[]
+  async () =>
+    (await $fetch('/api/education-trainings', {
+      query: { summary: 'true' },
+    })) as EducationTraining[]
 );
 const route = useRoute();
 const items = computed(() => eduData.value ?? []);

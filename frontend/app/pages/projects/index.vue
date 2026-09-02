@@ -18,8 +18,8 @@ const search = ref('');
 
 // Fetch projects from our Nuxt server endpoint
 const { data: projects } = await useAsyncData<Project[]>(
-  'projects',
-  async () => await $fetch('/api/projects')
+  'projects:summary',
+  async () => await $fetch('/api/projects', { query: { summary: 'true' } })
 );
 
 const filtered = computed(() => {

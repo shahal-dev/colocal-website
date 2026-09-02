@@ -43,9 +43,14 @@ const objectiveItems = computed(() => {
 
       <div class="order-1 md:order-2">
         <!-- responsive image: uses height breakpoints and lazy loading -->
-        <img
+        <NuxtImg
           :src="missionImage"
           alt="Mission team"
+          width="720"
+          height="600"
+          sizes="100vw md:50vw lg:720px"
+          format="webp"
+          quality="75"
           loading="lazy"
           class="w-full h-[180px] sm:h-[200px] md:h-[260px] lg:h-[320px] object-cover rounded shadow-sm"
         />
