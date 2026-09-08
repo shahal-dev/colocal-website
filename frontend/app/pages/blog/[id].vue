@@ -1,6 +1,7 @@
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue';
 import { useRoute } from '#app';
+import type { NewsEvent } from '~~/types/content';
 
 const route = useRoute();
 const id = String(route.params.id);
@@ -8,9 +9,36 @@ const id = String(route.params.id);
 // Fetch current news/event and more for sidebar (no project filter)
 const { data: current } = await useAsyncData(
   () => `blog-post:${id}`,
-  () => $fetch('/api/news-events', { params: { id, pageSize: '1' } })
+  () => $fetch<NewsEvent[]>('/api/news-events', { params: { id, pageSize: '1' } })
 );
-const item = computed(() => (current.value && current.value[0]) || null);
+
+// The summary attached to a post does not include author avatars. Match the
+// COLOCAL blog view by enriching each author from the authors endpoint.
+const { data: authorsData } = await useAsyncData('all-authors', () =>
+  $fetch('/api/authors', { query: { pageSize: '200' } })
+);
+
+const item = computed(() => {
+  const currentItem = current.value?.[0] || null;
+  if (!currentItem) return null;
+
+  const authorsMap = new Map();
+  if (authorsData.value?.data) {
+    (authorsData.value.data as Record<string, unknown>[]).forEach((author) => {
+      authorsMap.set(author.id, author);
+    });
+  }
+
+  if (Array.isArray(currentItem.authors)) {
+    const enrichedAuthors = currentItem.authors.map((author) => {
+      const fullAuthor = authorsMap.get(author.id);
+      return fullAuthor?.avatar ? { ...author, avatar: fullAuthor.avatar } : author;
+    });
+    return { ...currentItem, authors: enrichedAuthors };
+  }
+
+  return currentItem;
+});
 
 usePageSeo(() => {
   const i = item.value;
@@ -32,7 +60,7 @@ const more = computed(() =>
 );
 
 const carouselImages = computed(() => {
-  const extras = [];
+  const extras: string[] = [];
   if (Array.isArray(item.value?.images)) {
     item.value.images.forEach((entry) => {
       if (!entry) return;
@@ -47,8 +75,8 @@ const carouselImages = computed(() => {
     return [];
   }
 
-  const list = [];
-  const seen = new Set();
+  const list: string[] = [];
+  const seen = new Set<string>();
   const cover = item.value?.cover?.url?.trim?.();
   if (cover) {
     seen.add(cover);
@@ -74,7 +102,7 @@ const authorLine = computed(() => {
   if (Array.isArray(authors)) {
     const names = authors
       .map((entry) => (typeof entry === 'string' ? entry : entry?.name))
-      .filter((name) => typeof name === 'string' && name.trim().length > 0)
+      .filter((name): name is string => typeof name === 'string' && name.trim().length > 0)
       .map((name) => name.trim());
     if (names.length) return names.join(' • ');
   }
@@ -92,7 +120,7 @@ const authorLine = computed(() => {
   return '';
 });
 
-function formatDate(iso) {
+function formatDate(iso: string) {
   try {
     return new Date(iso).toLocaleDateString('en-GB', {
       day: 'numeric',
@@ -122,6 +150,19 @@ const youtubeEmbedUrl = computed(() => {
     return null;
   }
 });
+
+function formatAuthorLine(authors: unknown[]) {
+  if (Array.isArray(authors)) {
+    const names = authors
+      .map((entry) =>
+        typeof entry === 'string' ? entry : (entry as Record<string, unknown>)?.name
+      )
+      .filter((name): name is string => typeof name === 'string' && name.trim().length > 0)
+      .map((name) => name.trim());
+    if (names.length) return names.join(' • ');
+  }
+  return '';
+}
 </script>
 
 <template>
@@ -136,20 +177,69 @@ const youtubeEmbedUrl = computed(() => {
 
     <section class="w-full max-w-6xl mx-auto px-4 md:px-0 py-8">
       <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
-        <div class="md:col-span-8 mr-8 md:mr-12">
+        <div class="md:col-span-8">
           <div v-if="item">
             <div v-if="carouselImages.length" class="mb-5">
               <GalleryCarousel :images="carouselImages" :title="item.title" />
             </div>
-            <div v-else-if="item.cover?.url" class="w-full rounded-lg overflow-hidden mb-5">
-              <img :src="item.cover?.url" :alt="item.title" class="w-full h-full object-cover" />
+            <div
+              v-else-if="item.cover?.url"
+              class="w-full h-[24rem] md:h-[30rem] rounded-lg overflow-hidden mb-5"
+            >
+              <img :src="item.cover.url" :alt="item.title" class="w-full h-full object-cover" />
             </div>
             <h1 class="text-2xl md:text-3xl font-display font-semibold mb-2">{{ item.title }}</h1>
             <div v-if="secondaryTitle" class="text-lg text-gray-700 font-display mb-2">
               {{ secondaryTitle }}
             </div>
-            <div v-if="authorLine" class="text-sm text-gray-600 flex items-center gap-2 mb-2">
-              {{ authorLine }}
+
+            <div
+              v-if="item.authors && item.authors.length > 0"
+              class="flex items-center gap-3 mb-3 py-3 border-y border-gray-200"
+            >
+              <div class="flex -space-x-3">
+                <div
+                  v-for="(author, idx) in item.authors.slice(0, 3)"
+                  :key="idx"
+                  class="w-12 h-12 rounded-full bg-green-100 text-green-700 font-semibold border-2 border-white flex items-center justify-center overflow-hidden"
+                  :title="author.name"
+                >
+                  <img
+                    v-if="author.avatar?.url"
+                    :src="author.avatar.url"
+                    :alt="author.name"
+                    class="w-full h-full object-cover"
+                  />
+                  <template v-else>
+                    {{ author.name ? author.name.charAt(0).toUpperCase() : 'A' }}
+                  </template>
+                </div>
+              </div>
+              <div class="flex flex-col">
+                <div class="text-sm text-gray-700">
+                  <span v-if="item.authors.length === 1" class="font-semibold text-base">{{
+                    item.authors[0]?.name
+                  }}</span>
+                  <span v-else-if="item.authors.length === 2" class="font-medium"
+                    >{{ item.authors[0]?.name }} & {{ item.authors[1]?.name }}</span
+                  >
+                  <span v-else class="font-medium"
+                    >{{ item.authors[0]?.name }} +{{ item.authors.length - 1 }} more</span
+                  >
+                </div>
+              </div>
+            </div>
+
+            <div
+              v-else-if="authorLine"
+              class="text-sm text-gray-600 flex items-center gap-2 mb-3 py-3 border-y border-gray-200"
+            >
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M12 12c2.761 0 5-2.686 5-6s-2.239-6-5-6-5 2.686-5 6 2.239 6 5 6zm0 2c-3.866 0-7 3.134-7 7 0 .552.448 1 1 1h12c.552 0 1-.448 1-1 0-3.866-3.134-7-7-7z"
+                />
+              </svg>
+              <span class="font-medium">{{ authorLine }}</span>
             </div>
             <div class="text-sm text-gray-600 flex items-center gap-2 mb-4">
               <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -162,7 +252,7 @@ const youtubeEmbedUrl = computed(() => {
             </div>
             <MDC
               :value="formattedBody"
-              class="mdc-body prose max-w-none text-gray-800 space-y-6 text-justify"
+              class="mdc-body prose text-justify max-w-none text-gray-800 space-y-6"
             />
             <div v-if="youtubeEmbedUrl" class="mt-6 aspect-video">
               <iframe
@@ -181,7 +271,7 @@ const youtubeEmbedUrl = computed(() => {
             <h3
               class="text-xl font-display font-semibold text-gray-900 mb-6 pb-4 border-b border-gray-200"
             >
-              More Blog Posts
+              More Posts
             </h3>
             <div class="space-y-6">
               <NuxtLink
@@ -223,7 +313,9 @@ const youtubeEmbedUrl = computed(() => {
                   >
                     {{ m.title }}
                   </h4>
-                  <p v-if="m.date" class="text-xs text-gray-500">{{ formatDate(m.date) }}</p>
+                  <p v-if="m.authors" class="text-xs text-gray-500">
+                    {{ formatAuthorLine(m.authors) }}
+                  </p>
                 </div>
               </NuxtLink>
             </div>
@@ -232,7 +324,7 @@ const youtubeEmbedUrl = computed(() => {
                 to="/blog"
                 class="text-sm font-semibold text-green-700 hover:text-green-800 flex items-center gap-1.5 group w-fit"
               >
-                View all blog posts
+                View all posts
                 <svg
                   class="w-4 h-4 group-hover:translate-x-1 transition-transform"
                   fill="none"
@@ -266,13 +358,5 @@ const youtubeEmbedUrl = computed(() => {
 :deep(.mdc-body a:hover),
 :deep(.mdc-body a:focus-visible) {
   text-decoration: underline;
-}
-
-.hide-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-.hide-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
 }
 </style>
