@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watchEffect } from 'vue';
+import { ref, computed } from 'vue';
 import { useRoute } from '#app';
 import type {
   EducationTraining,
@@ -16,14 +16,8 @@ const researchPlaceholder = '/research-placeholder.jpg';
 const route = useRoute();
 const slug = route.params.slug;
 
-// Fetch the specific project by slug from our Nuxt server endpoint
-const { data: project, error: _projectError } = await useAsyncData<Project | null>(
-  () => `project-${slug}`,
-  async () => {
-    const res = await $fetch('/api/projects', { query: { slug: String(slug) } });
-    return res as Project | null;
-  }
-);
+// The parent route's middleware loads this before the page and navbar render.
+const project = useState<Project | null>(`project:${slug}`, () => null);
 
 const metaDesc = computed(
   () =>
@@ -74,13 +68,6 @@ useHead(() => {
         ]
       : [],
   };
-});
-
-// Share project in state so sibling pages under this slug can access it easily
-const projectKey = `project:${slug}`;
-const sharedProject = useState<Project | null>(projectKey, () => null);
-watchEffect(() => {
-  sharedProject.value = project.value ?? null;
 });
 
 // Use shared project navbar
