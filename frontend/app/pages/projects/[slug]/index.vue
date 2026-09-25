@@ -183,6 +183,7 @@ type CarouselItem = {
   cover: StrapiMedia | string | null | undefined;
   type: 'research' | 'outreach' | 'education';
   slug: string;
+  to: string;
 };
 
 const fallbackNews: NewsCard[] = [
@@ -345,6 +346,7 @@ const researchCarouselItems = computed<CarouselItem[]>(() => {
     cover: p.imageCover?.url ? p.imageCover : researchPlaceholder,
     type: 'research',
     slug: basePath.value,
+    to: `${basePath.value}/research/${p.documentId || p.id}`,
   }));
 });
 
@@ -364,6 +366,7 @@ const outreachCarouselItems = computed<CarouselItem[]>(() => {
     cover: n.cover,
     slug: basePath.value,
     type: 'outreach',
+    to: `${basePath.value}/${n.blog ? 'blog' : 'outreach'}/${n.documentId || n.id}`,
   }));
 });
 
@@ -380,6 +383,7 @@ const educationCarouselItems = computed<CarouselItem[]>(() => {
       cover: e.cover,
       slug: basePath.value,
       type: 'education',
+      to: `${basePath.value}/education/${e.documentId || e.id}`,
     }));
 });
 

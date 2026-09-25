@@ -96,7 +96,7 @@
       <!-- Left button -->
       <button
         aria-label="Previous slide"
-        class="absolute left-0 top-0 h-full w-1/3 md:w-1/4 z-30 group pointer-events-auto"
+        class="absolute left-0 top-0 h-full w-12 sm:w-16 z-30 group pointer-events-auto"
         @click="prev"
       >
         <div
@@ -121,7 +121,7 @@
       <!-- Right button -->
       <button
         aria-label="Next slide"
-        class="absolute right-0 top-0 h-full w-1/3 md:w-1/4 z-30 group pointer-events-auto"
+        class="absolute right-0 top-0 h-full w-12 sm:w-16 z-30 group pointer-events-auto"
         @click="next"
       >
         <div
