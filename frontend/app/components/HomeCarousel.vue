@@ -3,7 +3,7 @@
     role="region"
     aria-label="Homepage carousel"
     tabindex="0"
-    class="relative overflow-hidden h-96 md:h-[600px] w-full bg-home-carousel"
+    class="relative z-0 isolate overflow-hidden h-96 md:h-[600px] w-full bg-home-carousel"
     @mouseenter="pauseAutoplay"
     @mouseleave="startAutoplay"
     @focusin="pauseAutoplay"

@@ -3,7 +3,7 @@
     role="region"
     aria-label="Research and outreach carousel"
     tabindex="0"
-    class="relative overflow-hidden w-full bg-home-carousel h-[420px] sm:h-96 md:h-[600px]"
+    class="relative z-0 isolate overflow-hidden w-full bg-home-carousel h-[420px] sm:h-96 md:h-[600px]"
     @mouseenter="pauseAutoplay"
     @mouseleave="startAutoplay"
     @focusin="pauseAutoplay"
@@ -68,7 +68,7 @@
 
         <!-- Content -->
         <div
-          class="relative z-50 flex flex-col justify-center items-start px-4 sm:px-6 md:pl-24 md:pr-20 flex-1 md:order-1 order-2 pointer-events-none"
+          class="relative z-20 flex flex-col justify-center items-start px-4 sm:px-6 md:pl-24 md:pr-20 flex-1 md:order-1 order-2 pointer-events-none"
         >
           <h1
             class="m-0 mb-2 text-white text-xl md:text-[32px] lg:text-4xl font-semibold font-display"
@@ -82,7 +82,7 @@
             <NuxtLink
               v-if="currentSlide && currentSlide.to"
               :to="currentSlide.to"
-              class="relative z-50 px-5 py-3 rounded-sm hover:opacity-95 font-poppins font-semibold bg-green-600 text-white text-sm md:text-base"
+              class="relative z-20 px-5 py-3 rounded-sm hover:opacity-95 font-poppins font-semibold bg-green-600 text-white text-sm md:text-base"
             >
               {{ currentSlide?.cta }}
             </NuxtLink>

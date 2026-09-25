@@ -1,6 +1,6 @@
 <template>
   <nav
-    class="flex items-center justify-between px-6 md:px-25 py-4 z-50 w-full sticky top-0 bg-white shadow-md"
+    class="flex items-center justify-between px-6 md:px-25 py-4 z-[100] isolate w-full sticky top-0 bg-white shadow-md"
   >
     <div class="flex items-center">
       <a href="/" class="flex items-center">

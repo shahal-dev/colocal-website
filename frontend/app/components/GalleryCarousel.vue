@@ -180,6 +180,8 @@ onBeforeUnmount(() => {
 
 .carousel {
   position: relative;
+  z-index: 0;
+  isolation: isolate;
   width: 100%;
   height: 22rem;
   border-radius: 0.75rem;
