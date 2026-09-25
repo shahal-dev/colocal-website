@@ -30,6 +30,8 @@ const ALLOWED_QUERY_PARAMS: Record<string, Set<string>> = {
   '/api/authors': new Set(['colocal', 'team', 'pageSize', 'sort']),
   '/api/about': new Set(),
   '/api/global': new Set(),
+  '/api/home': new Set(),
+  '/api/team': new Set(),
 };
 
 function isValidValue(key: string, value: string): boolean {

@@ -1,5 +1,6 @@
 import { defineEventHandler, createError, getQuery } from 'h3';
 import { useRuntimeConfig } from '#imports';
+import { cachedStrapiGet } from '../utils/strapi-cache';
 import type { Author, StrapiMedia, StrapiImageFormat } from '../../types/content';
 import type {
   RawEntity,
@@ -93,10 +94,7 @@ function mapStrapiMedia(baseUrl: string, m?: FlatMedia | null): StrapiMedia | nu
 
 // Designations from the repeatable `titles` component, falling back to the
 // legacy single `title` string for entries not yet migrated.
-function mapTitles(
-  titles?: RawDesignationComponent[] | null,
-  title?: string | null
-): string[] {
+function mapTitles(titles?: RawDesignationComponent[] | null, title?: string | null): string[] {
   const list = (titles ?? [])
     .map((t) => (typeof t?.title === 'string' ? t.title.trim() : ''))
     .filter(Boolean);
@@ -160,9 +158,6 @@ export default defineEventHandler(async (event) => {
     'http://localhost:1337';
   const token = (config?.strapi?.token as string) || '';
 
-  const headers: Record<string, string> = { 'Content-Type': 'application/json' };
-  if (token) headers.Authorization = `Bearer ${token}`;
-
   // Get query parameters for filtering
   const query = getQuery(event);
   const filterColocal = query.colocal as string | undefined;
@@ -189,11 +184,12 @@ export default defineEventHandler(async (event) => {
       strapiQuery['filters[team][$eq]'] = filterTeam;
     }
 
-    const res = await $fetch<StrapiListRaw | StrapiListFlat>(`${baseUrl}/api/authors`, {
-      method: 'GET',
-      headers,
-      query: strapiQuery,
-    });
+    const res = await cachedStrapiGet<StrapiListRaw | StrapiListFlat>(
+      baseUrl,
+      token,
+      '/api/authors',
+      strapiQuery
+    );
 
     let dataList: Array<RawEntity<RawAuthorAttributes>> | Array<FlatAuthor> = [];
 

@@ -1,5 +1,6 @@
 import { defineEventHandler, setHeader } from 'h3';
 import { useRuntimeConfig } from '#imports';
+import { cachedStrapiGet } from '../utils/strapi-cache';
 
 const SITE_URL = 'https://www.luccc.org';
 
@@ -55,10 +56,10 @@ function renderSitemap(entries: Entry[]): string {
 async function fetchList<T extends object>(
   baseUrl: string,
   path: string,
-  headers: Record<string, string>
+  token: string
 ): Promise<RawEntity<T>[]> {
   try {
-    const res = await $fetch<StrapiList<T>>(`${baseUrl}${path}`, { headers });
+    const res = await cachedStrapiGet<StrapiList<T>>(baseUrl, token, path);
     return Array.isArray(res?.data) ? res.data : [];
   } catch {
     return [];
@@ -72,8 +73,6 @@ export default defineEventHandler(async (event) => {
     (config?.public?.strapiUrl as string) ||
     'http://localhost:1337';
   const token = (config?.strapi?.token as string) || '';
-  const headers: Record<string, string> = {};
-  if (token) headers.Authorization = `Bearer ${token}`;
 
   const entries: Entry[] = [];
   const seen = new Set<string>();
@@ -101,21 +100,21 @@ export default defineEventHandler(async (event) => {
 
   // Dynamic content
   const [projects, publications, newsEvents, educationTrainings] = await Promise.all([
-    fetchList<ProjectAttrs>(baseUrl, '/api/projects?pagination[limit]=100', headers),
+    fetchList<ProjectAttrs>(baseUrl, '/api/projects?pagination[limit]=100', token),
     fetchList<ResourceAttrs>(
       baseUrl,
       '/api/research-publications?pagination[limit]=1000&populate=project',
-      headers
+      token
     ),
     fetchList<ResourceAttrs>(
       baseUrl,
       '/api/news-events?pagination[limit]=1000&populate=project',
-      headers
+      token
     ),
     fetchList<ResourceAttrs>(
       baseUrl,
       '/api/education-trainings?pagination[limit]=1000&populate=project',
-      headers
+      token
     ),
   ]);
 

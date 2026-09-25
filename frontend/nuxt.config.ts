@@ -114,7 +114,14 @@ export default defineNuxtConfig({
     plugins: [tailwindcss()],
   },
 
-  modules: ['@nuxt/fonts', '@nuxt/icon', '@nuxt/image', '@nuxt/eslint', '@nuxtjs/mdc'],
+  modules: [
+    '@nuxt/fonts',
+    '@nuxt/icon',
+    '@nuxt/image',
+    '@nuxt/eslint',
+    '@nuxtjs/mdc',
+    '@vercel/analytics',
+  ],
 
   // @nuxt/image: allow IPX to optimize images served from the Strapi backend.
   // Strapi Cloud serves the API from `<id>.strapiapp.com` but uploaded media

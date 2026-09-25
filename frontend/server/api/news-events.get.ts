@@ -1,6 +1,7 @@
 import { defineEventHandler, createError, getQuery } from 'h3';
 import { useRuntimeConfig } from '#imports';
 import { mapProjectRefs } from '../utils/project-refs';
+import { cachedStrapiGet } from '../utils/strapi-cache';
 import type { NewsEvent, StrapiMedia, StrapiImageFormat, Author } from '../../types/content';
 import type {
   RawEntity,
@@ -289,15 +290,13 @@ export default defineEventHandler(async (event) => {
     query['filters[blog][$eq]'] = q.blog;
   }
 
-  const headers: Record<string, string> = { 'Content-Type': 'application/json' };
-  if (token) headers.Authorization = `Bearer ${token}`;
-
   try {
-    const res = await $fetch<StrapiListResponseUnion>(`${baseUrl}/api/news-events`, {
-      method: 'GET',
-      headers,
-      query,
-    });
+    const res = await cachedStrapiGet<StrapiListResponseUnion>(
+      baseUrl,
+      token,
+      '/api/news-events',
+      query
+    );
 
     let items: NewsEvent[] = [];
     if (Array.isArray(res?.data)) {

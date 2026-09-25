@@ -1,5 +1,6 @@
 import { defineEventHandler, createError, getQuery } from 'h3';
 import { useRuntimeConfig } from '#imports';
+import { cachedStrapiGet } from '../utils/strapi-cache';
 import type {
   Project,
   ResearchPublication,
@@ -476,17 +477,13 @@ export default defineEventHandler(async (event) => {
     query['filters[slug][$eq]'] = String(q.slug);
   }
 
-  const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
-  };
-  if (token) headers.Authorization = `Bearer ${token}`;
-
   try {
-    const res = await $fetch<StrapiListResponseUnion>(`${baseUrl}/api/projects`, {
-      method: 'GET',
-      headers,
-      query,
-    });
+    const res = await cachedStrapiGet<StrapiListResponseUnion>(
+      baseUrl,
+      token,
+      '/api/projects',
+      query
+    );
 
     let items: Project[] = [];
     if (Array.isArray(res?.data)) {

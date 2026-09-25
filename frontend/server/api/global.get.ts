@@ -1,5 +1,6 @@
 import { defineEventHandler, createError } from 'h3';
 import { useRuntimeConfig } from '#imports';
+import { cachedStrapiGet } from '../utils/strapi-cache';
 import type { StrapiMedia, StrapiImageFormat } from '../../types/content';
 import type {
   RawEntity,
@@ -110,15 +111,13 @@ export default defineEventHandler(async (event) => {
     'http://localhost:1337';
   const token = (config?.strapi?.token as string) || '';
 
-  const headers: Record<string, string> = { 'Content-Type': 'application/json' };
-  if (token) headers.Authorization = `Bearer ${token}`;
-
   try {
-    const res = await $fetch<StrapiSingleRaw | StrapiSingleFlat>(`${baseUrl}/api/global`, {
-      method: 'GET',
-      headers,
-      query: { populate: 'favicon' },
-    });
+    const res = await cachedStrapiGet<StrapiSingleRaw | StrapiSingleFlat>(
+      baseUrl,
+      token,
+      '/api/global',
+      { populate: 'favicon' }
+    );
 
     let favicon: StrapiMedia | null = null;
     if (hasDataKey(res)) {

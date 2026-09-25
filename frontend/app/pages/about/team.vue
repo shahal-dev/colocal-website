@@ -27,7 +27,6 @@ type Author = {
 };
 
 const config = useRuntimeConfig();
-const headers: Record<string, string> = {};
 
 function getDeep(obj: unknown, path: string[]): unknown {
   let cur: unknown = obj;
@@ -40,9 +39,6 @@ function getDeep(obj: unknown, path: string[]): unknown {
 
 const strapiUrlRaw = getDeep(config, ['strapi', 'url']) ?? getDeep(config, ['public', 'strapiUrl']);
 const strapiUrl = typeof strapiUrlRaw === 'string' ? strapiUrlRaw : 'http://localhost:1337';
-const tokenRaw = getDeep(config, ['strapi', 'token']);
-const token = typeof tokenRaw === 'string' ? tokenRaw : '';
-if (token) headers.Authorization = `Bearer ${token}`;
 
 function isRecord(v: unknown): v is Record<string, unknown> {
   return typeof v === 'object' && v !== null;
@@ -122,15 +118,7 @@ type TeamSingle = { about?: string; cover?: unknown; lead?: unknown };
 const { data: teamSingle, error: teamError } = await useAsyncData<TeamSingle>(
   'team-single',
   async () => {
-    const res: unknown = await $fetch(`${strapiUrl}/api/team`, {
-      headers,
-      query: {
-        // Object syntax so the lead's avatar and titles populate without
-        // naming keys that may not exist yet (Strapi 400s on unknown keys).
-        'populate[cover]': 'true',
-        'populate[lead][populate]': '*',
-      },
-    });
+    const res: unknown = await $fetch('/api/team');
     // v4 raw vs v5 flat
     const r = isRecord(res) ? (res as Record<string, unknown>) : {};
     const d = ('data' in r ? (r.data as unknown) : res) as unknown;
@@ -151,15 +139,11 @@ type MembersRes = { data: unknown[] };
 const { data: membersRes, error: membersError } = await useAsyncData<MembersRes>(
   'team-members',
   async () => {
-    const res: unknown = await $fetch(`${strapiUrl}/api/authors`, {
-      headers,
+    const res: unknown = await $fetch('/api/authors', {
       query: {
-        'filters[team][$eq]': 'true',
-        'pagination[pageSize]': '200',
+        team: 'true',
+        pageSize: '200',
         sort: 'name:asc',
-        // Wildcard: Strapi 400s on populate keys that don't exist yet
-        // (the `titles` component ships with a later CMS deploy).
-        populate: '*',
       },
     });
     const r = isRecord(res) ? (res as Record<string, unknown>) : {};

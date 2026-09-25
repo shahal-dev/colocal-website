@@ -24,7 +24,6 @@ useHead({
 });
 
 const config = useRuntimeConfig();
-const headers: Record<string, string> = {};
 
 function getDeep(obj: unknown, path: string[]): unknown {
   let cur: unknown = obj;
@@ -37,9 +36,6 @@ function getDeep(obj: unknown, path: string[]): unknown {
 
 const strapiUrlRaw = getDeep(config, ['strapi', 'url']) ?? getDeep(config, ['public', 'strapiUrl']);
 const strapiUrl = typeof strapiUrlRaw === 'string' ? strapiUrlRaw : 'http://localhost:1337';
-const tokenRaw = getDeep(config, ['strapi', 'token']);
-const token = typeof tokenRaw === 'string' ? tokenRaw : '';
-if (token) headers.Authorization = `Bearer ${token}`;
 
 function isRecord(v: unknown): v is Record<string, unknown> {
   return typeof v === 'object' && v !== null;
@@ -85,14 +81,7 @@ const { data: teamSingle, error: teamError } = await useAsyncData<TeamSingle | n
   `team-single-${slug.value}`,
   async () => {
     try {
-      const res: unknown = await $fetch(`${strapiUrl}/api/team`, {
-        headers,
-        query: {
-          'populate[0]': 'cover',
-          'populate[1]': 'lead',
-          'populate[2]': 'lead.avatar',
-        },
-      });
+      const res: unknown = await $fetch('/api/team');
       const r = isRecord(res) ? (res as Record<string, unknown>) : {};
       const d = ('data' in r ? (r.data as unknown) : res) as unknown;
       if (isRecord(d) && 'attributes' in d && isRecord((d as Record<string, unknown>).attributes)) {

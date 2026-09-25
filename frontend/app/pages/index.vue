@@ -39,8 +39,6 @@ useHead({
   ],
   link: [{ rel: 'canonical', href: 'https://www.luccc.org/' }],
 });
-const config = useRuntimeConfig();
-
 type HomeType = {
   About?: string;
   country_affiliations?: number;
@@ -60,10 +58,7 @@ function hasKey<T extends string>(obj: unknown, key: T): obj is Record<T, unknow
 }
 
 const { data: _home, error } = await useAsyncData<HomeType>('home', async () => {
-  const url = `${config.strapi.url}/api/home`;
-  const res: unknown = await $fetch(url, {
-    headers: config.strapi.token ? { Authorization: `Bearer ${config.strapi.token}` } : {},
-  });
+  const res: unknown = await $fetch('/api/home');
   // Adapt to Strapi v4/v5 response shapes
   if (hasKey(res, 'data')) {
     const data = res.data;

@@ -1,5 +1,6 @@
 import { defineEventHandler, createError } from 'h3';
 import { useRuntimeConfig } from '#imports';
+import { cachedStrapiGet } from '../utils/strapi-cache';
 import type { Author, StrapiMedia, StrapiImageFormat } from '../../types/content';
 import type {
   RawEntity,
@@ -200,18 +201,16 @@ export default defineEventHandler(async (event) => {
     'http://localhost:1337';
   const token = (config?.strapi?.token as string) || '';
 
-  const headers: Record<string, string> = { 'Content-Type': 'application/json' };
-  if (token) headers.Authorization = `Bearer ${token}`;
-
   try {
-    const res = await $fetch<StrapiSingleRaw | StrapiSingleFlat>(`${baseUrl}/api/about`, {
-      method: 'GET',
-      headers,
-      // Deep-populate quotes.author.avatar (don't mix with populate='*' to avoid type conflict)
-      query: {
+    const res = await cachedStrapiGet<StrapiSingleRaw | StrapiSingleFlat>(
+      baseUrl,
+      token,
+      '/api/about',
+      {
+        // Deep-populate quotes.author.avatar (don't mix with populate='*' to avoid type conflict)
         'populate[quotes][populate][author][populate]': 'avatar',
-      },
-    });
+      }
+    );
 
     let payload: AboutAttributesRaw | AboutFlat | null = null;
     if (hasDataKey(res)) {
@@ -283,18 +282,13 @@ export default defineEventHandler(async (event) => {
     if (candidateIds.size > 0) {
       try {
         const ids = Array.from(candidateIds);
-        const aList = await $fetch<{ data: Array<RawEntity<RawAuthorAttributes>> }>(
-          `${baseUrl}/api/authors`,
-          {
-            method: 'GET',
-            headers,
-            query: {
-              'filters[id][$in]': ids, // arrays become repeated params
-              'pagination[pageSize]': String(Math.max(ids.length, 50)),
-              populate: 'avatar',
-            },
-          }
-        );
+        const aList = await cachedStrapiGet<{
+          data: Array<RawEntity<RawAuthorAttributes>>;
+        }>(baseUrl, token, '/api/authors', {
+          'filters[id][$in]': ids, // arrays become repeated params
+          'pagination[pageSize]': String(Math.max(ids.length, 50)),
+          populate: 'avatar',
+        });
         for (const ent of aList?.data || []) {
           authorCache.set(ent.id, mapRawAuthor(baseUrl, ent));
         }
@@ -306,10 +300,9 @@ export default defineEventHandler(async (event) => {
     async function fetchAuthorById(id: number): Promise<Author | null> {
       if (authorCache.has(id)) return authorCache.get(id) ?? null;
       try {
-        const aRes = await $fetch<{ data: RawEntity<RawAuthorAttributes> | null }>(
-          `${baseUrl}/api/authors/${id}`,
-          { method: 'GET', headers, query: { populate: 'avatar' } }
-        );
+        const aRes = await cachedStrapiGet<{
+          data: RawEntity<RawAuthorAttributes> | null;
+        }>(baseUrl, token, `/api/authors/${id}`, { populate: 'avatar' });
         const mapped = aRes?.data ? mapRawAuthor(baseUrl, aRes.data) : null;
         authorCache.set(id, mapped);
         return mapped;
