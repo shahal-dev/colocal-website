@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { computed } from 'vue';
-import { useRoute, useAsyncData } from '#app';
+import { computed, onMounted, ref } from 'vue';
+import { useRoute } from '#app';
 import type {
   Project,
   Author,
@@ -33,7 +33,9 @@ const flagMap: Record<string, string> = {
   mz: '/images/flags/mz.svg',
   no: '/images/flags/no.svg',
   np: '/images/flags/np.svg',
-  ug: '/images/flags/ug.svg',
+  // The source SVG is unusually large and expensive for browsers to parse/render.
+  // Serve its pre-rendered equivalent so the Uganda page becomes visible immediately.
+  ug: '/images/flags/ug.webp',
 };
 
 const countryDataRecord: Record<string, CountryData> = {
@@ -43,7 +45,7 @@ const countryDataRecord: Record<string, CountryData> = {
     iso: 'BD',
     selectors: ['#BD'],
     partner: 'ICCCAD at Independent University, Bangladesh',
-    images: ['/images/countries/bd/1.jpg'],
+    images: ['/images/countries/bd/1.webp'],
     description: `The Department of Environmental Science and Management (DESM) at Independent University Bangladesh (IUB), together with the International Centre for Climate Change and Development (ICCCAD), are acting as a global south partner for the COLOCAL project.
 
 Established in 1993, DESM at IUB has achieved a reputation as one of the best institutions providing environmental education in Bangladesh. Having an interdisciplinary and holistic approach, the department integrates science, management, law, economics, public health and governance with an aim to create professionals for environmental problem-solving.
@@ -60,7 +62,7 @@ Also at IUB, ICCCAD is one of the leading research and capacity building organis
     selectors: ['#NP'],
     partner:
       'The School of Environmental Science and Management of Pokhara University (PU-SchESM) is acting as an implementing partner of the COLOCAL project.',
-    images: ['/images/countries/np/1.jpg'],
+    images: ['/images/countries/np/1.webp'],
     description: `School of Environmental Science and Management (SchEMS) College, affiliated with Pokhara University, Nepal, serves as a key Global South partner for the COLOCAL project.
 
 Established in 1999 has built a strong reputation as one of Nepal's leading institutions for environmental education. With an interdisciplinary and holistic approach, the department blends science, management, policy, economics, public health, and governance to train professionals equipped to tackle environmental challenges.
@@ -75,7 +77,7 @@ SchEMS leverages Pokhara University's networks and Nepal's frontline experience 
     iso: 'MZ',
     selectors: ['#MZ'],
     partner: 'Eduardo Mondlane University',
-    images: ['/images/countries/mz/1.png'],
+    images: ['/images/countries/mz/1.webp'],
     description: `Mozambique is a country of multiple opportunities and challenges. Rich in natural resources such as gas, gold, iron, heavy sands, coal, graphite, paradisiac beaches, fertile soils and unexploited forests, the country is, yet, a global reference of complex disasters emerging out of armed conflicts, climate-change induced disasters and institutionalized governance failures to a point that disasters are, to say, a part of everyday life of millions of people. With about 30 million inhabitants and a GDP of 15 billion, Mozambique ranks as one of the poorest countries in the world – Bottom 10 on the UNDP human development index (UNDP, 2020) and has been under continuous conflicts and disasters over his history.
 
 Established in 1962, Eduardo Mondlane University (Universidade Eduardo Mondlane-UEM) is the oldest, number one, and most prestigious university in Mozambique. By 2024 it was ranked by Edurank, amongst the 32 best African universities. UEM offers 204 different programs (104 BSc; 85 MSc and 15 PhD) across its 11 faculties and 6 high education schools. It has an annual intake of around 5,000 students with a global of around 50.000 students. The university vision is to become an international, regional and national reference on scientific knowledge production, innovation and dissemination putting research as the backbone for teaching and outreach.
@@ -99,10 +101,10 @@ Within the UEM, COLOCAL sits within the Faculty of Agronomy and Forestry Enginee
     selectors: ['.Norway'],
     partner: 'Norwegian University of Life Sciences',
     images: [
-      '/images/countries/no/1.webp',
-      '/images/countries/no/2.webp',
-      '/images/countries/no/3.webp',
-      '/images/countries/no/4.webp',
+      '/images/countries/no/1-optimized.webp',
+      '/images/countries/no/2-optimized.webp',
+      '/images/countries/no/3-optimized.webp',
+      '/images/countries/no/4-optimized.webp',
     ],
     description: `The Norwegian University of Life Sciences (NMBU) strives to help safeguard the basis for life on Earth. Since 1859 and throughout its proud history, as the Norwegian College of Agriculture and the Norwegian School of Veterinary Science, NMBU has evolved into a world-leading university within our realm of knowledge. NMBU has unique expertise that targets the wide-ranging and complex challenges that society is facing, including green transitions and climate change. We have the country's most satisfied university students, who receive research-based education in a unique student environment.
 
@@ -121,25 +123,38 @@ const currentCountryImages = computed(() => {
   return flag ? [flag] : [];
 });
 
-const isFallbackSvg = computed(() => {
+const isFallbackImage = computed(() => {
   if (!countryData.value) return false;
   return countryData.value.images.length === 0;
 });
 
-// Fetch all necessary data
-const { data: authorsRes } = await useAsyncData<{ data: Author[] }>('authors', () =>
-  $fetch('/api/authors')
-);
-const { data: publications } = await useAsyncData<ResearchPublication[]>('publications', () =>
-  $fetch('/api/publications', { query: { projectSlug: slug, summary: 'true' } })
-);
-const { data: newsEvents } = await useAsyncData<NewsEvent[]>('news-events', () =>
-  $fetch('/api/news-events', { query: { summary: 'true' } })
-);
-const { data: educationTrainings } = await useAsyncData<EducationTraining[]>(
-  'education-trainings',
-  () => $fetch('/api/education-trainings', { query: { summary: 'true' } })
-);
+// These collections only feed sections below the country introduction. Fetch them
+// concurrently after mount so a slow CMS response cannot hold up the hero image.
+const authorsRes = ref<{ data: Author[] } | null>(null);
+const publications = ref<ResearchPublication[] | null>(null);
+const newsEvents = ref<NewsEvent[] | null>(null);
+const educationTrainings = ref<EducationTraining[] | null>(null);
+
+onMounted(() => {
+  void Promise.allSettled([
+    $fetch<{ data: Author[] }>('/api/authors').then((data) => {
+      authorsRes.value = data;
+    }),
+    $fetch<ResearchPublication[]>('/api/publications', {
+      query: { projectSlug: slug, summary: 'true' },
+    }).then((data) => {
+      publications.value = data;
+    }),
+    $fetch<NewsEvent[]>('/api/news-events', { query: { summary: 'true' } }).then((data) => {
+      newsEvents.value = data;
+    }),
+    $fetch<EducationTraining[]>('/api/education-trainings', {
+      query: { summary: 'true' },
+    }).then((data) => {
+      educationTrainings.value = data;
+    }),
+  ]);
+});
 
 const teamMembers = computed(() => {
   return (
@@ -181,7 +196,7 @@ const countryEducationTrainings = computed(() => {
 
 useHead({
   title: countryData.value
-    ? `${countryData.value.name} — ${project.value?.shortTitle || 'Project'}`
+    ? `${countryData.value.name} — ${project.value?.shortTitle || slug.toUpperCase()}`
     : 'Country Not Found',
 });
 </script>
@@ -218,13 +233,14 @@ useHead({
         v-if="currentCountryImages.length > 0"
         :class="[
           'mb-8 w-full rounded-xl overflow-hidden flex items-center justify-center min-h-[400px]',
-          isFallbackSvg ? 'bg-[#041b18] p-8' : '',
+          isFallbackImage ? 'bg-[#041b18] p-8' : '',
         ]"
       >
         <GalleryCarousel
           :images="currentCountryImages"
           :title="`Map of ${countryData.name}`"
           large
+          native
         />
       </div>
 

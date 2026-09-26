@@ -9,11 +9,13 @@
       <transition :name="transitionName" mode="out-in">
         <div :key="`${activeIndex}-${currentSlide}`" class="carousel-slide">
           <img
-            v-if="isCurrentSlideSvg"
+            v-if="useNativeImage"
             :src="currentSlide"
             :alt="slideAlt(activeIndex)"
-            class="media media--vector"
-            loading="lazy"
+            class="media"
+            :class="{ 'media--vector': isCurrentSlideSvg }"
+            :loading="props.native ? 'eager' : 'lazy'"
+            :fetchpriority="props.native && activeIndex === 0 ? 'high' : 'auto'"
             decoding="async"
           />
           <NuxtImg
@@ -66,6 +68,7 @@ const props = defineProps<{
   images: Array<string | null | undefined> | null | undefined;
   title?: string | null;
   large?: boolean;
+  native?: boolean;
 }>();
 
 const normalizedImages = computed(() => {
@@ -87,6 +90,18 @@ const carouselImages = computed(() => normalizedImages.value.slice());
 
 const AUTO_ADVANCE_INTERVAL = 3000;
 let autoAdvanceTimer: ReturnType<typeof setInterval> | null = null;
+const nativeImagePreloads: HTMLImageElement[] = [];
+
+const preloadNativeImages = () => {
+  if (!props.native || !import.meta.client) return;
+  nativeImagePreloads.length = 0;
+  for (const src of carouselImages.value.slice(1)) {
+    const image = new Image();
+    image.decoding = 'async';
+    image.src = src;
+    nativeImagePreloads.push(image);
+  }
+};
 
 const stopAutoAdvance = () => {
   if (autoAdvanceTimer !== null) {
@@ -114,6 +129,7 @@ const activeIndex = ref(0);
 const transitionName = ref<'slide-next' | 'slide-prev'>('slide-next');
 const currentSlide = computed(() => carouselImages.value[activeIndex.value] ?? '');
 const isCurrentSlideSvg = computed(() => /\.svg(?:[?#]|$)/i.test(currentSlide.value));
+const useNativeImage = computed(() => props.native || isCurrentSlideSvg.value);
 
 watch(carouselImages, (images) => {
   activeIndex.value = 0;
@@ -174,10 +190,12 @@ function slideAlt(index: number) {
 
 onMounted(() => {
   startAutoAdvance();
+  preloadNativeImages();
 });
 
 onBeforeUnmount(() => {
   stopAutoAdvance();
+  nativeImagePreloads.length = 0;
 });
 </script>
 

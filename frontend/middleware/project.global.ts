@@ -10,6 +10,10 @@ export default defineNuxtRouteMiddleware(async (to: RouteLocationNormalized) => 
   const slug = Array.isArray(slugParam) ? slugParam[0] : slugParam;
   if (!slug) return;
 
+  // Country detail pages are self-contained; do not delay their hero image
+  // while waiting for the shared project request.
+  if (/^\/projects\/[^/]+\/about\/[^/]+\/?$/.test(to.path)) return;
+
   const key = `project:${slug}`;
   const state = useState<Project | null>(key, () => null);
   // Avoid refetching if already loaded for this slug
