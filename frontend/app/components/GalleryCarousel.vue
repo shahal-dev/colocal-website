@@ -8,7 +8,16 @@
     >
       <transition :name="transitionName" mode="out-in">
         <div :key="`${activeIndex}-${currentSlide}`" class="carousel-slide">
+          <img
+            v-if="isCurrentSlideSvg"
+            :src="currentSlide"
+            :alt="slideAlt(activeIndex)"
+            class="media media--vector"
+            loading="lazy"
+            decoding="async"
+          />
           <NuxtImg
+            v-else
             :src="currentSlide"
             :alt="slideAlt(activeIndex)"
             sizes="100vw md:720px"
@@ -104,6 +113,7 @@ const restartAutoAdvance = () => {
 const activeIndex = ref(0);
 const transitionName = ref<'slide-next' | 'slide-prev'>('slide-next');
 const currentSlide = computed(() => carouselImages.value[activeIndex.value] ?? '');
+const isCurrentSlideSvg = computed(() => /\.svg(?:[?#]|$)/i.test(currentSlide.value));
 
 watch(carouselImages, (images) => {
   activeIndex.value = 0;
@@ -205,6 +215,10 @@ onBeforeUnmount(() => {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.media--vector {
+  object-fit: contain;
 }
 
 .carousel-controls {
